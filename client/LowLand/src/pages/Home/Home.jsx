@@ -87,14 +87,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="flag">
-                  <img
-                    src="static/images/flag-vn.jpg"
-                    alt=""
-                  />
-                  <img
-                    src="static/images/flag-en.jpg"
-                    alt=""
-                  />
+                  <img src="static/images/flag-vn.jpg" alt="" />
+                  <img src="static/images/flag-en.jpg" alt="" />
                 </div>
               </div>
 
