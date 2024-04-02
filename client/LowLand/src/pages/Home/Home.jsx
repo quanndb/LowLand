@@ -8,6 +8,7 @@ import {
   InstagramOutlined,
   MailOutlined,
 } from "@ant-design/icons";
+import Header from "./components/Header";
 const Home = () => {
   const imageUrls = [
     "/static/images/imgslider1.jpg",
