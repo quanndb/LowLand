@@ -70,4 +70,5 @@ public class ProductController {
         Product updatedProduct = repository.save(product);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
+
 }
