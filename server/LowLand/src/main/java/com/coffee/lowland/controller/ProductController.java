@@ -49,6 +49,17 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
+
+
+    @DeleteMapping("/deleteProduct/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        repository.delete(product);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PutMapping("/setIsActive/{id}")
     public ResponseEntity<Product> setIsActiveById(@PathVariable Integer id, @RequestParam boolean isActive) {
         Product product = repository.findById(id)
@@ -58,14 +69,5 @@ public class ProductController {
 
         Product updatedProduct = repository.save(product);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/deleteProduct/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-
-        repository.delete(product);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
