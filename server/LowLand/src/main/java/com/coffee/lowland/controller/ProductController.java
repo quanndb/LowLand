@@ -95,26 +95,31 @@ public class ProductController {
             );
         }
     }
-
-//    @PutMapping("/{id}")
-//    //gộp : khi chưa có sp đó thì tạo mới, khi tồn tại thì update
-//    ResponseEntity<ResponseObject> updateProduct(@RequestBody Product newProduct, @PathVariable Integer id)
-//    {
-//        Product updateProduct =  repository.findById(id).map(
-//                product -> {
-//                    product.setName(newProduct.getName());
-//                    product.setType(newProduct.getType());
-//                    product.setActive(newProduct.isActive());
-//                    product.setDescription(newProduct.getDescription());
-//                    return repository.save(product);
-//                }).orElseGet(() -> {
-////                    newProduct.setId(id);
-//                    return repository.save(newProduct);
-//        });
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                new ResponseObject("ok", "Updated Product Sucessfully", updateProduct)
-//        );
-//    }
+//nên gộp như thế này
+    @PutMapping("/{id}")
+    //gộp : khi chưa có sp đó thì tạo mới, khi tồn tại thì update
+    ResponseEntity<ResponseObject> CreateOrUpdateProduct(@RequestBody Product newProduct)
+    {
+        Product foundProduct = productRepository.TimKiem(newProduct.getId(),newProduct.getProductCode());
+        if(foundProduct.getId() > 0)
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("false", "Product code already taken", null)
+            );
+        Product updateProduct =  productRepository.findById(newProduct.getId()).map(
+                product -> {
+                    product.setProductCode(newProduct.getProductCode());
+                    product.setName(newProduct.getName());
+                    product.setType(newProduct.getType());
+                    product.setActive(newProduct.isActive());
+                    product.setDescription(newProduct.getDescription());
+                    return productRepository.save(product);
+                }).orElseGet(() -> {
+                    return productRepository.save(newProduct);
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Updated Product Sucessfully", updateProduct)
+        );
+    }
     @DeleteMapping("/deleteProduct/{id}")
     public ResponseEntity<ResponseObject> deleteProduct(@PathVariable Integer id) {
         boolean exists = productRepository.existsById(id);
