@@ -1,11 +1,9 @@
 package com.coffee.lowland.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Entity
 @Getter
@@ -15,6 +13,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  int id;
 
+    private String productCode;
+
     private String name;
 
     private String type;
@@ -22,5 +22,8 @@ public class Product {
     private boolean isActive;
 
     private String description;
+
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+//    private List<Image> images;
 
 }
