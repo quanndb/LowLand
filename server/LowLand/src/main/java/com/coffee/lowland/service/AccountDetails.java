@@ -37,7 +37,7 @@ public class AccountDetails implements UserDetailsService {
 
         password = users.get(0).getPassword();
 
-        authorities.add(new SimpleGrantedAuthority(users.get(0).getPermission()));
+        authorities.add(new SimpleGrantedAuthority(users.get(0).getPermission().toString()));
 
         return new User(username,password,authorities);
     }
