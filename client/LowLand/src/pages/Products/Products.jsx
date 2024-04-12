@@ -1,7 +1,3 @@
-const Products = () => {
-    return ( <>
-        Products
-    </> );
+export default function Products() {
+  return <>Products</>;
 }
- 
-export default Products;

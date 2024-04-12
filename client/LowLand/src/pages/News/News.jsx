@@ -1,7 +1,3 @@
-const News = () => {
-    return ( <>
-        News
-    </> );
+export default function News() {
+  return <>News</>;
 }
- 
-export default News;
