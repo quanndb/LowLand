@@ -1,35 +1,34 @@
-import React from "react";
-import "./Home.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import './Home.css';
 import {
   FacebookOutlined,
   SendOutlined,
   YoutubeOutlined,
   InstagramOutlined,
   MailOutlined,
-} from "@ant-design/icons";
-const Home = () => {
+} from '@ant-design/icons';
+export default function Home() {
   const imageUrls = [
-    "/static/images/imgslider1.jpg",
-    "/static/images/imgslider2.png",
-    "/static/images/imgslider3.png",
+    '/static/images/imgslider1.jpg',
+    '/static/images/imgslider2.png',
+    '/static/images/imgslider3.png',
   ];
 
   const newsData = [
     {
-      imageUrl: "/static/images/newsrightcontent1.jpg",
-      title: "Tết mà! TẶNG QUÀ VẠN THẺ VÀNG, RƯỚC XE BẠC TỶ",
-      date: "05/01/2024",
+      imageUrl: '/static/images/newsrightcontent1.jpg',
+      title: 'Tết mà! TẶNG QUÀ VẠN THẺ VÀNG, RƯỚC XE BẠC TỶ',
+      date: '05/01/2024',
     },
     {
-      imageUrl: "/static/images/newsrightcontent2.png",
-      title: "ĐIỀU KHOẢN SỬ DỤNG ĐỐI VỚI THẺ HIGHLANDS COFFEE",
-      date: "15/11/2023",
+      imageUrl: '/static/images/newsrightcontent2.png',
+      title: 'ĐIỀU KHOẢN SỬ DỤNG ĐỐI VỚI THẺ HIGHLANDS COFFEE',
+      date: '15/11/2023',
     },
     {
-      imageUrl: "/static/images/newsrightcontent3.png",
-      title: "APP NÀY LÀ CỦA CHÚNG MÌNH",
-      date: "10/01/2023",
+      imageUrl: '/static/images/newsrightcontent3.png',
+      title: 'APP NÀY LÀ CỦA CHÚNG MÌNH',
+      date: '10/01/2023',
     },
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -42,28 +41,26 @@ const Home = () => {
         setShowScrollButton(false);
       }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === imageUrls.length - 1 ? 0 : prevIndex + 1
-      );
+      setCurrentImageIndex((prevIndex) => (prevIndex === imageUrls.length - 1 ? 0 : prevIndex + 1));
     }, 5000);
     return () => clearInterval(interval);
   }, [currentImageIndex, imageUrls.length]);
 
   return (
-    <>
+    <div>
       <div className="home-container">
         <header className="header">
           <nav className="nav header-container">
@@ -71,20 +68,14 @@ const Home = () => {
               <img
                 src="https://www.highlandscoffee.com.vn/vnt_upload/weblink/White_logo800.png"
                 alt=""
-                style={{ height: "86px" }}
+                style={{ height: '86px' }}
               />
             </a>
 
             <div className="header--right">
               <div className="search-container">
                 <div className="search">
-                  <input
-                    type="text"
-                    name=""
-                    id=""
-                    placeholder="Từ khóa"
-                    className="search-input"
-                  />
+                  <input type="text" name="" id="" placeholder="Từ khóa" className="search-input" />
                 </div>
                 <div className="flag">
                   <img src="static/images/flag-vn.jpg" alt="" />
@@ -135,25 +126,13 @@ const Home = () => {
         {/* content */}
         <div className="main-home">
           <div className="img-content">
-            <img
-              src={imageUrls[currentImageIndex]}
-              alt=""
-              className="imgcontain"
-            />
+            <img src={imageUrls[currentImageIndex]} alt="" className="imgcontain" />
           </div>
           <div className="img-content">
-            <img
-              src="static/images/imgcontent1.png"
-              alt=""
-              className="imgcontain lazy"
-            />
+            <img src="static/images/imgcontent1.png" alt="" className="imgcontain lazy" />
           </div>
           <div className="img-content">
-            <img
-              src="static/images/imgcontent2.png"
-              className="imgcontain lazy"
-              alt=""
-            />
+            <img src="static/images/imgcontent2.png" className="imgcontain lazy" alt="" />
           </div>
           {/* news-home */}
           <div className="news-home-container">
@@ -163,8 +142,7 @@ const Home = () => {
                 <div className="news-left-content">
                   <h4 className="news-left-hd">721 HUỲNH TẤN PHÁT</h4>
                   <div className="news-text">
-                    721 HUỲNH TẤN PHÁT, PHƯỜNG PHÚ THUẬN, QUẬN 7, TP. HỒ CHÍ
-                    MINH
+                    721 HUỲNH TẤN PHÁT, PHƯỜNG PHÚ THUẬN, QUẬN 7, TP. HỒ CHÍ MINH
                   </div>
                   <div>TÌM ĐƯỜNG </div>
                 </div>
@@ -181,11 +159,7 @@ const Home = () => {
                   {newsData.map((item) => (
                     <div key={item.imageUrl} className="news-right-item">
                       <div className="news-img-container">
-                        <img
-                          src={item.imageUrl}
-                          alt=""
-                          className="news-right-img"
-                        />
+                        <img src={item.imageUrl} alt="" className="news-right-img" />
                       </div>
                       <div className="news-right-content">
                         <h3 className="r-text-content">{item.title}</h3>
@@ -224,9 +198,7 @@ const Home = () => {
                   <InstagramOutlined />
                 </div>
               </div>
-              <div className="copyrightFT">
-                © 2024 Lowlands Coffee. All rights reserved
-              </div>
+              <div className="copyrightFT">© 2024 Lowlands Coffee. All rights reserved</div>
               <div className="linkFooter">
                 <SendOutlined /> Đăng ký để nhận bản tin
               </div>
@@ -243,8 +215,6 @@ const Home = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
-};
-
-export default Home;
+}
