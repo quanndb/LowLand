@@ -5,8 +5,6 @@ import Typography from "@mui/material/Typography";
 
 import { RouterLink } from "../../routes/components";
 
-import Logo from "../../components/logo";
-
 // ----------------------------------------------------------------------
 
 export default function NotFoundView() {
@@ -24,9 +22,7 @@ export default function NotFoundView() {
           sm: theme.spacing(5, 5, 0),
         }),
       }}
-    >
-      <Logo />
-    </Box>
+    ></Box>
   );
 
   return (
