@@ -8,7 +8,6 @@ import {
   MailOutlined,
 } from '@ant-design/icons';
 export default function Home() {
->>>>>>> master
   const imageUrls = [
     '/static/images/imgslider1.jpg',
     '/static/images/imgslider2.png',
@@ -36,7 +35,7 @@ export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      if (window.pageYOffset > 300) {
+      if (window.pageYOffset > 100) {
         setShowScrollButton(true);
       } else {
         setShowScrollButton(false);
@@ -60,6 +59,18 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [currentImageIndex, imageUrls.length]);
 
+
+  const observeImage = (index) => {
+    return (entry) => {
+      if (entry.isIntersecting || entry.intersectionRatio > 0.1) {
+        setImageLoaded((prev) => {
+          const newLoaded = [...prev];
+          newLoaded[index] = true;
+          return newLoaded;
+        });
+      }
+    };
+  };
   return (
     <div>
       <div className="home-container">
