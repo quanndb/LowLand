@@ -1,27 +1,21 @@
-import { useEffect } from "react";
-import PropTypes from "prop-types";
-
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
-import { alpha } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
 import ListItemButton from "@mui/material/ListItemButton";
-
-import { usePathname } from "../../routes/hooks";
-import { RouterLink } from "../../routes/components";
-
-import { useResponsive } from "../../hooks/use-responsive";
-
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import { useEffect } from "react";
 import { account } from "../../_mock/account";
-
 import Logo from "../../components/logo";
 import Scrollbar from "../../components/scrollbar";
-
+import { useResponsive } from "../../hooks/use-responsive";
+import { RouterLink } from "../../routes/components";
+import { usePathname } from "../../routes/hooks";
 import { NAV } from "./config-layout";
 import navConfig from "./config-navigation";
+import { jwtDecode } from "jwt-decode";
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +47,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="h5">{jwtDecode(localStorage.getItem("accessToken")).fullName}</Typography>
 
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {account.role}

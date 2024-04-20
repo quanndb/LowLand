@@ -21,7 +21,6 @@ export default function Router() {
       element: <Outlet />,
       path: "admin",
       children: [
-        { path: "login", element: <LoginPage /> },
         {
           element: <ProtectedRoute />,
           children: [

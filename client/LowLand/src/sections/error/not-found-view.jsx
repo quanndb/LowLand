@@ -63,7 +63,7 @@ export default function NotFoundView() {
           />
 
           <Button
-            href="/"
+            href="/login"
             size="large"
             variant="contained"
             component={RouterLink}

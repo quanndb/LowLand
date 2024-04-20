@@ -8,7 +8,7 @@ import { alpha } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-
+import { useRouter } from "../../../routes/hooks";
 import { account } from "../../../_mock/account";
 
 // ----------------------------------------------------------------------
@@ -33,12 +33,15 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
 
+  const router = useRouter();
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = () => {
     setOpen(null);
+    localStorage.removeItem("accessToken");
+    router.push("/login")
   };
 
   return (
