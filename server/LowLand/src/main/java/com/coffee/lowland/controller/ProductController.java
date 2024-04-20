@@ -100,8 +100,8 @@ public class ProductController {
     //gộp : khi chưa có sp đó thì tạo mới, khi tồn tại thì update
     ResponseEntity<ResponseObject> CreateOrUpdateProduct(@RequestBody Product newProduct)
     {
-        Product foundProduct = productRepository.TimKiem(newProduct.getId(),newProduct.getProductCode());
-        if(foundProduct.getId() > 0)
+        List<Product> foundProduct = productRepository.findProductsByProductCode(newProduct.getProductCode());
+        if(foundProduct.get(0).getId() > 0)
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("false", "Product code already taken", null)
             );
