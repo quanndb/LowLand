@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-import { RouterLink } from "../../routes/components";
+import { RouterLink } from "src/routes/components";
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ export default function NotFoundView() {
           />
 
           <Button
-            href="/login"
+            href="/"
             size="large"
             variant="contained"
             component={RouterLink}

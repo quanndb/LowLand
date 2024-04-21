@@ -32,7 +32,7 @@ const navConfig = [
   },
   {
     title: "login",
-    path: "/admin/login",
+    path: "/login",
     icon: icon("ic_lock"),
   },
   // {

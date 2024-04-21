@@ -14,7 +14,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import "./Home.css";
-import { useRouter } from "../../routes/hooks";
+import { useRouter } from "src/routes/hooks";
 // import Router from "routes/sections";
 export default function Home() {
   const imageUrls = [
@@ -43,6 +43,8 @@ export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const accessToken = localStorage.accessToken;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -152,13 +154,17 @@ export default function Home() {
                 </div>
 
                 <div className="name-user">
-                  {jwtDecode(localStorage.getItem("accessToken") + "").sub}
+                  {accessToken ? jwtDecode(accessToken).fullName : ""}
                 </div>
 
-                <div className="log-out" onClick={handleLogOut}>
-                  Đăng xuất
-                  {/* <ConFirmDiaLog /> */}
-                </div>
+                {accessToken ? (
+                  <div className="log-out" onClick={handleLogOut}>
+                    Đăng xuất
+                    {/* <ConFirmDiaLog /> */}
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
 
               <div className="nav__menu">

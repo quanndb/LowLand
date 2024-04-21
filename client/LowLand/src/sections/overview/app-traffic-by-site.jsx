@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import CardHeader from "@mui/material/CardHeader";
 
-import { fShortenNumber } from "../../utils/format-number";
+import { fShortenNumber } from "src/utils/format-number";
 
 // ----------------------------------------------------------------------
 

@@ -12,11 +12,12 @@ import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
-import Iconify from "../../components/iconify";
-import Logo from "../../components/logo";
-import { useRouter } from "../../routes/hooks";
-import { bgGradient } from "../../theme/css";
+import { useEffect, useState } from "react";
+import Iconify from "src/components/iconify";
+import Logo from "src/components/logo";
+import { useRouter } from "src/routes/hooks";
+import { bgGradient } from "src/theme/css";
+import { useNavigate, Navigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,8 @@ export default function LoginView() {
   const theme = useTheme();
 
   const router = useRouter();
+
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [userName, setUserName] = useState("");
@@ -37,7 +40,6 @@ export default function LoginView() {
         password: passWord,
       })
       .then(function (response) {
-        console.log(response.data.token);
         localStorage.setItem("accessToken", response.data.token);
 
         if (jwtDecode(response.data.token).role != "ADMIN") {
@@ -50,6 +52,12 @@ export default function LoginView() {
         console.log(error);
       });
   };
+
+  if (localStorage.accessToken) {
+    useEffect(() => {
+      navigate("/admin/dashboard");
+    }, []);
+  }
 
   const renderForm = (
     <>

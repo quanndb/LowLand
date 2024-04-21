@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
-import Iconify from "../../components/iconify";
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
