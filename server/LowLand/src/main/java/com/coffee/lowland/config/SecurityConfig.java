@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v1/login/**").permitAll()
-                        .requestMatchers("/v1/**").hasAuthority("ADMIN")
+                        .requestMatchers("/v1/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 ).userDetailsService(accountDetails)
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

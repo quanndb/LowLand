@@ -3,15 +3,15 @@ import { Outlet, Navigate, useRoutes } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
 
-export const IndexPage = lazy(() => import("../pages/app"));
-export const BlogPage = lazy(() => import("../pages/blog"));
-export const UserPage = lazy(() => import("../pages/user"));
-export const LoginPage = lazy(() => import("../pages/login"));
-export const ProductsPage = lazy(() => import("../pages/products"));
-export const Page404 = lazy(() => import("../pages/page-not-found"));
-export const Home = lazy(() => import("../pages/Home/Home"));
-export const News = lazy(() => import("../pages/News/News"));
-export const Products = lazy(() => import("../pages/Products/Products"));
+export const IndexPage = lazy(() => import("src/pages/app"));
+export const BlogPage = lazy(() => import("src/pages/blog"));
+export const UserPage = lazy(() => import("src/pages/user"));
+export const LoginPage = lazy(() => import("src/pages/login"));
+export const ProductsPage = lazy(() => import("src/pages/products"));
+export const Page404 = lazy(() => import("src/pages/page-not-found"));
+export const Home = lazy(() => import("src/pages/Home/Home"));
+export const News = lazy(() => import("src/pages/News/News"));
+export const Products = lazy(() => import("src/pages/Products/Products"));
 
 // ----------------------------------------------------------------------
 
