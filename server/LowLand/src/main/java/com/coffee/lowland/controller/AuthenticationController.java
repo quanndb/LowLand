@@ -6,7 +6,7 @@ import com.coffee.lowland.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/v1")
+@RequestMapping("/v1/admin")
 @CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 public class AuthenticationController {
