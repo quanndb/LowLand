@@ -23,17 +23,17 @@ public class BlogController {
     private BlogRepository blogRepository;
 
     @GetMapping("/")
-    public ResponseEntity<ResponseObject> getBlogs(@RequestParam int page, @RequestParam int size){
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok","ok",blogService.getBlogs(page,size).get()));
+    public ResponseEntity<Object> getBlogs(@RequestParam int page, @RequestParam int size){
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogs(page,size).get());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getBlog(@PathVariable int id){
+    public ResponseEntity<Object> getBlog(@PathVariable int id){
         List<Blog> exitstBlog = blogService.getBlog(id);
         if(exitstBlog.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Fail","Not found blog", null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
         }
-        else return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Success","Blog has been saved", exitstBlog.get(0)));
+        else return ResponseEntity.status(HttpStatus.OK).body(exitstBlog.get(0));
     }
 
     @PostMapping("/")
@@ -42,7 +42,7 @@ public class BlogController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateBlog(@PathVariable int id, @RequestBody Blog newBlog){
+    public ResponseEntity<Object> updateBlog(@PathVariable int id, @RequestBody Blog newBlog){
         List<Blog> existBlog = blogRepository.findBlogById(id);
         if(existBlog.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found the blog");
@@ -51,8 +51,8 @@ public class BlogController {
             existBlog.get(0).setTitle(newBlog.getTitle());
             existBlog.get(0).setContent(newBlog.getContent());
             existBlog.get(0).setDate((new Date()).toString());
-            blogRepository.save(existBlog.get(0));
-            return ResponseEntity.status(HttpStatus.OK).body("Update blog successfully");
+            Blog updatedBlog = blogRepository.save(existBlog.get(0));
+            return ResponseEntity.status(HttpStatus.OK).body(updatedBlog);
         }
     }
 

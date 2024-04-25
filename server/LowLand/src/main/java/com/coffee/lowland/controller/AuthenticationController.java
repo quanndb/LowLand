@@ -18,12 +18,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Account request){
+    public ResponseEntity<Object> register(@RequestBody Account request){
         return ResponseEntity.ok(authenticationService.register(request));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody Account request){
-        return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

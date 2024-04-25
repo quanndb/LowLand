@@ -1,6 +1,5 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.model.Image;
 import com.coffee.lowland.model.Product;
 import com.coffee.lowland.model.ResponseObject;
 import com.coffee.lowland.repository.ImageRepository;
@@ -22,24 +21,19 @@ public class ProductController {
     private ImageRepository imageRepository;
 
     @GetMapping("/getAllProducts")
-    public ResponseEntity<ResponseObject> getAllProducts() {
+    public ResponseEntity<Object> getAllProducts() {
         Iterable<Product> products = productRepository.findAll();
-        ResponseObject responseObject = new ResponseObject("ok", "Retrieved all products successfully", products);
-        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<ResponseObject> findById(@PathVariable Integer id) {
+    ResponseEntity<Object> findById(@PathVariable Integer id) {
         Optional<Product> foundProduct = productRepository.findById(id);
         if(foundProduct.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "query product successfully", foundProduct)
-            );
+            return ResponseEntity.status(HttpStatus.OK).body(foundProduct);
         }
         else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("flase","Cannot find product with id=" +id, "" )
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=" +id);
         }
     }
 
@@ -60,23 +54,19 @@ public class ProductController {
 
 
     @PostMapping("/addProduct")
-    public ResponseEntity<ResponseObject> addProduct(@RequestBody Product newProduct) {
+    public ResponseEntity<Object> addProduct(@RequestBody Product newProduct) {
         List<Product> foundProduct = productRepository.findProductsByProductCode(newProduct.getProductCode());
         if(foundProduct.size() > 0)
         {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ResponseObject("false", "Product code already taken", "")
-            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Product code already taken");
         }
         else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    new ResponseObject("ok", "Product inserted successfully", productRepository.save(newProduct))
-            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(newProduct));
         }
     }
 
     @PutMapping("/updateProduct/{id}")
-    public ResponseEntity<ResponseObject> updateProduct(@PathVariable Integer id, @RequestBody Product productDetails) {
+    public ResponseEntity<Object> updateProduct(@PathVariable Integer id, @RequestBody Product productDetails) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -86,25 +76,19 @@ public class ProductController {
             product.setActive(productDetails.isActive());
             product.setDescription(productDetails.getDescription());
             Product updatedProduct = productRepository.save(product);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Product updated successfully", updatedProduct)
-            );
+            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false","Cannot find product with id=" + id, "")
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=" + id);
         }
     }
 //nên gộp như thế này
     @PutMapping("/{id}")
     //gộp : khi chưa có sp đó thì tạo mới, khi tồn tại thì update
-    ResponseEntity<ResponseObject> CreateOrUpdateProduct(@RequestBody Product newProduct)
+    ResponseEntity<Object> CreateOrUpdateProduct(@RequestBody Product newProduct)
     {
         List<Product> foundProduct = productRepository.findProductsByProductCode(newProduct.getProductCode());
         if(foundProduct.get(0).getId() > 0)
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("false", "Product code already taken", null)
-            );
+            return ResponseEntity.status(HttpStatus.OK).body("Product code already taken");
         Product updateProduct =  productRepository.findById(newProduct.getId()).map(
                 product -> {
                     product.setProductCode(newProduct.getProductCode());
@@ -116,39 +100,29 @@ public class ProductController {
                 }).orElseGet(() -> {
                     return productRepository.save(newProduct);
         });
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "Updated Product Sucessfully", updateProduct)
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
     }
     @DeleteMapping("/deleteProduct/{id}")
-    public ResponseEntity<ResponseObject> deleteProduct(@PathVariable Integer id) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable Integer id) {
         boolean exists = productRepository.existsById(id);
         if (exists) {
             productRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    new ResponseObject("ok", "Product deleted successfully", "")
-            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Product deleted successfully");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false","Cannot find product with id=" + id, "")
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=" + id);
         }
     }
 
     @PutMapping("/setIsActive/{id}")
-    public ResponseEntity<ResponseObject> setIsActiveById(@PathVariable Integer id) {
+    public ResponseEntity<Object> setIsActiveById(@PathVariable Integer id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
             product.setActive(!product.isActive());
             Product updatedProduct = productRepository.save(product);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Updated product's isActive successfully", updatedProduct)
-            );
+            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false","Cannot find product with id=" + id, "")
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=" + id);
         }
     }
 

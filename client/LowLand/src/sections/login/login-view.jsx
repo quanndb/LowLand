@@ -18,6 +18,7 @@ import Logo from "src/components/logo";
 import { useRouter } from "src/routes/hooks";
 import { bgGradient } from "src/theme/css";
 import { useNavigate, Navigate } from "react-router-dom";
+import authAPI from "src/services/API/authAPI";
 
 // ----------------------------------------------------------------------
 
@@ -34,15 +35,16 @@ export default function LoginView() {
   const [passWord, setPassWord] = useState("");
 
   const handleClick = () => {
-    axios
-      .post("http://localhost:2818/api/v1/login", {
+    authAPI
+      .login({
         username: userName,
         password: passWord,
       })
       .then(function (response) {
-        localStorage.setItem("accessToken", response.data.token);
+        console.log(response);
+        localStorage.setItem("accessToken", response.accessToken);
 
-        if (jwtDecode(response.data.token).role != "ADMIN") {
+        if (jwtDecode(response.accessToken).role != "ADMIN") {
           router.push("/");
         } else {
           router.push("/admin/dashboard");
