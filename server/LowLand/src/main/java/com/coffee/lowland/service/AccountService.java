@@ -19,4 +19,8 @@ public class AccountService {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
+
+    public boolean accountExitst(String username){
+        return !accountRepository.findAccountByUsername(username).isEmpty();
+    }
 }
