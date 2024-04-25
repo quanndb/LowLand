@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -14,7 +15,7 @@ public class CustomerGreetingController {
 
     private static final String greetingTemplate = "Hello, %s %s";
 
-    private final AtomicLong counter = new AtomicLong();
+    private final AtomicInteger counter = new AtomicInteger();
 
     @GetMapping("/greeting")
     public Greeting greeting (@RequestParam(value = "gender",defaultValue = "0") boolean gender,
