@@ -10,10 +10,10 @@ import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 
-import { users } from "../../../_mock/user";
+import { users } from "src/_mock/user";
 
-import Iconify from "../../../components/iconify";
-import Scrollbar from "../../../components/scrollbar";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
 
 import TableNoData from "../table-no-data";
 import UserTableRow from "../user-table-row";

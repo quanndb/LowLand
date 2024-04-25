@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class Greeting {
 
-    private long id;
+    private Integer id;
 
     private String content;
 }

@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import { styled, useTheme } from "@mui/material/styles";
 
-import Chart, { useChart } from "../../components/chart";
+import Chart, { useChart } from "src/components/chart";
 
 // ----------------------------------------------------------------------
 

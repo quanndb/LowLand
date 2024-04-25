@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-import { NotFoundView } from "../sections/error";
+import { NotFoundView } from "src/sections/error";
 
 // ----------------------------------------------------------------------
 

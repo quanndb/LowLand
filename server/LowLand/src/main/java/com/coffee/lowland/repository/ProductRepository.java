@@ -1,14 +1,13 @@
 package com.coffee.lowland.repository;
 
 import com.coffee.lowland.model.Product;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends CrudRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 //    Product updateProductById(int id,Product newProduct);
     List<Product> findProductsByProductCode(String codeProduct);
     List <Product> findProductsByProductCodeAndId(String productCode , int id);

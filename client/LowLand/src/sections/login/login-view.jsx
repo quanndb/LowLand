@@ -1,24 +1,23 @@
-import { useState } from "react";
-
+import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { alpha, useTheme } from "@mui/material/styles";
-import InputAdornment from "@mui/material/InputAdornment";
-
-import { useRouter } from "../../routes/hooks";
-
-import { bgGradient } from "../../theme/css";
-
-import Logo from "../../components/logo";
-import Iconify from "../../components/iconify";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import Iconify from "src/components/iconify";
+import Logo from "src/components/logo";
+import { useRouter } from "src/routes/hooks";
+import { bgGradient } from "src/theme/css";
+import { useNavigate, Navigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -27,21 +26,55 @@ export default function LoginView() {
 
   const router = useRouter();
 
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  const [passWord, setPassWord] = useState("");
 
   const handleClick = () => {
-    router.push("/dashboard");
+    axios
+      .post("http://localhost:2818/api/v1/login", {
+        username: userName,
+        password: passWord,
+      })
+      .then(function (response) {
+        localStorage.setItem("accessToken", response.data.token);
+
+        if (jwtDecode(response.data.token).role != "ADMIN") {
+          router.push("/");
+        } else {
+          router.push("/admin/dashboard");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
+  if (localStorage.accessToken) {
+    useEffect(() => {
+      navigate("/admin/dashboard");
+    }, []);
+  }
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+          name="email"
+          label="User Name"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? "text" : "password"}
+          value={passWord}
+          onChange={(e) => setPassWord(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

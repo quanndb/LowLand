@@ -3,23 +3,33 @@ package com.coffee.lowland.controller;
 import com.coffee.lowland.model.Image;
 import com.coffee.lowland.model.Product;
 import com.coffee.lowland.model.ResponseObject;
+import com.coffee.lowland.model.UploadImage;
 import com.coffee.lowland.repository.ImageRepository;
 import com.coffee.lowland.repository.ProductRepository;
+import com.coffee.lowland.service.CloudinaryService;
+import com.coffee.lowland.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping ("/v1/images")
+@RequestMapping ("/v1/admin/images")
 public class ImageController {
     @Autowired
-    private ImageRepository imageRepository;
+    private ImageService imageService;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping("/getAllImageOfProductById/{id}")
     public ResponseEntity<ResponseObject> getProductImages(@PathVariable Integer id) {
@@ -27,7 +37,7 @@ public class ImageController {
         if (optionalProduct.isPresent()) {
 //            Product product = optionalProduct.get();
             // Lấy tất cả các ảnh có type là product và có productID khớp với id của sản phẩm
-            List<Image> productImages = imageRepository.findByTypeAndProductID("product", id);
+            List<Image> productImages = imageService.findByTypeAndProductID("product", id);
 
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Retrieved all images of the product successfully", productImages)
@@ -45,7 +55,7 @@ public class ImageController {
 //            Product product = optionalProduct.get();
             newImage.setType("product");
             newImage.setProductID(id);
-            Image savedImage = imageRepository.save(newImage);
+            Image savedImage = imageService.save(newImage);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     new ResponseObject("ok", "Image added to product successfully", savedImage)
@@ -57,9 +67,27 @@ public class ImageController {
         }
     }
 
+    @PostMapping("/upload")
+    @ResponseBody
+    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile multipartFile,@RequestParam String type, @RequestParam Integer productID, @RequestParam Integer blogID) throws IOException {
+        if (ImageIO.read(multipartFile.getInputStream()) == null) {
+            return new ResponseEntity<>("Image non valid!", HttpStatus.BAD_REQUEST);
+        }
+        Map result = cloudinaryService.upload(multipartFile);
+        Image image = new Image(
+                (String) result.get("original_filename"),
+                (String) result.get("url"),
+                (String) result.get("public_id"),
+                type,
+                productID==0?null:productID,blogID==0?null:blogID
+                );
+        imageService.save(image);
+        return new ResponseEntity<>("image saved ! ", HttpStatus.OK);
+    }
+
     @PutMapping("/updateImage/{id}")
     public ResponseEntity<ResponseObject> updateImage(@PathVariable Integer id, @RequestBody Image updatedImageInfo) {
-        Optional<Image> optionalImage = imageRepository.findById(id);
+        Optional<Image> optionalImage = imageService.findById(id);
         if (optionalImage.isPresent()) {
             try {
                 Image img = optionalImage.get();
@@ -70,15 +98,15 @@ public class ImageController {
                 if (updatedImageInfo.getType() != null) {
                     img.setType(updatedImageInfo.getType());
                 }
-                if (updatedImageInfo.getImage() != null) {
+                if (updatedImageInfo.getImageURL() != null) {
 //                    String newUrl = updatedImageInfo.getImage().replace("\"", "");
 //                    img.setImage(newUrl);
-                    img.setImage(updatedImageInfo.getImage());
+                    img.setImageURL(updatedImageInfo.getImageURL());
                 }
 //                if (updatedImageInfo.getBlogID() != null) {
 //                    img.setBlogID(updatedImageInfo.getBlogID());
 //                }
-                Image updatedImage = imageRepository.save(img);
+                Image updatedImage = imageService.save(img);
                 return ResponseEntity.status(HttpStatus.CREATED).body(
                         new ResponseObject("ok", "Updated image successfully", updatedImage)
                 );
@@ -96,10 +124,11 @@ public class ImageController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseObject> deleteImageById (@PathVariable int id)
     {
-        Optional<Image> optionalImage = imageRepository.findById(id);
+        Optional<Image> optionalImage = imageService.findById(id);
         if (optionalImage.isPresent()) {
             try {
-                imageRepository.deleteById(id);
+                cloudinaryService.delete(optionalImage.get().getImageID());
+                imageService.delete(id);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("ok", "Deleted image successfully", "")
                 );

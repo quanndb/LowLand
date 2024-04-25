@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
-import DashboardLayout from "../layouts/dashboard";
+import DashboardLayout from "src/layouts/dashboard";
 import { Suspense } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = () => {
-  if (!localStorage.getItem("accessToken")) {
-    localStorage.setItem("accessToken", "quandeptrai");
-    // return <Navigate to={"/admin/login"} />;
+  const accessToken = localStorage.getItem("accessToken");
+  if (!accessToken || jwtDecode(accessToken).role != "ADMIN") {
+    return <Navigate to={"/404"} />;
   }
   return (
     <DashboardLayout>
