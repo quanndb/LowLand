@@ -3,8 +3,7 @@ package com.coffee.lowland.controller;
 
 import com.coffee.lowland.model.Account;
 import com.coffee.lowland.model.AuthenticationResponse;
-import com.coffee.lowland.model.Permission;
-import com.coffee.lowland.model.ResponseObject;
+import com.coffee.lowland.model.Role;
 import com.coffee.lowland.service.AccountService;
 import com.coffee.lowland.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class AuthController {
     public ResponseEntity<String> registerCustomer(@RequestBody Account account) {
 
         ResponseEntity<String> response = null;
-        account.setPermission(Permission.USER);
+        account.setRole(Role.USER);
         if(accountService.accountExitst(account.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
         try {
             Account newAccount = accountService.createAccount(account);

@@ -27,11 +27,11 @@ public class Account implements UserDetails {
     private String fullName;
 
     @Enumerated(value = EnumType.STRING)
-    Permission permission;
+    Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(permission.name()));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
