@@ -15,6 +15,7 @@ import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import { useResponsive } from "src/hooks/use-responsive";
 import { Padding } from "@mui/icons-material";
 import { Box } from "@mui/material";
+import LowLandLogo from "src/components/navigation/logo";
 
 const HeaderTab = ({ isMobile, showNav }) => {
   const [value, setValue] = useState(0);
@@ -81,23 +82,11 @@ const Header = () => {
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "start",
+          alignItems: "center",
           padding: "10px 0px",
         }}
       >
-        <Button
-          sx={{
-            height: "60px",
-            width: "60px",
-            borderRadius: "50%",
-            backgroundImage: "url(static/images/logo.jpg)",
-            backgroundSize: "contain",
-            margin: "0px 5px",
-            boxShadow:
-              "rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;",
-          }}
-          href="/"
-        />
+        <LowLandLogo />
         <HeaderTab isMobile={isMobile} showNav={showNav} />
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button

@@ -2,7 +2,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 
 const HomeBanner = () => {
   return (
-    <Container disableGutters>
+    <Container disableGutters sx={{ marginBottom: "100px" }}>
       <Container
         sx={{
           backgroundImage: `linear-gradient(180deg, rgba(5, 8, 39, 0.4), rgba(5, 8, 39, 0.4)), url("https://assets.website-files.com/5be96251aaba7a7b19ecdf69/5be96251aaba7a58aaecdfba_Header-Pic.jpg")`,
@@ -38,7 +38,7 @@ const HomeBanner = () => {
           </Typography>
           <Typography
             noWrap={false}
-            sx={{ textAlign: "center", marginBottom: "20px" }}
+            sx={{ textAlign: "center", marginBottom: "20px", opacity: "0.8" }}
           >
             Step into a world where each sip of coffee is a delightful journey,
             where flavors dance on your palate and every cup holds the promise
@@ -47,7 +47,8 @@ const HomeBanner = () => {
           <Button
             sx={{
               backgroundColor: "#fff",
-              padding: "10px",
+              padding: "15px 20px",
+              fontWeight: "700",
               "&:hover": {
                 backgroundColor: "#ccc",
               },

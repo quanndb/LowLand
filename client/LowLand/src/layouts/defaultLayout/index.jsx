@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import Header from "./header";
 import Footer from "./footer";
 
-const DefaultLayout = ({ children }) => {
+const DefaultLayout = ({ children, notShowHeader }) => {
   return (
     <Container
       maxWidth="100%"
@@ -14,7 +14,7 @@ const DefaultLayout = ({ children }) => {
         justifyContent: "space-between",
       }}
     >
-      <Header />
+      {notShowHeader ? <></> : <Header></Header>}
       {children}
       <Footer />
     </Container>

@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+
 import NotFoundView from "src/sections/not-found/not-found";
 
 const NotFound = () => {
