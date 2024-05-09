@@ -26,18 +26,14 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public String register(Account request){
+    public Account register(Account request){
         Account newUser = new Account();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setFullName(request.getFullName());
-        newUser.setPermission(request.getPermission());
+        newUser.setRole(request.getRole());
         newUser = accountRepository.save(newUser);
-
-        String res = "fail";
-        if(newUser.getId()>0)  res= "ok";
-
-        return (res);
+        return (newUser);
     }
 
     public AuthenticationResponse authenticate(Account request){

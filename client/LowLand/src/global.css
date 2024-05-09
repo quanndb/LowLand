@@ -1,2 +1,17 @@
 /* scrollbar */
-@import 'simplebar-react/dist/simplebar.min.css';
+@import "simplebar-react/dist/simplebar.min.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #1d1f2e;
+  --secondary-color: #a25f4b;
+  --background-color: #f6f6f6;
+}
+.css-lfwcke-MuiTabs-flexContainer {
+  align-items: center;
+}

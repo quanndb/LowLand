@@ -32,24 +32,20 @@ public class ImageController {
     private CloudinaryService cloudinaryService;
 
     @GetMapping("/getAllImageOfProductById/{id}")
-    public ResponseEntity<ResponseObject> getProductImages(@PathVariable Integer id) {
+    public ResponseEntity<Object> getProductImages(@PathVariable Integer id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
 //            Product product = optionalProduct.get();
             // Lấy tất cả các ảnh có type là product và có productID khớp với id của sản phẩm
             List<Image> productImages = imageService.findByTypeAndProductID("product", id);
 
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Retrieved all images of the product successfully", productImages)
-            );
+            return ResponseEntity.status(HttpStatus.OK).body(productImages);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false", "Cannot find product with id=" + id, "")
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=" + id);
         }
     }
     @PostMapping("/addProductImage/{id}")
-    public ResponseEntity<ResponseObject> addImageToProduct(@PathVariable Integer id, @RequestBody Image newImage) {
+    public ResponseEntity<Object> addImageToProduct(@PathVariable Integer id, @RequestBody Image newImage) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
 //            Product product = optionalProduct.get();
@@ -57,19 +53,15 @@ public class ImageController {
             newImage.setProductID(id);
             Image savedImage = imageService.save(newImage);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    new ResponseObject("ok", "Image added to product successfully", savedImage)
-            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedImage);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false", "Cannot find product with id=" + id, "")
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=");
         }
     }
 
     @PostMapping("/upload")
     @ResponseBody
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile multipartFile,@RequestParam String type, @RequestParam Integer productID, @RequestParam Integer blogID) throws IOException {
+    public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile multipartFile,@RequestParam String type, @RequestParam Integer productID, @RequestParam Integer blogID) throws IOException {
         if (ImageIO.read(multipartFile.getInputStream()) == null) {
             return new ResponseEntity<>("Image non valid!", HttpStatus.BAD_REQUEST);
         }
@@ -86,7 +78,7 @@ public class ImageController {
     }
 
     @PutMapping("/updateImage/{id}")
-    public ResponseEntity<ResponseObject> updateImage(@PathVariable Integer id, @RequestBody Image updatedImageInfo) {
+    public ResponseEntity<Object> updateImage(@PathVariable Integer id, @RequestBody Image updatedImageInfo) {
         Optional<Image> optionalImage = imageService.findById(id);
         if (optionalImage.isPresent()) {
             try {
@@ -108,21 +100,21 @@ public class ImageController {
 //                }
                 Image updatedImage = imageService.save(img);
                 return ResponseEntity.status(HttpStatus.CREATED).body(
-                        new ResponseObject("ok", "Updated image successfully", updatedImage)
+                        updatedImage
                 );
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        new ResponseObject("false", "Failed to update image", e.getMessage())
+                        "Failed to update image"
                 );
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false", "Cannot find image with id=" + id, "")
+                   "Cannot find image with id=" + id
             );
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseObject> deleteImageById (@PathVariable int id)
+    public ResponseEntity<Object> deleteImageById (@PathVariable int id)
     {
         Optional<Image> optionalImage = imageService.findById(id);
         if (optionalImage.isPresent()) {
@@ -130,16 +122,16 @@ public class ImageController {
                 cloudinaryService.delete(optionalImage.get().getImageID());
                 imageService.delete(id);
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Deleted image successfully", "")
+                         "Deleted image successfully"
                 );
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        new ResponseObject("false", "Failed to delete image", e.getMessage())
+                       "Failed to delete image"
                 );
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("false", "Cannot find image with id=" + id, "")
+                    "Cannot find image with id=" + id
             );
         }
     }

@@ -1,14 +1,17 @@
 package com.coffee.lowland.model;
 
+import lombok.Builder;
+
+@Builder
 public class AuthenticationResponse {
 
-    private String token;
+    private final String accessToken;
 
-    public AuthenticationResponse(String token) {
-        this.token = token;
+    public AuthenticationResponse(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 }
