@@ -44,6 +44,7 @@ const SubcribeForm = () => {
           label="youremail@lowlandcoffee.com"
           variant="outlined"
           color="info"
+          sx={{ zIndex: 0 }}
         />
         <Button
           color="secondary"

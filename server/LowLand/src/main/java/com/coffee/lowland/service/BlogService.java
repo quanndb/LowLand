@@ -18,6 +18,7 @@ public class BlogService {
     public Page<Blog> getBlogs(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         return blogRepository.findAll(pageable);
+
     }
 
     public List<Blog> getBlog(Integer id){

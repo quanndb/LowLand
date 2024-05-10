@@ -11,4 +11,5 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findByTypeAndProductID(String type, Integer productID);
     List<Image> findByOrderById();
+
 }

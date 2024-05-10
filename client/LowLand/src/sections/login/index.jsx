@@ -37,11 +37,12 @@ const LoginView = () => {
     <DefaultLayout notShowHeader={true}>
       <Container
         sx={{
-          margin: "80px 0px",
+          margin: "0px 0px",
           alignSelf: "center",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "100vh",
         }}
       >
         <Grid

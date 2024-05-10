@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Header from "./header";
 import Footer from "./footer";
 
@@ -15,7 +15,7 @@ const DefaultLayout = ({ children, notShowHeader }) => {
       }}
     >
       {notShowHeader ? <></> : <Header></Header>}
-      {children}
+      <Box sx={{ paddingTop: "100px" }}>{children}</Box>
       <Footer />
     </Container>
   );
