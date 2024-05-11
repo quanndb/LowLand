@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 const SectionTitle = ({ children, sx }) => {
   return (
-    <Box sx={{ width: "fit-content", margin: "100px auto" }}>
+    <Box sx={{ maxWidth: "250px", width: "fit-content", margin: "100px auto" }}>
       <Typography
         noWrap={false}
         sx={{
@@ -14,6 +14,7 @@ const SectionTitle = ({ children, sx }) => {
             content: `''`,
             width: "45px",
             height: "3px",
+            top: 0,
             transform: "translateY(11px)",
             marginTop: "-1px",
             backgroundColor: "black",
@@ -23,6 +24,7 @@ const SectionTitle = ({ children, sx }) => {
             left: "102%",
             content: `''`,
             width: "45px",
+            top: 0,
             height: "3px",
             transform: "translateY(11px)",
             marginTop: "-1px",

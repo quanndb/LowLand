@@ -1,13 +1,12 @@
 import { Container } from "@mui/material";
 
-import DefaultLayout from "src/layouts/defaultLayout";
 import HomeBanner from "../banner";
 import HomeStory from "../story";
 import HomeMagazine from "../magazine";
 import HomeBlog from "../blogStory";
 import FeaturedMugs from "../featuredMugs";
-import ShowCase from "../showCase";
 import MoreProducts from "../moreProducts";
+import ShowCase from "src/components/ShowCase";
 
 const HomeView = () => {
   return (
@@ -20,7 +19,8 @@ const HomeView = () => {
       <MoreProducts />
 
       <HomeMagazine />
-      <ShowCase />
+
+      <ShowCase url={"static/images/showCase.jpg"} />
       <HomeBlog />
     </>
   );

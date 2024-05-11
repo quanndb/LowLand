@@ -44,6 +44,10 @@ export default function Router() {
           path: "blogs",
         },
         {
+          element: <BlogsPage />,
+          path: "blogs/:blogID",
+        },
+        {
           element: <ContactPage />,
           path: "contact",
         },

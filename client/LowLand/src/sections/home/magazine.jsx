@@ -11,6 +11,9 @@ import { useResponsive } from "src/hooks/use-responsive";
 
 const HomeMagazine = () => {
   const isMobile = useResponsive("down", 900);
+
+  const isLessMobile = useResponsive("down", 600);
+
   return (
     <Container maxWidth={"md"} sx={{ marginBottom: "100px" }}>
       <SectionTitle>BUY 2 MUGS AND GET A COFFEE MAGAZINE FREE</SectionTitle>
@@ -47,26 +50,39 @@ const HomeMagazine = () => {
             </Button>
           </Box>
         </Grid>
-        <Grid item md={1} sx={{ display: "flex" }}>
+        <Grid
+          item
+          md={1}
+          sx={{
+            display: "flex",
+            flexWrap: `${isLessMobile ? "wrap" : "nowrap"}`,
+            justifyContent: "center",
+          }}
+        >
           <Box
             sx={{
               backgroundImage: "url(static/images/magazine1.jpg)",
               height: "280px",
-              width: "280px",
+              width: `${isLessMobile ? "100%" : "280px"}`,
               backgroundPosition: "center",
               backgroundSize: "cover",
-              marginRight: "20px",
             }}
           />
-          <div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: `${isLessMobile ? "row" : "column"}`,
+              paddingLeft: `${isLessMobile ? "0px" : "20px"}`,
+            }}
+          >
             <Box
               sx={{
                 backgroundImage: "url(static/images/magazine2.jpg)",
                 height: "130px",
                 width: "160px",
-                marginBottom: "20px",
                 backgroundPosition: "center",
                 backgroundSize: "cover",
+                margin: `${isLessMobile ? "20px" : "0px"} 20px 0px 0px`,
               }}
             />
             <Box
@@ -76,9 +92,10 @@ const HomeMagazine = () => {
                 width: "160px",
                 backgroundPosition: "center",
                 backgroundSize: "cover",
+                margin: "20px 0px 0px 0px",
               }}
             />
-          </div>
+          </Box>
         </Grid>
       </Grid>
     </Container>

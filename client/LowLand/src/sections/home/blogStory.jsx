@@ -11,7 +11,7 @@ const HomeBlog = () => {
 
       <Grid
         container
-        spacing={4}
+        spacing={1}
         direction={"row"}
         justifyContent={"center"}
         wrap="wrap"
@@ -19,9 +19,9 @@ const HomeBlog = () => {
           textAlign: `${isMobile ? "center" : "left"}`,
         }}
       >
-        <Grid item md={4}>
+        <Grid item lg={4} md={6} sm={12}>
           <BlogItem
-            url={"/blogs"}
+            url={"/blogs/123"}
             imageURL={"static/images/blog1.jpg"}
             title={
               "Health Check: why do I get a headache when I haven’t had my coffee?"
@@ -32,7 +32,7 @@ const HomeBlog = () => {
             date={"october 9, 2018"}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item lg={4} md={6} sm={12}>
           <BlogItem
             imageURL={"static/images/blog2.jpg"}
             title={
@@ -44,7 +44,7 @@ const HomeBlog = () => {
             date={"october 9, 2018"}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item lg={4} md={6} sm={12}>
           <BlogItem
             imageURL={"static/images/blog3.jpg"}
             title={

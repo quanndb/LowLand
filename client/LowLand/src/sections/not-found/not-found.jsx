@@ -46,7 +46,7 @@ const NotFoundView = () => {
             width: "400px",
             height: "400px",
             borderRadius: "50%",
-            border: "solid 50px var(--primary-color)",
+            border: "solid 20px var(--secondary-color)",
             boxShadow:
               "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;",
           }}
@@ -55,7 +55,7 @@ const NotFoundView = () => {
       <Button
         startIcon={<HomeIcon />}
         sx={{ marginTop: "30px" }}
-        color="secondary"
+        color="primary"
         variant="contained"
         onClick={() => router.push("/")}
       >

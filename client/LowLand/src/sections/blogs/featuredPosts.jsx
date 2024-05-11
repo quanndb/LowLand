@@ -5,10 +5,7 @@ import SectionTitle from "src/components/SectionTitle";
 
 const FeaturedPosts = () => {
   return (
-    <Container
-      maxWidth={"lg"}
-      sx={{ marginBottom: "100px", position: "relative", top: "-300px" }}
-    >
+    <>
       <SectionTitle>Featured Posts</SectionTitle>
       <Grid container spacing={4} justifyContent={"center"}>
         <Grid item md={6}>
@@ -50,7 +47,7 @@ const FeaturedPosts = () => {
         }
         date={"october 9, 2018"}
       />
-    </Container>
+    </>
   );
 };
 

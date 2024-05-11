@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -18,48 +18,25 @@ import { useResponsive } from "src/hooks/use-responsive";
 import LowLandLogo from "src/components/navigation/logo";
 import { pageSelector } from "src/redux/selectors/PageSelector";
 import PagesSlice from "src/redux/slices/PagesSlice";
+import { usePathname } from "src/routes/hooks";
 
-const HeaderTab = ({ isMobile, showNav }) => {
+const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
-  const currentPage = useSelector(pageSelector);
+  let location = usePathname();
 
   const handleChange = (event, newValue) => {
-    let nextPage = "";
-    switch (newValue) {
-      case 0: {
-        nextPage = "/";
-        break;
-      }
-      case 1: {
-        nextPage = "/products";
-        break;
-      }
-      case 2: {
-        nextPage = "/blogs";
-        break;
-      }
-      case 3: {
-        nextPage = "/about";
-        break;
-      }
-      case 4: {
-        nextPage = "/contact";
-        break;
-      }
-      default: {
-      }
-    }
     dispatch(PagesSlice.actions.setPage(newValue));
-    navigate(nextPage);
+    setShowNav(false);
+    navigate(newValue);
   };
 
   return (
     <Tabs
       id="navBar"
-      value={currentPage}
+      value={location.split("/")[1]}
       onChange={handleChange}
       variant="scrollable"
       scrollButtons="auto"
@@ -80,11 +57,46 @@ const HeaderTab = ({ isMobile, showNav }) => {
       }}
       orientation={isMobile ? "vertical" : "horizontal"}
     >
-      <Tab label="HOME" sx={{ fontWeight: "bold" }} />
-      <Tab label="OUR PRODUCTS" sx={{ fontWeight: "bold" }} />
-      <Tab label="BLOG" sx={{ fontWeight: "bold" }} />
-      <Tab label="ABOUT" sx={{ fontWeight: "bold" }} />
-      <Tab label="CONTACT" sx={{ fontWeight: "bold" }} />
+      <Tab
+        label="HOME"
+        value={""}
+        sx={{
+          fontWeight: "bold",
+          width: `${isMobile ? "100%" : "fit-content"}`,
+        }}
+      />
+      <Tab
+        label="OUR PRODUCTS"
+        value={"products"}
+        sx={{
+          fontWeight: "bold",
+          width: `${isMobile ? "100%" : "fit-content"}`,
+        }}
+      />
+      <Tab
+        label="BLOGS"
+        value={"blogs"}
+        sx={{
+          fontWeight: "bold",
+          width: `${isMobile ? "100%" : "fit-content"}`,
+        }}
+      />
+      <Tab
+        label="ABOUT"
+        value={"about"}
+        sx={{
+          fontWeight: "bold",
+          width: `${isMobile ? "100%" : "fit-content"}`,
+        }}
+      />
+      <Tab
+        label="CONTACT"
+        value={"contact"}
+        sx={{
+          fontWeight: "bold",
+          width: `${isMobile ? "100%" : "fit-content"}`,
+        }}
+      />
     </Tabs>
   );
 };
@@ -120,7 +132,11 @@ const Header = () => {
         }}
       >
         <LowLandLogo />
-        <HeaderTab isMobile={isMobile} showNav={showNav} />
+        <HeaderTab
+          isMobile={isMobile}
+          showNav={showNav}
+          setShowNav={setShowNav}
+        />
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button
             sx={{
