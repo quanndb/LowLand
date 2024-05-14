@@ -16,8 +16,6 @@ import CartDrawer from "./common/CartDrawer";
 import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import { useResponsive } from "src/hooks/use-responsive";
 import LowLandLogo from "src/components/navigation/logo";
-import { pageSelector } from "src/redux/selectors/PageSelector";
-import PagesSlice from "src/redux/slices/PagesSlice";
 import { usePathname } from "src/routes/hooks";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
@@ -28,7 +26,6 @@ const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   let location = usePathname();
 
   const handleChange = (event, newValue) => {
-    dispatch(PagesSlice.actions.setPage(newValue));
     setShowNav(false);
     navigate(newValue);
   };

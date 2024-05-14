@@ -28,7 +28,10 @@ const DecoComp = ({ title, desciption, children }) => {
       </Container>
       <Container
         maxWidth={"lg"}
-        sx={{ marginBottom: "100px", position: "relative", top: "-400px" }}
+        sx={{
+          marginBottom: "100px",
+          transform: "translateY(-400px)",
+        }}
       >
         {children}
       </Container>

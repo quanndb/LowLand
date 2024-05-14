@@ -1,4 +1,3 @@
-import { Password } from "@mui/icons-material";
 import axios from "src/services";
 
 const authAPI = {

@@ -9,9 +9,11 @@ const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
       container
       sx={{
         justifyContent: "center",
+        alignItems: "center",
         textDecoration: "none",
         color: "var(--primary-color)",
-        padding: "15px",
+        padding: "15px 10px",
+        mb: "20px",
         "&:hover": {
           boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px;",
         },
@@ -27,21 +29,20 @@ const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
     >
       <Grid
         item
-        md={4}
+        md={6}
         sx={{ margin: "10px 0px", padding: "0px 30px", width: "100%" }}
       >
         <Image
           url={imageURL}
           sx={{
-            height: "250px",
+            height: "200px",
             width: "100%",
-            marginBottom: "30px",
           }}
         />
       </Grid>
       <Grid
         item
-        md={5}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
