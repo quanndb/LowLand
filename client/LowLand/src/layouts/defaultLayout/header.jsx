@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
@@ -19,8 +19,6 @@ import LowLandLogo from "src/components/navigation/logo";
 import { usePathname } from "src/routes/hooks";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
-  const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   let location = usePathname();
@@ -45,12 +43,15 @@ const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
         width: "100%",
         height: "fit-content",
         left: "0",
-        top: `${showNav ? "101%" : "-300%"}`,
+        top: `${showNav ? "100%" : "-300%"}`,
         opacity: `${isMobile ? (showNav ? 1 : 0) : 1}`,
         padding: "10px",
         zIndex: 1,
         position: `${isMobile ? "absolute" : "static"}`,
         transition: "all 0.5s ease",
+        boxShadow: `${
+          isMobile ? "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" : "none"
+        }`,
       }}
       orientation={isMobile ? "vertical" : "horizontal"}
     >

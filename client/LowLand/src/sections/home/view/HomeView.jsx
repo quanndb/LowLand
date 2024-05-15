@@ -1,12 +1,9 @@
-import { Container } from "@mui/material";
-
 import HomeBanner from "../banner";
 import HomeStory from "../story";
 import HomeMagazine from "../magazine";
 import HomeBlog from "../blogStory";
-import FeaturedMugs from "../featuredMugs";
-import MoreProducts from "../moreProducts";
 import ShowCase from "src/components/ShowCase";
+import SectionTitle from "src/components/SectionTitle";
 
 const HomeView = () => {
   return (
@@ -14,13 +11,13 @@ const HomeView = () => {
       <HomeBanner />
       <HomeStory />
 
-      <FeaturedMugs />
+      <SectionTitle>FEATURED MUGS</SectionTitle>
 
-      <MoreProducts />
+      <SectionTitle>MORE PRODUCTS</SectionTitle>
 
       <HomeMagazine />
 
-      <ShowCase url={"static/images/showCase.jpg"} />
+      <ShowCase imageURL={"static/images/showCase.jpg"} />
       <HomeBlog />
     </>
   );

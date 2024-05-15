@@ -63,8 +63,7 @@ const ContactFooter = () => {
     <Container
       sx={{
         backgroundColor: "#fff",
-        padding: "20px",
-        marginBottom: "30px",
+        padding: "20px ",
         boxShadow:
           "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;",
       }}
@@ -94,6 +93,7 @@ const ContactFooter = () => {
               width: "200px",
               fontWeight: "600",
               fontStyle: "italic",
+              textAlign: "center",
             }}
           >
             "Delivering the best coffee life since 1996. From coffee geeks to

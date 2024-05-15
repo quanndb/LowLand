@@ -33,7 +33,7 @@ const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
         sx={{ margin: "10px 0px", padding: "0px 30px", width: "100%" }}
       >
         <Image
-          url={imageURL}
+          imageURL={imageURL}
           sx={{
             height: "200px",
             width: "100%",

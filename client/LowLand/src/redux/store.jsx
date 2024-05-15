@@ -3,9 +3,11 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import DrawerManagerSlice from "./slices/DrawerManagerSlice";
+import CartManagerSlice from "./slices/CartManager";
 
 const rootReducer = combineReducers({
   DrawerManager: DrawerManagerSlice.reducer,
+  CartManager: CartManagerSlice.reducer,
 });
 
 const persistedReducer = persistReducer({ key: "root", storage }, rootReducer);

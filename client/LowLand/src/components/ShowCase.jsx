@@ -1,12 +1,12 @@
 import { Container } from "@mui/material";
 
-const ShowCase = ({ url }) => {
+const ShowCase = ({ imageURL }) => {
   return (
     <Container
       maxWidth={"100%"}
       sx={{
         height: "340px",
-        backgroundImage: `${url ? `url("${url}")` : "none"}`,
+        backgroundImage: `${imageURL ? `url("${imageURL}")` : "none"}`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",

@@ -39,6 +39,7 @@ const BlogsView = () => {
   return (
     <Box sx={{ height: "fit-content" }}>
       <DecoComp
+        space={240}
         title={"Read coffee stories on our Blog"}
         desciption={`Step into a world where each sip of coffee is a delightful journey,
           where flavors dance on your palate and every cup holds the promise of

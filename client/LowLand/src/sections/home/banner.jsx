@@ -1,4 +1,5 @@
 import { Box, Button, Container, Typography } from "@mui/material";
+import IntroText from "src/components/IntroText";
 
 const HomeBanner = () => {
   return (
@@ -31,19 +32,12 @@ const HomeBanner = () => {
           >
             BEST PLACE FOR CHILL'IN
           </Typography>
-          <Typography
-            sx={{ fontSize: "40px", fontWeight: "700", marginBottom: "20px" }}
-          >
-            LowLand Coffee
-          </Typography>
-          <Typography
-            noWrap={false}
-            sx={{ textAlign: "center", marginBottom: "20px", opacity: "0.8" }}
-          >
-            Step into a world where each sip of coffee is a delightful journey,
+          <IntroText
+            title={"LowLand Coffee"}
+            desciption={`Step into a world where each sip of coffee is a delightful journey,
             where flavors dance on your palate and every cup holds the promise
-            of a new adventure, only at our coffee haven.
-          </Typography>
+            of a new adventure, only at our coffee haven.`}
+          />
           <Button
             sx={{
               backgroundColor: "#fff",

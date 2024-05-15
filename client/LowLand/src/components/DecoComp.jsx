@@ -1,36 +1,28 @@
 import { Box, Container, Typography } from "@mui/material";
+import IntroText from "./IntroText";
 
-const DecoComp = ({ title, desciption, children }) => {
+const DecoComp = ({ title, desciption, children, sx, space }) => {
   return (
     <>
       <Container
         disableGutters
         sx={{
           textAlign: "center",
-          padding: "100px 0px 300px",
+          padding: "150px 0px",
           backgroundColor: "#f0f0f0",
           borderRadius: "10px",
         }}
       >
         <Box sx={{ width: "60%", margin: "auto" }}>
-          <Typography
-            variant="h1"
-            sx={{ fontSize: "40px", marginBottom: "40px", fontWeight: "600" }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            sx={{ opacity: "0.7", fontSize: "20px", marginBottom: "50px" }}
-          >
-            {desciption}
-          </Typography>
+          <IntroText title={title} desciption={desciption} />
         </Box>
       </Container>
       <Container
         maxWidth={"lg"}
         sx={{
-          marginBottom: "100px",
-          transform: "translateY(-400px)",
+          transform: `translateY(-${space}px)`,
+          mb: `-${space - 100}px`,
+          ...sx,
         }}
       >
         {children}
