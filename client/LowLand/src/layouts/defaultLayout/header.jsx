@@ -46,7 +46,7 @@ const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
         top: `${showNav ? "100%" : "-300%"}`,
         opacity: `${isMobile ? (showNav ? 1 : 0) : 1}`,
         padding: "10px",
-        zIndex: 1,
+        zIndex: 2,
         position: `${isMobile ? "absolute" : "static"}`,
         transition: "all 0.5s ease",
         boxShadow: `${
@@ -116,7 +116,7 @@ const Header = () => {
       sx={{
         position: "fixed",
         backgroundColor: "#fff",
-        zIndex: 1,
+        zIndex: 2,
         boxShadow:
           "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px",
       }}
