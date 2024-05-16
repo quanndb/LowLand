@@ -1,5 +1,6 @@
 /* scrollbar */
 @import "simplebar-react/dist/simplebar.min.css";
+@import "react-toastify/dist/ReactToastify.css";
 
 * {
   margin: 0;
@@ -11,7 +12,7 @@
   --primary-color: #1d1f2e;
   --secondary-color: #a25f4b;
 
-  --background-color: #f6f6f6;
+  --background-color: #f6f6f65a;
 }
 .css-lfwcke-MuiTabs-flexContainer {
   align-items: center;

@@ -3,7 +3,8 @@ import { Outlet, Navigate, useRoutes } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
 import DefaultLayout from "src/layouts/defaultLayout";
-import { element } from "prop-types";
+import Loading from "src/components/Loading";
+import { ToastContainer } from "react-toastify";
 
 export const HomePage = lazy(() => import("src/pages/home"));
 export const BlogsPage = lazy(() => import("src/pages/blogs"));
@@ -20,8 +21,9 @@ export default function Router() {
     {
       element: (
         <DefaultLayout>
-          <Suspense>
+          <Suspense fallback={<Loading />}>
             <Outlet />
+            <ToastContainer autoClose={2000} />
           </Suspense>
         </DefaultLayout>
       ),
@@ -44,7 +46,7 @@ export default function Router() {
           path: "blogs",
         },
         {
-          element: <BlogsPage />,
+          element: <></>,
           path: "blogs/:blogID",
         },
         {

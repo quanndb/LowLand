@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
-const Overlay = ({ hovered }) => {
+const Overlay = ({ hovered, overlayContent }) => {
   return (
     <Box
       sx={{
@@ -29,19 +29,20 @@ const Overlay = ({ hovered }) => {
             transform: "translateX(-50%)",
             position: "absolute",
             transition: "all 0.5s ease",
+            textTransform: "uppercase",
             "&:hover": {
               backgroundColor: "#ddd",
             },
           }}
         >
-          EXPLORE MUGS
+          {overlayContent ? overlayContent : "EXPLORE MUGS"}
         </Button>
       </Box>
     </Box>
   );
 };
 
-const Image = ({ sx, imageURL, unShowOverlay }) => {
+const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -56,7 +57,11 @@ const Image = ({ sx, imageURL, unShowOverlay }) => {
         ...sx,
       }}
     >
-      {unShowOverlay ? <></> : <Overlay hovered={hovered} />}
+      {unShowOverlay ? (
+        <></>
+      ) : (
+        <Overlay hovered={hovered} overlayContent={overlayContent} />
+      )}
     </Box>
   );
 };

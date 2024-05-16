@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
@@ -17,6 +17,7 @@ import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import { useResponsive } from "src/hooks/use-responsive";
 import LowLandLogo from "src/components/navigation/logo";
 import { usePathname } from "src/routes/hooks";
+import { cart } from "src/redux/selectors/CartSelector";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   const navigate = useNavigate();
@@ -106,6 +107,8 @@ const Header = () => {
 
   const dispatch = useDispatch();
 
+  const quantityInCart = useSelector(cart).length;
+
   const handleOpenCartDrawer = () => {
     dispatch(DrawerManagerSlice.actions.setOpenCartDrawer(true));
   };
@@ -145,7 +148,11 @@ const Header = () => {
             onClick={handleOpenCartDrawer}
           >
             Cart
-            <Badge badgeContent={4} color="primary" sx={{ marginLeft: "8px" }}>
+            <Badge
+              badgeContent={quantityInCart}
+              color="primary"
+              sx={{ marginLeft: "8px" }}
+            >
               <ShoppingCartOutlinedIcon />
             </Badge>
           </Button>
@@ -158,7 +165,6 @@ const Header = () => {
             </IconButton>
           )}
         </Box>
-
         <CartDrawer />
       </Container>
     </Container>

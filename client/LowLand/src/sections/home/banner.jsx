@@ -1,7 +1,9 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import IntroText from "src/components/IntroText";
+import { useRouter } from "src/routes/hooks";
 
 const HomeBanner = () => {
+  const router = useRouter();
   return (
     <Container disableGutters sx={{ marginBottom: "100px" }}>
       <Container
@@ -47,6 +49,7 @@ const HomeBanner = () => {
                 backgroundColor: "#ccc",
               },
             }}
+            onClick={() => router.push("/products")}
           >
             EXPLORE OUR PRODUCTS
           </Button>

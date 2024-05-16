@@ -33,7 +33,7 @@ const SubcribeForm = () => {
       </Typography>
       <Box
         sx={{
-          backgroundColor: "var(--background-color)",
+          backgroundColor: "#fff",
           padding: "20px 20px",
           display: "flex",
           borderRadius: "10px",

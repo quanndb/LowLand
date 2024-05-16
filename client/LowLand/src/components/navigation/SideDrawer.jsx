@@ -39,7 +39,12 @@ function SideDrawer({ children, open, drawer }) {
 
   return (
     <>
-      <Drawer anchor={"right"} open={open} onClose={handleCloseDrawer}>
+      <Drawer
+        anchor={"right"}
+        open={open}
+        onClose={handleCloseDrawer}
+        sx={{ display: "flex", flexDirection: "column" }}
+      >
         {DrawerList}
       </Drawer>
     </>

@@ -8,8 +8,11 @@ import {
 } from "@mui/material";
 import SectionTitle from "src/components/SectionTitle";
 import { useResponsive } from "src/hooks/use-responsive";
+import { useRouter } from "src/routes/hooks";
 
 const HomeMagazine = () => {
+  const router = useRouter();
+
   const isMobile = useResponsive("down", 900);
 
   const isLessMobile = useResponsive("down", 600);
@@ -45,7 +48,11 @@ const HomeMagazine = () => {
               your life.
             </Typography>
 
-            <Button variant="contained" sx={{ margin: "10px" }}>
+            <Button
+              variant="contained"
+              sx={{ margin: "10px" }}
+              onClick={() => router.push("/products")}
+            >
               START SHOPPING
             </Button>
           </Box>
