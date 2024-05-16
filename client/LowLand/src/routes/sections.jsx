@@ -60,6 +60,10 @@ export default function Router() {
       element: <LoginPage />,
     },
     {
+      path: "products",
+      element: <ProductsPage />,
+    },
+    {
       path: "404",
       element: <NotFound />,
     },

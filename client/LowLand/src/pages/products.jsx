@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import ProductsView from "src/sections/products";
+import { ProductsView } from "src/sections/products/view";
 
 const ProductsPage = () => {
   return (

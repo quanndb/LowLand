@@ -2,16 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const CartManagerSlice = createSlice({
   name: "CartManager",
-  initialState: [
-    {
-      id: 1,
-      productID: 123,
-      productName: "Bac Xiu",
-      imageURL: "static/images/logo.jpg",
-      quantity: 5,
-      price: 25000,
-    },
-  ],
+  initialState: [],
   reducers: {
     addToCart(state, action) {
       let isExisted = false;

@@ -13,7 +13,7 @@ import { formatPrice } from "src/utils/format-number";
 
 const EmptyCartContent = () => {
   return (
-    <Box sx={{ p: "12px" }}>
+    <Box sx={{ p: "10px" }}>
       <Image
         imageURL={"static/images/empty-cart.jpg"}
         sx={{
@@ -220,7 +220,7 @@ const CartContent = () => {
         textAlign: "center",
         pt: "60px",
         px: "10px",
-        width: "100%",
+        width: "330px",
         height: "100%",
       }}
     >

@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 import { Button } from "@mui/material";
+
 import CartManagerSlice from "src/redux/slices/CartManager";
 
 const ProductsView = () => {
