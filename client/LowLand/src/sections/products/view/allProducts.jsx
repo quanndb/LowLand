@@ -13,31 +13,31 @@ const allProducts = () => {
         }}
       >
         <Grid item>
-          <ProductItem url={"/static/images/product2.jpg"} />
+          <ProductItem imageURL={"/static/images/product2.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product3.jpg"} />
+          <ProductItem imageURL={"/static/images/product3.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
         <Grid item>
-          <ProductItem url={"/static/images/product4.jpg"} />
+          <ProductItem imageURL={"/static/images/product4.jpg"} />
         </Grid>
       </Grid>
     </Box>

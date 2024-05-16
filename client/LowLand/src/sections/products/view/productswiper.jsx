@@ -48,7 +48,7 @@ const Productswiper = () => {
   return (
     <>
       <Swiper
-        style={{ position: "relative", width: "100%", marginBottom:"100px" }}
+        style={{ position: "relative", width: "100%", marginBottom: "100px" }}
         pagination={{
           clickable: true,
         }}
@@ -63,7 +63,7 @@ const Productswiper = () => {
           >
             <Grid item md={1} width={"100%"} height={"300px"}>
               <Image
-                url={"/static/images/ourproduct1.jpg"}
+                imageURL={"/static/images/ourproduct1.jpg"}
                 sx={{ width: "100%", height: "310px" }}
               />
             </Grid>
@@ -111,7 +111,7 @@ const Productswiper = () => {
           >
             <Grid item md={1} width={"100%"} height={"300px"}>
               <Image
-                url={"/static/images/ourproduct2.jpg"}
+                imageURL={"/static/images/ourproduct2.jpg"}
                 sx={{ width: "100%", height: "310px" }}
               />
             </Grid>
