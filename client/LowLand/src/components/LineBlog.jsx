@@ -1,9 +1,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Image from "./Image";
 import { useNavigate } from "react-router-dom";
+import { useRouter } from "src/routes/hooks";
 
 const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   return (
     <Grid
       container
@@ -24,7 +25,7 @@ const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
       href={url ? "/" : url}
       onClick={(e) => {
         e.preventDefault();
-        navigate(url);
+        router.push(url);
       }}
     >
       <Grid

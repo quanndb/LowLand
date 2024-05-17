@@ -7,7 +7,8 @@ const CartManagerSlice = createSlice({
     addToCart(state, action) {
       let isExisted = false;
       state.forEach((item) => {
-        if (item.id === action.payload.id) {
+        if (item.productID === action.payload.productID) {
+          console.log(item.productID, action.payload.productID);
           item.quantity += Number(action.payload.quantity);
           isExisted = true;
           return;
@@ -17,14 +18,14 @@ const CartManagerSlice = createSlice({
     },
     setQuantity(state, action) {
       state.forEach((item) => {
-        if (item.id === action.payload.id) {
+        if (item.productID === action.payload.productID) {
           item.quantity = action.payload.quantity;
           return;
         }
       });
     },
     removeFromCart(state, action) {
-      return state.filter((item) => item.id !== action.payload);
+      return state.filter((item) => item.productID !== action.payload);
     },
   },
 });

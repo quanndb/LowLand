@@ -4,7 +4,6 @@ import { Box, Button, Container } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 
 import { useRouter } from "src/routes/hooks";
-import { repeat } from "lodash";
 
 const NotFoundView = () => {
   const router = useRouter();
@@ -57,7 +56,7 @@ const NotFoundView = () => {
         sx={{ marginTop: "30px" }}
         color="primary"
         variant="contained"
-        onClick={() => router.push("/")}
+        onClick={() => router.replace("/")}
       >
         Go to homepage
       </Button>

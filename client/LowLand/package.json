@@ -23,7 +23,7 @@
     "@iconify/react": "^4.1.1",
     "@mui/icons-material": "^5.14.12",
     "@mui/lab": "^5.0.0-alpha.147",
-    "@mui/material": "^5.15.17",
+    "@mui/material": "^5.15.18",
     "@reduxjs/toolkit": "^2.2.3",
     "apexcharts": "^3.43.0",
     "axios": "^1.6.8",

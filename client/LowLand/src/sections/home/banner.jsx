@@ -49,7 +49,7 @@ const HomeBanner = () => {
                 backgroundColor: "#ccc",
               },
             }}
-            onClick={() => router.push("/products")}
+            onClick={() => router.replace("/products")}
           >
             EXPLORE OUR PRODUCTS
           </Button>

@@ -8,10 +8,16 @@ import SideDrawer from "src/components/navigation/SideDrawer";
 import { cartDrawer } from "src/redux/selectors/DrawerSelector";
 import { cart } from "src/redux/selectors/CartSelector";
 import Image from "src/components/Image";
+import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import CartManagerSlice from "src/redux/slices/CartManager";
 import { formatPrice } from "src/utils/format-number";
+import { useRouter } from "src/routes/hooks";
 
 const EmptyCartContent = () => {
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+
   return (
     <Box sx={{ p: "10px" }}>
       <Image
@@ -29,7 +35,7 @@ const EmptyCartContent = () => {
         sx={{
           fontWeight: "bold",
           fontSize: "20px",
-          padding: "20px",
+          padding: "15px",
           marginBottom: "10px",
           opacity: "0.7",
         }}
@@ -41,6 +47,10 @@ const EmptyCartContent = () => {
         variant="contained"
         endIcon={<ArrowForwardIcon />}
         sx={{ fontWeight: "600" }}
+        onClick={() => {
+          dispatch(DrawerManagerSlice.actions.setOpenCartDrawer(false));
+          router.replace("/products");
+        }}
       >
         Explore our products
       </Button>
@@ -48,21 +58,21 @@ const EmptyCartContent = () => {
   );
 };
 
-const CartItem = ({ id, imageURL, productName, price, quantity }) => {
+const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
   const dispatch = useDispatch();
 
   const handleSetQuantity = (e) => {
     if (e.target.value > 0 && e.target.value < 10001)
       dispatch(
         CartManagerSlice.actions.setQuantity({
-          id: id,
+          productID: productID,
           quantity: Number(e.target.value),
         })
       );
   };
 
   const handleRemoveItem = () => {
-    dispatch(CartManagerSlice.actions.removeFromCart(id));
+    dispatch(CartManagerSlice.actions.removeFromCart(productID));
   };
 
   return (
@@ -71,32 +81,34 @@ const CartItem = ({ id, imageURL, productName, price, quantity }) => {
         width: "100%",
         display: "flex",
         p: "10px",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         alignItems: "center",
         boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px;",
         mb: "10px",
       }}
     >
-      <Image
-        imageURL={imageURL}
-        sx={{ width: "80px", height: "80px", mr: "15px" }}
-        unShowOverlay={true}
-      />
-      <Box sx={{ textAlign: "left", mr: "15px" }}>
-        <Typography sx={{ fontWeight: "600", opacity: "0.8" }}>
-          {productName}
-        </Typography>
-        <Typography sx={{ opacity: "0.6" }}>
-          {price}
-          <span> VNĐ</span>
-        </Typography>
-        <Button
-          color="error"
-          startIcon={<DeleteIcon />}
-          onClick={handleRemoveItem}
-        >
-          REMOVE
-        </Button>
+      <Box sx={{ display: "flex", alignItems: "center", mr: "5px" }}>
+        <Image
+          imageURL={imageURL}
+          sx={{ width: "80px", height: "80px", mr: "15px" }}
+          unShowOverlay={true}
+        />
+        <Box sx={{ textAlign: "left" }}>
+          <Typography noWrap={false} sx={{ fontWeight: "600", opacity: "0.8" }}>
+            {productName}
+          </Typography>
+          <Typography sx={{ opacity: "0.6" }}>
+            {formatPrice(price)}
+            <span> VNĐ</span>
+          </Typography>
+          <Button
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleRemoveItem}
+          >
+            REMOVE
+          </Button>
+        </Box>
       </Box>
       <input
         type="number"
@@ -131,8 +143,8 @@ const CartListItem = ({ data }) => {
       {data.map((item) => {
         return (
           <CartItem
-            key={item.id}
-            id={item.id}
+            key={item.productID}
+            productID={item.productID}
             imageURL={item.imageURL}
             productName={item.productName}
             price={item.price}
@@ -220,7 +232,6 @@ const CartContent = () => {
         textAlign: "center",
         pt: "60px",
         px: "10px",
-        width: "330px",
         height: "100%",
       }}
     >

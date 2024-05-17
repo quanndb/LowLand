@@ -1,10 +1,10 @@
 import { Suspense, lazy } from "react";
 import { Outlet, Navigate, useRoutes } from "react-router-dom";
-
-import ProtectedRoute from "./ProtectedRoute";
-import DefaultLayout from "src/layouts/defaultLayout";
-import Loading from "src/components/Loading";
 import { ToastContainer } from "react-toastify";
+
+import DefaultLayout from "src/layouts/defaultLayout";
+import ProtectedRoute from "./ProtectedRoute";
+import Loading from "src/components/Loading";
 
 export const HomePage = lazy(() => import("src/pages/home"));
 export const BlogsPage = lazy(() => import("src/pages/blogs"));
@@ -13,6 +13,7 @@ export const AboutPage = lazy(() => import("src/pages/about"));
 export const ProductsPage = lazy(() => import("src/pages/products"));
 export const LoginPage = lazy(() => import("src/pages/login"));
 export const NotFound = lazy(() => import("src/pages/not-found"));
+export const DetailBlogPage = lazy(() => import("src/pages/detail-blog"));
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +47,7 @@ export default function Router() {
           path: "blogs",
         },
         {
-          element: <></>,
+          element: <DetailBlogPage />,
           path: "blogs/:blogID",
         },
         {

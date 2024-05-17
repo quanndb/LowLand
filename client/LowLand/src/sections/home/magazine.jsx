@@ -51,7 +51,7 @@ const HomeMagazine = () => {
             <Button
               variant="contained"
               sx={{ margin: "10px" }}
-              onClick={() => router.push("/products")}
+              onClick={() => router.replace("/products")}
             >
               START SHOPPING
             </Button>

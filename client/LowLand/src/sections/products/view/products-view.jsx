@@ -10,8 +10,7 @@ const ProductsView = () => {
   const dispatch = useDispatch();
   const handleAddToCart = () => {
     const newItem = {
-      id: 4,
-      productID: 4124,
+      productID: 27,
       productName: "Bac Xiu",
       imageURL: "static/images/blog1.jpg",
       quantity: 2,

@@ -16,17 +16,17 @@ import CartDrawer from "./common/CartDrawer";
 import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import { useResponsive } from "src/hooks/use-responsive";
 import LowLandLogo from "src/components/navigation/logo";
-import { usePathname } from "src/routes/hooks";
+import { usePathname, useRouter } from "src/routes/hooks";
 import { cart } from "src/redux/selectors/CartSelector";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   let location = usePathname();
 
   const handleChange = (event, newValue) => {
     setShowNav(false);
-    navigate(newValue);
+    router.replace(newValue);
   };
 
   return (

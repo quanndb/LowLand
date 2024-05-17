@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import Image from "./Image";
+import { useRouter } from "src/routes/hooks";
 
 const BlogItem = ({ url, imageURL, title, description, date, sx }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -23,7 +23,7 @@ const BlogItem = ({ url, imageURL, title, description, date, sx }) => {
       href={url ? "/" : url}
       onClick={(e) => {
         e.preventDefault();
-        navigate(url);
+        router.push(url);
       }}
     >
       <Image

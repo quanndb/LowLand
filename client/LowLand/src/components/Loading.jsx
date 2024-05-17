@@ -11,7 +11,7 @@ const Loading = () => {
         alignItems: "center",
       }}
     >
-      <CircularProgress color="secondary" size={100} thickness={4.5} />
+      <CircularProgress color="secondary" size={50} thickness={4.0} />
     </Box>
   );
 };
