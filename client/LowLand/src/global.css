@@ -17,3 +17,12 @@
 .css-lfwcke-MuiTabs-flexContainer {
   align-items: center;
 }
+
+.swiper {
+  .swiper-pagination {
+    top: 95% !important;
+    .swiper-pagination-bullet-active {
+      background-color: var(--secondary-color);
+    }
+  }
+}

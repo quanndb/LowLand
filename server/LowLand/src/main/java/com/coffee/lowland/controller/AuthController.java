@@ -22,7 +22,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerCustomer(\@RequestBody Account account) {
+    public ResponseEntity<String> registerCustomer(@RequestBody Account account) {
 
         ResponseEntity<String> response = null;
         account.setRole(Role.USER);

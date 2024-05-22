@@ -12,7 +12,7 @@ const ProductsView = () => {
     const newItem = {
       productID: 27,
       productName: "Bac Xiu",
-      imageURL: "static/images/blog1.jpg",
+      imageURL: "/static/images/blog1.jpg",
       quantity: 2,
       price: 25000,
     };

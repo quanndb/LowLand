@@ -68,7 +68,7 @@ const HomeMagazine = () => {
         >
           <Box
             sx={{
-              backgroundImage: "url(static/images/magazine1.jpg)",
+              backgroundImage: "url(/static/images/magazine1.jpg)",
               height: "280px",
               width: `${isLessMobile ? "100%" : "280px"}`,
               backgroundPosition: "center",
@@ -84,7 +84,7 @@ const HomeMagazine = () => {
           >
             <Box
               sx={{
-                backgroundImage: "url(static/images/magazine2.jpg)",
+                backgroundImage: "url(/static/images/magazine2.jpg)",
                 height: "130px",
                 width: "160px",
                 backgroundPosition: "center",
@@ -94,7 +94,7 @@ const HomeMagazine = () => {
             />
             <Box
               sx={{
-                backgroundImage: "url(static/images/magazine3.jpg)",
+                backgroundImage: "url(/static/images/magazine3.jpg)",
                 height: "130px",
                 width: "160px",
                 backgroundPosition: "center",

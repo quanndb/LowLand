@@ -73,10 +73,10 @@ const Authors = () => {
   return (
     <Box>
       <SectionTitle>Authors</SectionTitle>
-      <Category imgURL={"static/images/logo.jpg"}>Vu Minh Quan</Category>
-      <Category imgURL={"static/images/logo.jpg"}>Nguyen Anh Quan</Category>
-      <Category imgURL={"static/images/logo.jpg"}>Le Minh Khoi</Category>
-      <Category imgURL={"static/images/logo.jpg"}>Ha Van Sang</Category>
+      <Category imgURL={"/static/images/logo.jpg"}>Vu Minh Quan</Category>
+      <Category imgURL={"/static/images/logo.jpg"}>Nguyen Anh Quan</Category>
+      <Category imgURL={"/static/images/logo.jpg"}>Le Minh Khoi</Category>
+      <Category imgURL={"/static/images/logo.jpg"}>Ha Van Sang</Category>
     </Box>
   );
 };
@@ -112,7 +112,7 @@ const BlogMenu = () => {
           <SectionTitle>Lastest Blogs</SectionTitle>
           <LineBlog
             url={"/"}
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -123,7 +123,7 @@ const BlogMenu = () => {
           />
           <LineBlog
             url={"/"}
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -134,7 +134,7 @@ const BlogMenu = () => {
           />
           <LineBlog
             url={"/"}
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -145,7 +145,7 @@ const BlogMenu = () => {
           />
           <LineBlog
             url={"/"}
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -156,7 +156,7 @@ const BlogMenu = () => {
           />
           <LineBlog
             url={"/"}
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }

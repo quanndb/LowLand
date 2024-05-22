@@ -38,7 +38,7 @@ const NotFoundView = () => {
       >
         <Box
           sx={{
-            backgroundImage: "url(static/images/404.jpg)",
+            backgroundImage: "url(/static/images/404.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             backgroundSize: "cover",

@@ -22,7 +22,7 @@ const HomeBlog = () => {
         <Grid item lg={4} md={6} sm={12}>
           <BlogItem
             url={"/blogs/123"}
-            imageURL={"static/images/blog1.jpg"}
+            imageURL={"/static/images/blog1.jpg"}
             title={
               "Health Check: why do I get a headache when I haven’t had my coffee?"
             }
@@ -34,7 +34,7 @@ const HomeBlog = () => {
         </Grid>
         <Grid item lg={4} md={6} sm={12}>
           <BlogItem
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Health Check: why do I get a headache when I haven’t had my coffee?"
             }
@@ -46,7 +46,7 @@ const HomeBlog = () => {
         </Grid>
         <Grid item lg={4} md={6} sm={12}>
           <BlogItem
-            imageURL={"static/images/blog3.jpg"}
+            imageURL={"/static/images/blog3.jpg"}
             title={
               "Health Check: why do I get a headache when I haven’t had my coffee?"
             }

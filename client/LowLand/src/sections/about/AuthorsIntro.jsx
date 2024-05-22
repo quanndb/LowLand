@@ -35,7 +35,7 @@ const AuthorsIntro = () => {
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
-            imageURL={"static/images/logo.jpg"}
+            imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
         <Grid item md={1} sm>
@@ -43,7 +43,7 @@ const AuthorsIntro = () => {
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
-            imageURL={"static/images/logo.jpg"}
+            imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
         <Grid item md={1} sm>
@@ -51,7 +51,7 @@ const AuthorsIntro = () => {
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
-            imageURL={"static/images/logo.jpg"}
+            imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
         <Grid item md={1} sm>
@@ -59,7 +59,7 @@ const AuthorsIntro = () => {
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
-            imageURL={"static/images/logo.jpg"}
+            imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
       </Grid>

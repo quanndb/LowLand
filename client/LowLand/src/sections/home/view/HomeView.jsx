@@ -17,7 +17,7 @@ const HomeView = () => {
 
       <HomeMagazine />
 
-      <ShowCase imageURL={"static/images/showCase.jpg"} />
+      <ShowCase imageURL={"/static/images/showCase.jpg"} />
       <HomeBlog />
     </>
   );

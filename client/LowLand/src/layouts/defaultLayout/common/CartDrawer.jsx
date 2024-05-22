@@ -21,7 +21,7 @@ const EmptyCartContent = () => {
   return (
     <Box sx={{ p: "10px" }}>
       <Image
-        imageURL={"static/images/empty-cart.jpg"}
+        imageURL={"/static/images/empty-cart.jpg"}
         sx={{
           width: "100%",
           height: "300px",

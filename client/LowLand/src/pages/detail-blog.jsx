@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+
 import { DetailBlogView } from "src/sections/detail-blog/view";
 
 const DetailBlogPage = () => {

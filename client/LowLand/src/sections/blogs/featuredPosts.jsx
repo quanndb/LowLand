@@ -11,7 +11,7 @@ const FeaturedPosts = () => {
         <Grid item md={6}>
           <BlogItem
             url={"/"}
-            imageURL={"static/images/blog1.jpg"}
+            imageURL={"/static/images/blog1.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -24,7 +24,7 @@ const FeaturedPosts = () => {
         <Grid item md={6}>
           <BlogItem
             url={"/"}
-            imageURL={"static/images/blog2.jpg"}
+            imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }

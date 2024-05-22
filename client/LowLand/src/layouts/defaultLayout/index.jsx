@@ -1,23 +1,28 @@
 import { Box, Container } from "@mui/material";
-import Header from "./header";
-import Footer from "./footer";
+import { Suspense, lazy } from "react";
+import Loading from "src/components/Loading";
 
-const DefaultLayout = ({ children, notShowHeader }) => {
+const Header = lazy(() => import("./header"));
+const Footer = lazy(() => import("./footer"));
+
+const DefaultLayout = ({ children }) => {
   return (
-    <Container
-      maxWidth="100%"
-      disableGutters
-      sx={{
-        backgroundColor: "var(--background-color)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      {notShowHeader ? <></> : <Header></Header>}
-      <Box sx={{ paddingTop: "100px" }}>{children}</Box>
-      <Footer />
-    </Container>
+    <Suspense fallback={<Loading />}>
+      <Container
+        maxWidth="100%"
+        disableGutters
+        sx={{
+          backgroundColor: "var(--background-color)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Header />
+        <Box sx={{ paddingTop: "100px" }}>{children}</Box>
+        <Footer />
+      </Container>
+    </Suspense>
   );
 };
 

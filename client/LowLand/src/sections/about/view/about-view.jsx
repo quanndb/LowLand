@@ -19,7 +19,7 @@ const AboutView = () => {
       >
         <Container maxWidth="md">
           <Image
-            imageURL={"static/images/aboutBanner.jpg"}
+            imageURL={"/static/images/aboutBanner.jpg"}
             sx={{ width: "100%", height: "320px", mb: "100px" }}
             unShowOverlay={true}
           />
@@ -28,7 +28,7 @@ const AboutView = () => {
           <AuthorsIntro />
         </Container>
       </DecoComp>
-      <ShowCase imageURL={"static/images/showcase2.jpg"} />
+      <ShowCase imageURL={"/static/images/showcase2.jpg"} />
       <TimeLine />
     </>
   );

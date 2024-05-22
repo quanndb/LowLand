@@ -8,7 +8,6 @@ const CartManagerSlice = createSlice({
       let isExisted = false;
       state.forEach((item) => {
         if (item.productID === action.payload.productID) {
-          console.log(item.productID, action.payload.productID);
           item.quantity += Number(action.payload.quantity);
           isExisted = true;
           return;

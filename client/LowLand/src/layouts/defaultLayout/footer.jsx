@@ -72,7 +72,7 @@ const ContactFooter = () => {
         <Grid item sx={{ margin: "10px" }}>
           <Box
             sx={{
-              backgroundImage: `url("static/images/logo.jpg")`,
+              backgroundImage: `url("/static/images/logo.jpg")`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               height: "120px",
