@@ -22,7 +22,11 @@ const routes = createBrowserRouter([
       <DefaultLayout>
         <Suspense fallback={<Loading />}>
           <Outlet />
-          <ToastContainer autoClose={2000} />
+          <ToastContainer
+            autoClose={2000}
+            pauseOnHover={false}
+            position="top-center"
+          />
         </Suspense>
       </DefaultLayout>
     ),

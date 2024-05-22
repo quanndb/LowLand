@@ -57,27 +57,25 @@ const CustomizedBreadcrumbs = ({ sx, title }) => {
   );
 };
 
-const DetailBlogView = () => {
-  const { blog } = useLoaderData();
-  console.log(blog);
+const DetailBlogView = ({ blog }) => {
   return (
     <>
       <Container sx={{ mt: "40px" }} disableGutters={true}>
         <Box sx={{ p: "20px" }}>
-          <CustomizedBreadcrumbs sx={{ mb: "40px" }} title={blog[0].title} />
+          <CustomizedBreadcrumbs sx={{ mb: "40px" }} title={blog.title} />
           <IntroText
             variant={"h1"}
-            title={blog[0].title}
-            desciption={blog[0].description}
+            title={blog.title}
+            desciption={blog.description}
             sx={{ maxWidth: "800px", textAlign: "left" }}
           />
         </Box>
         <Image
-          imageURL={blog[0].imageURL}
+          imageURL={blog.imageURL}
           sx={{ width: "100%", height: "450px" }}
           unShowOverlay={true}
         />
-        <BLogContent data={blog[0].data} />
+        <BLogContent data={blog.data} />
         <FutherReading />
       </Container>
     </>

@@ -13,6 +13,9 @@ function SideDrawer({ children, open, drawer }) {
       case "cart": {
         dispatch(DrawerManagerSlice.actions.setOpenCartDrawer(false));
       }
+      case "blogComment": {
+        dispatch(DrawerManagerSlice.actions.setOpenBlogCommentDrawer(false));
+      }
       default: {
       }
     }

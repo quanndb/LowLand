@@ -94,7 +94,9 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
           unShowOverlay={true}
         />
         <Box sx={{ textAlign: "left" }}>
-          <Typography noWrap={false} sx={{ fontWeight: "600", opacity: "0.8" }}>
+          <Typography
+            sx={{ fontWeight: "600", opacity: "0.8", width: "fit-content" }}
+          >
             {productName}
           </Typography>
           <Typography sx={{ opacity: "0.6" }}>
@@ -205,7 +207,6 @@ const CartLayout = ({ data }) => {
   return (
     <Box
       sx={{
-        p: "10px",
         height: "100%",
         width: "100%",
         display: "flex",
@@ -233,6 +234,8 @@ const CartContent = () => {
         pt: "60px",
         px: "10px",
         height: "100%",
+        width: "fit-content",
+        maxWidth: "800px",
       }}
     >
       {cartList.length ? <CartLayout data={cartList} /> : <EmptyCartContent />}

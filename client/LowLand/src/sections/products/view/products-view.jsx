@@ -10,16 +10,15 @@ const ProductsView = () => {
   const dispatch = useDispatch();
   const handleAddToCart = () => {
     const newItem = {
-      productID: 27,
-      productName: "Bac Xiu",
+      productID: 21,
+      productName:
+        "Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu bac xiu",
       imageURL: "/static/images/blog1.jpg",
       quantity: 2,
       price: 25000,
     };
     dispatch(CartManagerSlice.actions.addToCart(newItem));
-    toast.success("Add to cart successfully!", {
-      position: "top-center",
-    });
+    toast.success("Add to cart successfully!");
   };
   return (
     <>

@@ -18,15 +18,11 @@ const FormWrap = () => {
       <Container
         maxWidth="lg"
         sx={{
-          padding: {
-            md: "40px !important",
-            xs: "20px !important",
-          },
           textAlign: {
             md: "left",
             xs: "center",
           },
-          marginBottom: "50px",
+          mb: "100px",
         }}
       >
         <Grid
@@ -137,21 +133,10 @@ const FormWrap = () => {
 
 const IntroductionBehindForm = () => {
   return (
-    <Box
-      sx={{
-        padding: {
-          md: "100px 150px 100px 150px",
-          xs: "0px",
-        },
-      }}
-    >
+    <Container maxWidth="sm" sx={{ mb: "100px" }}>
       <Grid
         container
         sx={{
-          padding: {
-            md: "50px",
-            xs: "0px",
-          },
           textAlign: {
             xs: "center",
           },
@@ -221,7 +206,7 @@ const IntroductionBehindForm = () => {
           </Box>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 
@@ -229,7 +214,7 @@ const ContactView = () => {
   return (
     <>
       <DecoComp
-        space={260}
+        space={200}
         title={"Let's Connect"}
         desciption={
           "At LowLand Coffee Shop, we believe in elevating your daily coffee experience. Nestled in the heart of the city, we offer more than just a cup of coffee – we offer a warm, inviting atmosphere where every sip is a journey of rich flavors and community connection. Come, savor the moment with us."
@@ -302,7 +287,7 @@ const ContactView = () => {
         </Container>
       </DecoComp>
 
-      <FormWrap></FormWrap>
+      <FormWrap />
 
       <Container maxWidth={"100%"} sx={{ marginBottom: "30px" }} disableGutters>
         <iframe

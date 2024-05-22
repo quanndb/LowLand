@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 export const BlogHeader = ({ children, variant }) => {
   const styleVariant = {
@@ -33,14 +33,6 @@ export const BlogHeader = ({ children, variant }) => {
   );
 };
 
-export const BlogBoldHeader = ({ children }) => {
-  return <strong>{children}</strong>;
-};
-
-export const BlogItalicHeader = ({ children }) => {
-  return <em>{children}</em>;
-};
-
 export const BlogImage = ({ imageURL, alt }) => {
   return (
     <img
@@ -48,5 +40,35 @@ export const BlogImage = ({ imageURL, alt }) => {
       alt={alt}
       style={{ width: "100%", marginTop: "25px", marginBottom: "25px" }}
     />
+  );
+};
+
+export const BlogLink = ({ children, href }) => {
+  return (
+    <>
+      {children ? (
+        <Button
+          href={href}
+          target="_blank"
+          variant="contained"
+          sx={{ m: "10px 5px", textTransform: "none" }}
+        >
+          {children}
+        </Button>
+      ) : (
+        <Button
+          href={href}
+          target="_blank"
+          color="secondary"
+          sx={{
+            m: "10px 5px",
+            textDecoration: "underline",
+            textTransform: "none",
+          }}
+        >
+          {href}
+        </Button>
+      )}
+    </>
   );
 };
