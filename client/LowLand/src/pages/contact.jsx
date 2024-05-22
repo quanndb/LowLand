@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
-
-import ContactView from "src/sections/contact";
+import { ContactView } from "src/sections/contact/view";
 
 const ContactPage = () => {
   return (
