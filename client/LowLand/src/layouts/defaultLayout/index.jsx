@@ -1,11 +1,13 @@
 import { Box, Container } from "@mui/material";
 import { Suspense, lazy } from "react";
 import Loading from "src/components/Loading";
+import { useScrollToTop } from "src/hooks/use-scroll-to-top";
 
 const Header = lazy(() => import("./header"));
 const Footer = lazy(() => import("./footer"));
 
 const DefaultLayout = ({ children }) => {
+  useScrollToTop();
   return (
     <Suspense fallback={<Loading />}>
       <Container

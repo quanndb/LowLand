@@ -60,7 +60,7 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
       {unShowOverlay ? (
         <></>
       ) : (
-        <Overlay hovered={hovered} overlayContent={overlayContent} />
+        <Overlay hovered={hovered} overlayContent={overlayContent ? overlayContent : null} />
       )}
     </Box>
   );
