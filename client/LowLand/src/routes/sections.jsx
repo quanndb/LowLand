@@ -66,10 +66,6 @@ const routes = createBrowserRouter([
         path: "contact",
         element: <ContactPage />,
       },
-      {
-        path: "user",
-        element: <UserPage />,
-      },
     ],
   },
   {
@@ -87,6 +83,10 @@ const routes = createBrowserRouter([
         <NotFound />
       </Suspense>
     ),
+  },
+  {
+    path: "user",
+    element: <UserPage/>,
   },
   {
     path: "*",
