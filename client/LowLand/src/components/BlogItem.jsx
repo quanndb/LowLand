@@ -29,7 +29,7 @@ const BlogItem = ({ url, imageURL, title, description, date, sx }) => {
       <Image
         imageURL={imageURL}
         sx={{
-          height: "300px",
+          height: "250px",
           width: "100%",
           marginBottom: "40px",
         }}

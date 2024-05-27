@@ -78,53 +78,67 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
   return (
     <Box
       sx={{
-        width: "100%",
-        display: "flex",
-        p: "10px",
-        justifyContent: "space-between",
-        alignItems: "center",
         boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px;",
+        p: "10px",
         mb: "10px",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", mr: "5px" }}>
-        <Image
-          imageURL={imageURL}
-          sx={{ width: "80px", height: "80px", mr: "15px" }}
-          unShowOverlay={true}
-        />
-        <Box sx={{ textAlign: "left" }}>
-          <Typography
-            sx={{ fontWeight: "600", opacity: "0.8", width: "fit-content" }}
-          >
-            {productName}
-          </Typography>
-          <Typography sx={{ opacity: "0.6" }}>
-            {formatPrice(price)}
-            <span> VNĐ</span>
-          </Typography>
-          <Button
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={handleRemoveItem}
-          >
-            REMOVE
-          </Button>
-        </Box>
-      </Box>
-      <input
-        type="number"
-        style={{
-          width: "60px",
-          height: "40px",
-          textAlign: "center",
-          fontWeight: "600",
-          fontSize: "15px",
-          overflow: "hidden",
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
-        value={quantity}
-        onChange={handleSetQuantity}
-      />
+      >
+        <Box
+          sx={{ display: "flex", alignItems: "center", mr: "15px", flex: 1 }}
+        >
+          <Image
+            imageURL={imageURL}
+            sx={{ width: "80px", height: "80px", mr: "15px" }}
+            unShowOverlay={true}
+          />
+          <Box sx={{ textAlign: "left", wordBreak: "break-word", flex: 1 }}>
+            <Typography sx={{ fontWeight: "600", opacity: "0.8" }}>
+              {productName}
+            </Typography>
+          </Box>
+        </Box>
+        <input
+          type="number"
+          style={{
+            width: "40px",
+            height: "30px",
+            textAlign: "center",
+            fontWeight: "600",
+            fontSize: "15px",
+            overflow: "hidden",
+          }}
+          value={quantity}
+          onChange={handleSetQuantity}
+        />
+      </Box>
+      <Box
+        sx={{
+          mt: "10px",
+          display: "flex",
+          justifyContent: "end",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ opacity: "0.6" }}>
+          {formatPrice(price)}
+          <span> VNĐ</span>
+        </Typography>
+        <Button
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={handleRemoveItem}
+        >
+          REMOVE
+        </Button>
+      </Box>
     </Box>
   );
 };

@@ -13,14 +13,25 @@ const ProductItem = ({
     <Box
       sx={{
         ...sx,
-        position:"relative",
+        position: "relative",
       }}
     >
       <Image
         imageURL={imageURL}
         sx={{ width: "350px", height: "400px", posiion: "relative" }}
       />
-      <Button sx={{position: "absolute", top:"0", right:"0", margin:"8px", backgroundColor: "white", color: "var(--secondary-color)" }}>On Sale</Button>
+      <Button
+        sx={{
+          position: "absolute",
+          top: "0",
+          right: "0",
+          margin: "8px",
+          backgroundColor: "white",
+          color: "var(--secondary-color)",
+        }}
+      >
+        On Sale
+      </Button>
       <Typography sx={{ textAlign: "center", marginTop: "30px" }}>
         Red Love Cup
         {/* {title} */}

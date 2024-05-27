@@ -31,7 +31,13 @@ const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
       <Grid
         item
         md={6}
-        sx={{ margin: "10px 0px", padding: "0px 30px", width: "100%" }}
+        sx={{
+          margin: "10px 0px",
+          padding: {
+            md: "0px 30px",
+          },
+          width: "100%",
+        }}
       >
         <Image
           imageURL={imageURL}

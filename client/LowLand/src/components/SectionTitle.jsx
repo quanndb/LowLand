@@ -1,23 +1,31 @@
 import { Box, Typography } from "@mui/material";
 const SectionTitle = ({ children, sx }) => {
   return (
-    <Box sx={{ maxWidth: "250px", width: "fit-content", margin: "70px auto" }}>
+    <Box
+      sx={{
+        width: "fit-content",
+        margin: "70px auto",
+        wordBreak: "break-word",
+        maxWidth: "150px",
+      }}
+    >
       <Typography
-        noWrap={false}
         sx={{
           opacity: "0.6",
           fontWeight: "600",
           position: "relative",
           textTransform: "uppercase",
           textAlign: "center",
+          fontSize: "12px",
+          wordBreak: "break-word",
           ...sx,
           "::before": {
             fontStyle: "",
             position: "absolute",
-            right: "102%",
+            right: "101%",
             content: `''`,
-            width: "45px",
-            height: "3px",
+            width: "40px",
+            height: "2px",
             top: 0,
             transform: "translateY(11px)",
             marginTop: "-1px",
@@ -25,11 +33,11 @@ const SectionTitle = ({ children, sx }) => {
           },
           "::after": {
             position: "absolute",
-            left: "102%",
+            left: "101%",
             content: `''`,
-            width: "45px",
+            width: "40px",
             top: 0,
-            height: "3px",
+            height: "2px",
             transform: "translateY(11px)",
             marginTop: "-1px",
             backgroundColor: "black",

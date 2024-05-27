@@ -18,6 +18,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 import LowLandLogo from "src/components/navigation/logo";
 import { usePathname, useRouter } from "src/routes/hooks";
 import { cart } from "src/redux/selectors/CartSelector";
+import { Avatar } from "@mui/material";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   const router = useRouter();
@@ -139,23 +140,19 @@ const Header = () => {
           setShowNav={setShowNav}
         />
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Button
+          <IconButton>
+            <Avatar></Avatar>
+          </IconButton>
+          <IconButton
             sx={{
               fontWeight: "bold",
-              padding: "20px 20px",
-              marginLeft: "10px",
             }}
             onClick={handleOpenCartDrawer}
           >
-            Cart
-            <Badge
-              badgeContent={quantityInCart}
-              color="primary"
-              sx={{ marginLeft: "8px" }}
-            >
+            <Badge badgeContent={quantityInCart} color="primary">
               <ShoppingCartOutlinedIcon />
             </Badge>
-          </Button>
+          </IconButton>
 
           {!isMobile ? (
             <></>

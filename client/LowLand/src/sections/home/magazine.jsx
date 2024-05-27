@@ -64,6 +64,7 @@ const HomeMagazine = () => {
             display: "flex",
             flexWrap: `${isLessMobile ? "wrap" : "nowrap"}`,
             justifyContent: "center",
+            width: "100%",
           }}
         >
           <Box
@@ -86,7 +87,7 @@ const HomeMagazine = () => {
               sx={{
                 backgroundImage: "url(/static/images/magazine2.jpg)",
                 height: "130px",
-                width: "160px",
+                width: "110px",
                 backgroundPosition: "center",
                 backgroundSize: "cover",
                 margin: `${isLessMobile ? "20px" : "0px"} 20px 0px 0px`,
@@ -96,7 +97,7 @@ const HomeMagazine = () => {
               sx={{
                 backgroundImage: "url(/static/images/magazine3.jpg)",
                 height: "130px",
-                width: "160px",
+                width: "110px",
                 backgroundPosition: "center",
                 backgroundSize: "cover",
                 margin: "20px 0px 0px 0px",

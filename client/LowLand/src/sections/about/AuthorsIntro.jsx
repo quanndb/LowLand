@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import Image from "src/components/Image";
 import IntroText from "src/components/IntroText";
 import SectionTitle from "src/components/SectionTitle";
@@ -10,7 +10,7 @@ const Author = ({ name, position, imageURL }) => {
     >
       <Image
         imageURL={imageURL}
-        sx={{ height: "380px", width: "300px", mb: "30px" }}
+        sx={{ height: "200px", width: "100%", mb: "30px" }}
       />
       <Typography sx={{ fontWeight: "600", fontSize: "22px", mb: "15px" }}>
         {name}
@@ -27,7 +27,7 @@ const AuthorsIntro = () => {
       <Grid
         container
         justifyContent={"center"}
-        columnSpacing={{ md: 18, sm: 0 }}
+        columnSpacing={{ md: 4, sm: 0 }}
         rowSpacing={6}
         columns={{ sm: 1, md: 3 }}
       >
@@ -39,7 +39,6 @@ const AuthorsIntro = () => {
           />
         </Grid>
         <Grid item md={1} sm>
-          {" "}
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}

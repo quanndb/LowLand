@@ -21,7 +21,7 @@ import { useState } from "react";
 const CommentItem = ({ avatarURL, name, date, like, comment }) => {
   const [isLiked, setIsLiked] = useState(like);
   return (
-    <Box sx={{ my: "20px" }}>
+    <Box sx={{ my: "20px", pr: "20px" }}>
       <Box sx={{ display: "flex" }}>
         <Avatar
           sx={{ mr: "10px", border: "2px solid var(--primary-color)" }}
@@ -34,17 +34,15 @@ const CommentItem = ({ avatarURL, name, date, like, comment }) => {
               p: "8px 15px",
               borderRadius: "15px",
               width: "fit-content",
-              mr: "10px",
+              wordBreak: "break-word", // Ensures long comments wrap
             }}
           >
-            <Typography sx={{ fontWeight: "600", mb: "10px" }} noWrap={false}>
+            <Typography sx={{ fontWeight: "600", mb: "2px" }} noWrap={false}>
               {name}
             </Typography>
-            <Typography noWrap={false} sx={{}}>
-              {comment}
-            </Typography>
+            <Typography>{comment}</Typography>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center", mt: "5px" }}>
             <IconButton onClick={() => setIsLiked(!isLiked)} sx={{ mr: "5px" }}>
               <Badge badgeContent={10} color="primary">
                 {isLiked ? (
@@ -94,14 +92,17 @@ const BlogCommentDrawer = ({ children }) => {
   const open = useSelector(blogCommentDrawer);
   return (
     <SideDrawer open={open} drawer="blogComment">
-      <Box sx={{ maxWidth: "800px", width: "92%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: "800px",
+          width: "92%",
+        }}
+      >
         <Box
           sx={{
-            height: "fit-content",
-            width: "fit-content",
             mt: "80px",
-            display: "flex",
-            flexDirection: "column",
           }}
         >
           <Typography sx={{ fontSize: "20px", fontWeight: "600", mb: "20px" }}>
@@ -109,61 +110,74 @@ const BlogCommentDrawer = ({ children }) => {
           </Typography>
           <Divider sx={{ m: "20px" }} />
           <FormComment />
-          <Box sx={{ overflowY: "scroll", height: "100%" }}>
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={
-                "Quan dep trai v haha haha hahahaha hahaha hahahaha.Quan dep trai v haha haha hahahaha hahaha hahahaha"
-              }
-              like={true}
-              date={"20:48 22/5/2024"}
-            />
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={"Quan dep trai"}
-              like={false}
-              date={"20:48 22/5/2024"}
-            />
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={
-                "Quan dep trai v haha haha hahahaha hahaha hahahaha.Quan dep trai "
-              }
-              like={false}
-              date={"20:48 22/5/2024"}
-            />
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={"Quan dep trai"}
-              like={true}
-              date={"20:48 22/5/2024"}
-            />
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={"hahahaha.Quan dep trai"}
-              like={false}
-              date={"20:48 22/5/2024"}
-            />
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={"hahahaha.Quan dep trai"}
-              like={false}
-              date={"20:48 22/5/2024"}
-            />
-            <CommentItem
-              name={"quanndb"}
-              avatarURL={"/static/images/logo.jpg"}
-              comment={"hahahaha.Quan dep trai"}
-              like={false}
-              date={"20:48 22/5/2024"}
-            />
-          </Box>
+        </Box>
+        <Box
+          sx={{
+            overflowY: "scroll", // Enable vertical scrolling
+          }}
+        >
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={
+              "Quan dep trai v haha haha hahahaha hahaha hahahaha.Quan dep trai v haha haha hahahaha hahaha hahahaha"
+            }
+            like={true}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={
+              "sdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+            like={true}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={"Quan dep trai"}
+            like={false}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={
+              "Quan dep trai v haha haha hahahaha hahaha hahahaha.Quan dep trai "
+            }
+            like={false}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={"Quan dep trai"}
+            like={true}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={"hahahaha.Quan dep trai"}
+            like={false}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={"hahahaha.Quan dep trai"}
+            like={false}
+            date={"20:48 22/5/2024"}
+          />
+          <CommentItem
+            name={"quanndb"}
+            avatarURL={"/static/images/logo.jpg"}
+            comment={"hahahaha.Quan dep trai"}
+            like={false}
+            date={"20:48 22/5/2024"}
+          />
         </Box>
       </Box>
     </SideDrawer>

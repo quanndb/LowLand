@@ -65,6 +65,7 @@ const Productswiper = () => {
               <Image
                 imageURL={"/static/images/ourproduct1.jpg"}
                 sx={{ width: "100%", height: "310px" }}
+                overlayContent={"ABC"}
               />
             </Grid>
             <Grid

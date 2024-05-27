@@ -10,10 +10,9 @@ const ProductsView = () => {
   const dispatch = useDispatch();
   const handleAddToCart = () => {
     const newItem = {
-      productID: 21,
-      productName:
-        "Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu Bac Xiu bac xiu",
-      imageURL: "/static/images/blog1.jpg",
+      productID: 1,
+      productName: "Black coffee",
+      imageURL: "/static/images/product2.jpg",
       quantity: 2,
       price: 25000,
     };
