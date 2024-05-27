@@ -2,37 +2,37 @@ package com.coffee.lowland.controller;
 
 import com.coffee.lowland.model.Image;
 import com.coffee.lowland.model.Product;
-import com.coffee.lowland.model.ResponseObject;
-import com.coffee.lowland.model.UploadImage;
-import com.coffee.lowland.repository.ImageRepository;
+
 import com.coffee.lowland.repository.ProductRepository;
 import com.coffee.lowland.service.CloudinaryService;
 import com.coffee.lowland.service.ImageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping ("/v1/admin/images")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ImageController {
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CloudinaryService cloudinaryService;
+
+    ImageService imageService;
+    ProductRepository productRepository;
+    CloudinaryService cloudinaryService;
 
     @GetMapping("/getAllImageOfProductById/{id}")
-    public ResponseEntity<Object> getProductImages(@PathVariable Integer id) {
+    public ResponseEntity<Object> getProductImages(@PathVariable String id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
 //            Product product = optionalProduct.get();
@@ -45,7 +45,7 @@ public class ImageController {
         }
     }
     @PostMapping("/addProductImage/{id}")
-    public ResponseEntity<Object> addImageToProduct(@PathVariable Integer id, @RequestBody Image newImage) {
+    public ResponseEntity<Object> addImageToProduct(@PathVariable String id, @RequestBody Image newImage) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
 //            Product product = optionalProduct.get();
@@ -61,24 +61,25 @@ public class ImageController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile multipartFile,@RequestParam String type, @RequestParam Integer productID, @RequestParam Integer blogID) throws IOException {
+    public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile multipartFile,@RequestParam String type, @RequestParam String productID, @RequestParam String blogID) throws IOException {
         if (ImageIO.read(multipartFile.getInputStream()) == null) {
             return new ResponseEntity<>("Image non valid!", HttpStatus.BAD_REQUEST);
         }
         Map result = cloudinaryService.upload(multipartFile);
-        Image image = new Image(
-                (String) result.get("original_filename"),
-                (String) result.get("url"),
-                (String) result.get("public_id"),
-                type,
-                productID==0?null:productID,blogID==0?null:blogID
-                );
+        Image image = Image.builder()
+                .name((String) result.get("original_filename"))
+                .imageURL((String) result.get("url"))
+                .imageID((String) result.get("public_id"))
+                .type(type)
+                .productID(Objects.equals(productID, "") ? null : productID)
+                .blogID(Objects.equals(blogID,"")?null:blogID)
+                .build();
         imageService.save(image);
         return new ResponseEntity<>("image saved ! ", HttpStatus.OK);
     }
 
     @PutMapping("/updateImage/{id}")
-    public ResponseEntity<Object> updateImage(@PathVariable Integer id, @RequestBody Image updatedImageInfo) {
+    public ResponseEntity<Object> updateImage(@PathVariable String id, @RequestBody Image updatedImageInfo) {
         Optional<Image> optionalImage = imageService.findById(id);
         if (optionalImage.isPresent()) {
             try {
@@ -114,7 +115,7 @@ public class ImageController {
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteImageById (@PathVariable int id)
+    public ResponseEntity<Object> deleteImageById (@PathVariable String id)
     {
         Optional<Image> optionalImage = imageService.findById(id);
         if (optionalImage.isPresent()) {

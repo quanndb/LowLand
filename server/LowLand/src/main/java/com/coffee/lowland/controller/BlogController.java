@@ -1,9 +1,11 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.model.Blog;
-import com.coffee.lowland.model.ResponseObject;
 import com.coffee.lowland.repository.BlogRepository;
 import com.coffee.lowland.service.BlogService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +17,13 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("v1/blogs")
+@RequestMapping("/blogs")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class BlogController {
 
-    @Autowired
-    private BlogService blogService;
-    @Autowired
-    private BlogRepository blogRepository;
+    BlogService blogService;
+    BlogRepository blogRepository;
 
     @GetMapping("/")
     public ResponseEntity<Object> getBlogs(@RequestParam int page, @RequestParam int size){
@@ -29,7 +31,7 @@ public class BlogController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getBlog(@PathVariable int id){
+    public ResponseEntity<Object> getBlog(@PathVariable String id){
         List<Blog> exitstBlog = blogService.getBlog(id);
         if(exitstBlog.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
@@ -43,7 +45,7 @@ public class BlogController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateBlog(@PathVariable int id, @RequestBody Blog newBlog){
+    public ResponseEntity<Object> updateBlog(@PathVariable String id, @RequestBody Blog newBlog){
         List<Blog> existBlog = blogRepository.findBlogById(id);
         if(existBlog.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found the blog");
@@ -58,7 +60,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBlog(@PathVariable int id){
+    public ResponseEntity<String> deleteBlog(@PathVariable String id){
         List<Blog> existBlog = blogRepository.findBlogById(id);
         if(existBlog.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found the blog");

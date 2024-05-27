@@ -2,52 +2,27 @@ package com.coffee.lowland.model;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
+    String name;
+    String imageURL;
+    String type;
+    String productID;
+    String blogID;
+    String imageID;
 
-    private String name;
+    public Image() {
 
-    private String imageURL;
-
-    private String type;
-
-    private Integer productID;
-
-    private Integer blogID;
-
-    private String imageID;
-
-    public Image(String name, String imageURL, String publicId, Image image) {
-        this.name=name;
-        this.imageURL=imageURL;
-        this.imageID=publicId;
-        this.type=image.getType();
-        this.blogID=image.getBlogID();
-        this.productID=image.getProductID();
-    }
-
-    public Image(String originalFilename, String url, String publicId) {
-        this.name = originalFilename;
-        this.imageURL = url;
-        this.imageID = publicId;
-    }
-
-    public Image(String originalFilename, String url, String publicId, String type, Integer productID, Integer blogID) {
-        this.name = originalFilename;
-        this.imageURL = url;
-        this.imageID = publicId;
-        this.type = type;
-        this.productID = productID;
-        this.blogID = blogID;
     }
 }

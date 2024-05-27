@@ -1,8 +1,10 @@
 package com.coffee.lowland.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,18 +16,15 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Account implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String username;
-
-    private String password;
-
-    private String fullName;
-
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
+    String username;
+    String password;
+    String fullName;
     @Enumerated(value = EnumType.STRING)
     Role role;
 

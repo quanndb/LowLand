@@ -1,24 +1,25 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.model.Product;
-import com.coffee.lowland.model.ResponseObject;
-import com.coffee.lowland.repository.ImageRepository;
 import com.coffee.lowland.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(path ="/v1/products")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ProductController {
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private ImageRepository imageRepository;
+
+    ProductRepository productRepository;
 
     @GetMapping("/getAllProducts")
     public ResponseEntity<Object> getAllProducts() {
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Object> findById(@PathVariable Integer id) {
+    ResponseEntity<Object> findById(@PathVariable String id) {
         Optional<Product> foundProduct = productRepository.findById(id);
         if(foundProduct.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(foundProduct);
@@ -66,7 +67,7 @@ public class ProductController {
     }
 
     @PutMapping("/updateProduct/{id}")
-    public ResponseEntity<Object> updateProduct(@PathVariable Integer id, @RequestBody Product productDetails) {
+    public ResponseEntity<Object> updateProduct(@PathVariable String id, @RequestBody Product productDetails) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -87,7 +88,7 @@ public class ProductController {
     ResponseEntity<Object> CreateOrUpdateProduct(@RequestBody Product newProduct)
     {
         List<Product> foundProduct = productRepository.findProductsByProductCode(newProduct.getProductCode());
-        if(foundProduct.get(0).getId() > 0)
+        if(!Objects.equals(foundProduct.get(0).getId(), ""))
             return ResponseEntity.status(HttpStatus.OK).body("Product code already taken");
         Product updateProduct =  productRepository.findById(newProduct.getId()).map(
                 product -> {
@@ -103,7 +104,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
     }
     @DeleteMapping("/deleteProduct/{id}")
-    public ResponseEntity<Object> deleteProduct(@PathVariable Integer id) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable String id) {
         boolean exists = productRepository.existsById(id);
         if (exists) {
             productRepository.deleteById(id);
@@ -114,7 +115,7 @@ public class ProductController {
     }
 
     @PutMapping("/setIsActive/{id}")
-    public ResponseEntity<Object> setIsActiveById(@PathVariable Integer id) {
+    public ResponseEntity<Object> setIsActiveById(@PathVariable String id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -125,63 +126,4 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find product with id=" + id);
         }
     }
-
-
-
-//    @GetMapping("/imagesProduct")
-//    public ResponseEntity<ResponseObject> getAllProductImages() {
-//        Iterable<Product> allProducts = repository.findAll();
-//        List<Image> allProductImages = new ArrayList<>();
-//
-//        for (Product product : allProducts) {
-//            List<Image> productImages = imageRepository.findByTypeAndProductID("product", product.getId());
-//            allProductImages.addAll(productImages);
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                new ResponseObject("ok", "Retrieved all images of all products successfully", allProductImages)
-//        );
-//    }
-
-//    @DeleteMapping("/{productId}/deleteImage/{imageId}")
-//    public ResponseEntity<ResponseObject> deleteImageOfProduct(@PathVariable Integer productId, @PathVariable Integer imageId) {
-//        try {
-//            // Kiểm tra xem sản phẩm có tồn tại không
-//            Optional<Product> optionalProduct = productRepository.findById(productId);
-//            if (optionalProduct.isPresent()) {
-//                // Kiểm tra xem ảnh cần xóa có tồn tại không
-//                Optional<Image> optionalImage = imageRepository.findById(imageId);
-//                if (optionalImage.isPresent()) {
-//                    Image image = optionalImage.get();
-//                    // Kiểm tra xem ảnh thuộc về sản phẩm nào
-//                    if (image.getProductID() == productId) {
-//                        // Xóa ảnh
-//                        imageRepository.delete(image);
-//                        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-//                                new ResponseObject("ok", "Image deleted successfully", "")
-//                        );
-//                    } else {
-//                        // Nếu ảnh không thuộc về sản phẩm này, trả về lỗi
-//                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-//                                new ResponseObject("false", "Image with id=" + imageId + " does not belong to product with id=" + productId, "")
-//                        );
-//                    }
-//                } else {
-//                    // Nếu không tìm thấy ảnh, trả về lỗi
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-//                            new ResponseObject("false", "Cannot find image with id=" + imageId, "")
-//                    );
-//                }
-//            } else {
-//                // Nếu không tìm thấy sản phẩm, trả về lỗi
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-//                        new ResponseObject("false", "Cannot find product with id=" + productId, "")
-//                );
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                    new ResponseObject("false", "Failed to delete image", e.getMessage())
-//            );
-//        }
-//    }
 }

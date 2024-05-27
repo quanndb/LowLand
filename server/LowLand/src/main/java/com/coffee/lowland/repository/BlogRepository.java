@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BlogRepository extends JpaRepository<Blog, Integer> {
-
-    List<Blog> findBlogById(Integer id);
+public interface BlogRepository extends JpaRepository<Blog, String> {
+    List<Blog> findBlogById(String id);
 
 }

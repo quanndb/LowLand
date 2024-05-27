@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ImageRepository extends JpaRepository<Image, Integer> {
-    List<Image> findByTypeAndProductID(String type, Integer productID);
+public interface ImageRepository extends JpaRepository<Image, String> {
+    List<Image> findByTypeAndProductID(String type, String productID);
     List<Image> findByOrderById();
 
 }

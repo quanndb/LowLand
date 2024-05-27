@@ -1,29 +1,23 @@
 package com.coffee.lowland.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 
 @Entity
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String productCode;
-
-    private String name;
-
-    private String type;
-
-    private boolean isActive;
-
-    private String description;
-
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-//    private List<Image> images;
-
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
+    String productCode;
+    String name;
+    String type;
+    boolean isActive;
+    String description;
 }

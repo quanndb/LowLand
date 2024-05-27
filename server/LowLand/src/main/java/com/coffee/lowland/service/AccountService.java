@@ -1,18 +1,22 @@
 package com.coffee.lowland.service;
 
+import com.coffee.lowland.exception.AppExceptions;
+import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.model.Account;
 import com.coffee.lowland.repository.AccountRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class AccountService {
 
-    @Autowired
     PasswordEncoder passwordEncoder;
-
-    @Autowired
     AccountRepository accountRepository;
 
     public Account createAccount(Account account){
@@ -21,6 +25,11 @@ public class AccountService {
     }
 
     public boolean accountExitst(String username){
-        return !accountRepository.findAccountByUsername(username).isEmpty();
+        return accountRepository.existsAccountByUsername(username);
+    }
+
+    public Account findAccountByUsername(String username){
+        return accountRepository.findByUsername(username)
+                .orElseThrow(()-> new AppExceptions(ErrorCode.USERNAME_NOT_EXIST));
     }
 }

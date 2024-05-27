@@ -2,6 +2,12 @@ package com.coffee.lowland.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,14 +20,22 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CloudinaryService {
-    Cloudinary cloudinary;
+    @Value("${CLOUD_NAME}")
+    String CLOUD_NAME;
+    @Value("${API_KEY}")
+    String API_KEY;
+    @Value("${API_SECRET}")
+    String API_SECRET;
+
+    final Cloudinary cloudinary;
 
     public CloudinaryService() {
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cloud_name", "dqh3nmtam");
-        valuesMap.put("api_key", "729227722912876");
-        valuesMap.put("api_secret", "ZQILhDNsvpr4FTViE248Au_cpY0");
+        valuesMap.put("cloud_name", CLOUD_NAME);
+        valuesMap.put("api_key", API_KEY);
+        valuesMap.put("api_secret", API_SECRET);
         cloudinary = new Cloudinary(valuesMap);
     }
 

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.sql.Update;
 
 @Entity
@@ -13,16 +14,14 @@ import org.hibernate.sql.Update;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Blog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String title;
-
-    private String content;
-
-    private String date;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
+    String title;
+    String content;
+    String date;
 
 }

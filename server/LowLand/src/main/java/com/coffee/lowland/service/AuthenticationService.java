@@ -1,52 +1,104 @@
 package com.coffee.lowland.service;
 
+import com.coffee.lowland.DTO.request.AuthenticationRequest;
+import com.coffee.lowland.DTO.request.IntrospectRequest;
+import com.coffee.lowland.DTO.response.AuthenticationResponse;
+import com.coffee.lowland.DTO.response.IntrospectResponse;
+import com.coffee.lowland.exception.AppExceptions;
+import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.model.Account;
-import com.coffee.lowland.model.AuthenticationResponse;
 import com.coffee.lowland.repository.AccountRepository;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class AuthenticationService {
 
-    private final AccountRepository accountRepository;
+    @NonFinal
+    @Value("${SECRET_KEY}")
+    String SECRET_KEY;
 
-    private final PasswordEncoder passwordEncoder;
+    AccountRepository accountRepository;
+    PasswordEncoder passwordEncoder;
 
-    private final JWTService jwtService;
+    public AuthenticationResponse authenticate(AuthenticationRequest request){
+        var account = accountRepository.findByUsername(request.getUsername())
+                .orElseThrow(()->new AppExceptions(ErrorCode.USERNAME_NOT_EXIST));
+        boolean authenticate = passwordEncoder.matches(request.getPassword(),
+                account.getPassword());
 
-    private final AuthenticationManager authenticationManager;
+        if(!authenticate) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
 
-    public AuthenticationService(AccountRepository accountRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
-        this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
+        var token = generateToken(account);
+
+        return AuthenticationResponse.builder().accessToken(token).authenticated(true).build();
     }
 
-    public Account register(Account request){
-        Account newUser = new Account();
-        newUser.setUsername(request.getUsername());
-        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        newUser.setFullName(request.getFullName());
-        newUser.setRole(request.getRole());
-        newUser = accountRepository.save(newUser);
-        return (newUser);
+    private String generateToken(Account account) {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(account.getUsername())
+                .issuer("lowland.com")
+                .issueTime(new Date())
+                .expirationTime(new Date(
+                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                ))
+                .build();
+
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+
+        JWSObject jwsObject = new JWSObject(header, payload);
+
+        try {
+            jwsObject.sign(new MACSigner(SECRET_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
+        var token = request.getToken();
+        boolean isValid = true;
+
+        try {
+            verifyToken(token, false);
+        } catch (AppExceptions e) {
+            isValid = false;
+        }
+
+        return IntrospectResponse.builder().valid(isValid).build();
     }
 
-    public AuthenticationResponse authenticate(Account request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(SECRET_KEY.getBytes());
 
-        Account user = accountRepository.findAccountByUsername(request.getUsername()).get(0);
-        String token = jwtService.generateToken(user);
+        SignedJWT signedJWT = SignedJWT.parse(token);
 
-        return new AuthenticationResponse(token);
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(verifier);
+
+        if (!(verified && expiryTime.after(new Date()))) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
+
+        return signedJWT;
     }
 }
