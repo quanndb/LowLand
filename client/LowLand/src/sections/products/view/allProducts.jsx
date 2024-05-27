@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import ProductItem from "src/components/ProductItem";
-
-const allProducts = () => {
+import { PRODUCTS } from "src/mock/itemProduct.js";
+const AllProducts = () => {
   return (
     <Box>
       <Grid
@@ -12,35 +12,29 @@ const allProducts = () => {
           width: "100%",
         }}
       >
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product2.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product3.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
-        <Grid item>
-          <ProductItem imageURL={"/static/images/product4.jpg"} />
-        </Grid>
+        {/* sx,
+  imageURL,
+  name,
+  originalPrices,
+  salePrices,
+  isSale, */}
+
+        {PRODUCTS.map((item) => {
+          return (
+            <Grid item key={item.id}>
+              <ProductItem
+                id={item.id}
+                imageURL={item.imageURL}
+                isSale={item.isSale}
+                name={item.name}
+                salePrices={item.salePrices}
+                originalPrices={item.originalPrices}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </Box>
   );
 };
-export default allProducts;
+export default AllProducts;

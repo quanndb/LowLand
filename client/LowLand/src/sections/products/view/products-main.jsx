@@ -1,10 +1,18 @@
-import "./index.css";
 import Productswiper from "./productswiper";
 import AllProducts from "./allProducts";
 
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { useState } from "react";
 
-const ProductsMain = () => {
+const ProductsMain = ({ categories }) => {
+  const [active, setActive] = useState(0);
+
+  const handleClickCategory = (id) => {
+    if (active !== id) {
+      setActive(id);
+    }
+  };
+
   return (
     <Container>
       <Box
@@ -36,51 +44,38 @@ const ProductsMain = () => {
           justifyContent={"center"}
           columns={{ md: 5, sm: 1 }}
         >
-          <Grid item sm={1} sx={{ width: "100%", padding: "4px" }}>
-            <Button
-              className="btnColor"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              ALL PRODUCTS
-            </Button>
-          </Grid>
-          <Grid item sm={1} sx={{ width: "100%", padding: "4px" }}>
-            <Button
-              className="btnColor"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              COFFEE MUGS
-            </Button>
-          </Grid>
-          <Grid item sm={1} sx={{ width: "100%", padding: "4px" }}>
-            <Button
-              className="btnColor"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              OTHERS
-            </Button>
-          </Grid>
-          <Grid item sm={1} sx={{ width: "100%", padding: "4px" }}>
-            <Button
-              className="btnColor"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              PREMIUM
-            </Button>
-          </Grid>
-          <Grid item sm={1} sx={{ width: "100%", padding: "4px" }}>
-            <Button
-              className="btnColor"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              TEA MUGS
-            </Button>
-          </Grid>
+          {categories.map((item) => {
+            return (
+              <Grid
+                item
+                sm={1}
+                sx={{ width: "100%", padding: "4px" }}
+                key={item.id}
+              >
+                <Button
+                  className="btnColor"
+                  sx={{
+                    width: "100%",
+                    backgroundColor:
+                      active === item.id ? "var(--secondary-color)" : "none",
+                    color:
+                      active === item.id ? "white" : "var(--secondary-color)",
+                    "&:hover": {
+                      backgroundColor:
+                        active === item.id ? "var(--secondary-color)" : "none",
+                      color:
+                        active === item.id ? "white" : "var(--secondary-color)",
+                      opacity: ".7",
+                    },
+                  }}
+                  variant="outlined"
+                  onClick={() => handleClickCategory(item.id)}
+                >
+                  {item.name}
+                </Button>
+              </Grid>
+            );
+          })}
         </Grid>
       </Container>
       <Productswiper />

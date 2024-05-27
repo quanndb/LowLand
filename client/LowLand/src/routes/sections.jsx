@@ -4,6 +4,10 @@ import { ToastContainer } from "react-toastify";
 
 import Loading from "src/components/Loading";
 import { fetchBlogById } from "./loaders/blogLoader";
+import { fetchProductById } from "./loaders/productLoader";
+
+import DetailProductPage from "src/pages/detaill-product";
+import UserPage from "src/pages/UserPage";
 
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
 const HomePage = lazy(() => import("src/pages/home"));
@@ -41,6 +45,11 @@ const routes = createBrowserRouter([
         element: <ProductsPage />,
       },
       {
+        path: "products/:productID",
+        element: <DetailProductPage />,
+        loader: fetchProductById,
+      },
+      {
         path: "about",
         element: <AboutPage />,
       },
@@ -74,6 +83,10 @@ const routes = createBrowserRouter([
         <NotFound />
       </Suspense>
     ),
+  },
+  {
+    path: "user",
+    element: <UserPage/>,
   },
   {
     path: "*",

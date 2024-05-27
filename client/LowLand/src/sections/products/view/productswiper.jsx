@@ -55,7 +55,15 @@ const Productswiper = () => {
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide>
+        <SwiperSlide
+          style={{
+            textAlign: "center",
+            fontSize: "18px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Grid
             container
             sx={{ width: "100%", padding: "40px" }}
@@ -65,7 +73,7 @@ const Productswiper = () => {
               <Image
                 imageURL={"/static/images/ourproduct1.jpg"}
                 sx={{ width: "100%", height: "310px" }}
-                overlayContent={"ABC"}
+                overlayContent={"READ THE FULL STORY"}
               />
             </Grid>
             <Grid
@@ -114,6 +122,8 @@ const Productswiper = () => {
               <Image
                 imageURL={"/static/images/ourproduct2.jpg"}
                 sx={{ width: "100%", height: "310px" }}
+                overlayContent={"READ THE FULL STORY"}
+
               />
             </Grid>
             <Grid
