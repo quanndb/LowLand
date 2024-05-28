@@ -26,11 +26,6 @@ const routes = createBrowserRouter([
       <DefaultLayout>
         <Suspense fallback={<Loading />}>
           <Outlet />
-          <ToastContainer
-            autoClose={2000}
-            pauseOnHover={false}
-            position="top-center"
-          />
         </Suspense>
       </DefaultLayout>
     ),
@@ -70,23 +65,15 @@ const routes = createBrowserRouter([
   },
   {
     path: "login",
-    element: (
-      <Suspense fallback={<Loading />}>
-        <LoginPage />
-      </Suspense>
-    ),
+    element: <LoginPage />,
   },
   {
     path: "404",
-    element: (
-      <Suspense fallback={<Loading />}>
-        <NotFound />
-      </Suspense>
-    ),
+    element: <NotFound />,
   },
   {
     path: "user",
-    element: <UserPage/>,
+    element: <UserPage />,
   },
   {
     path: "*",

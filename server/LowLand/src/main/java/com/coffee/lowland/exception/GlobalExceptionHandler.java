@@ -1,7 +1,10 @@
 package com.coffee.lowland.exception;
 
 import com.coffee.lowland.DTO.response.APIResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.Objects;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
@@ -17,7 +21,16 @@ public class GlobalExceptionHandler {
                 .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
                 .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
                 .build();
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).body(apiResponse);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<APIResponse<?>> handleForbiddenExceptions(Exception exception){
+        APIResponse<?> apiResponse = APIResponse.builder()
+                .code(ErrorCode.FORBIDDEN_EXCEPTION.getCode())
+                .message(ErrorCode.FORBIDDEN_EXCEPTION.getMessage())
+                .build();
+        return ResponseEntity.status(ErrorCode.FORBIDDEN_EXCEPTION.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = AppExceptions.class)
@@ -26,7 +39,7 @@ public class GlobalExceptionHandler {
                 .code(exceptions.getErrorCode().getCode())
                 .message(exceptions.getErrorCode().getMessage())
                 .build();
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(exceptions.getErrorCode().getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -41,6 +54,6 @@ public class GlobalExceptionHandler {
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 }

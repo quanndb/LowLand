@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:2818/api/v1",
+  baseURL: "http://localhost:2818/api",
   headers: {
     "content-type": "application/json",
   },
@@ -9,11 +9,12 @@ const instance = axios.create({
 
 instance.interceptors.response.use(
   function (response) {
-    if (response && response.data) return response.data;
+    if (response && response.data && response.data.result)
+      return response.data.result;
     else return response;
   },
   function (error) {
-    throw error;
+    throw error.response.data.message;
   }
 );
 

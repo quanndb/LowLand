@@ -32,11 +32,7 @@ public class BlogController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getBlog(@PathVariable String id){
-        List<Blog> exitstBlog = blogService.getBlog(id);
-        if(exitstBlog.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
-        }
-        else return ResponseEntity.status(HttpStatus.OK).body(exitstBlog.get(0));
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlog(id));
     }
 
     @PostMapping("/")

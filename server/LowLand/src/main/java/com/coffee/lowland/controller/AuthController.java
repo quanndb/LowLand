@@ -2,14 +2,17 @@ package com.coffee.lowland.controller;
 
 
 import com.coffee.lowland.DTO.request.AuthenticationRequest;
+import com.coffee.lowland.DTO.request.UserRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import com.coffee.lowland.DTO.response.AuthenticationResponse;
 
+import com.coffee.lowland.DTO.response.UserResponse;
 import com.coffee.lowland.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +32,13 @@ public class AuthController {
     public APIResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
         return APIResponse.<AuthenticationResponse>builder().code(2000).result(result).build();
+    }
+
+    @GetMapping("/user")
+    public APIResponse<UserResponse> getUser(){
+        return APIResponse.<UserResponse>builder()
+                .code(2000)
+                .result(authenticationService.getMyInfo())
+                .build();
     }
 }

@@ -1,13 +1,11 @@
 import { Box, Container } from "@mui/material";
 import { Suspense, lazy } from "react";
 import Loading from "src/components/Loading";
-import { useScrollToTop } from "src/hooks/use-scroll-to-top";
 
 const Header = lazy(() => import("./header"));
 const Footer = lazy(() => import("./footer"));
 
-const DefaultLayout = ({ children }) => {
-  useScrollToTop();
+const DefaultLayout = ({ children, notShowHeader }) => {
   return (
     <Suspense fallback={<Loading />}>
       <Container
@@ -20,8 +18,17 @@ const DefaultLayout = ({ children }) => {
           justifyContent: "space-between",
         }}
       >
-        <Header />
-        <Box sx={{ paddingTop: "100px" }}>{children}</Box>
+        {!notShowHeader ? <Header /> : <></>}
+        <Box
+          sx={{
+            paddingTop: "100px",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          {children}
+        </Box>
         <Footer />
       </Container>
     </Suspense>

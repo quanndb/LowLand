@@ -4,8 +4,8 @@ import { useScrollToTop } from "./hooks/use-scroll-to-top";
 
 // ----------------------------------------------------------------------
 
-export default function App() {
+export default function App({ children }) {
   useScrollToTop();
 
-  return <></>;
+  return <>{children}</>;
 }
