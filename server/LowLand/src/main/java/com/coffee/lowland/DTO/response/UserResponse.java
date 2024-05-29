@@ -13,4 +13,6 @@ import lombok.experimental.FieldDefaults;
 public class UserResponse {
     String username;
     String fullName;
+
+    String avatar;
 }

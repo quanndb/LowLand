@@ -12,16 +12,9 @@ const AllProducts = () => {
           width: "100%",
         }}
       >
-        {/* sx,
-  imageURL,
-  name,
-  originalPrices,
-  salePrices,
-  isSale, */}
-
         {PRODUCTS.map((item) => {
           return (
-            <Grid item key={item.id}>
+            <Grid item md={3} xs={12} key={item.id}>
               <ProductItem
                 id={item.id}
                 imageURL={item.imageURL}
