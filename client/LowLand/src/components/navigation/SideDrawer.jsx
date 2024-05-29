@@ -16,6 +16,9 @@ function SideDrawer({ children, open, drawer }) {
       case "blogComment": {
         dispatch(DrawerManagerSlice.actions.setOpenBlogCommentDrawer(false));
       }
+      case "user": {
+        dispatch(DrawerManagerSlice.actions.setOpenUserDrawer(false));
+      }
       default: {
       }
     }
@@ -34,7 +37,7 @@ function SideDrawer({ children, open, drawer }) {
         onClick={handleCloseDrawer}
       />
 
-      <Box display={"flex"} width={"100%"} justifyContent={"center"}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
         {children}
       </Box>
     </Box>

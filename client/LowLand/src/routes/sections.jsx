@@ -65,15 +65,27 @@ const routes = createBrowserRouter([
   },
   {
     path: "login",
-    element: <LoginPage />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <LoginPage />
+      </Suspense>
+    ),
   },
   {
     path: "404",
-    element: <NotFound />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <NotFound />
+      </Suspense>
+    ),
   },
   {
     path: "user",
-    element: <UserPage />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <UserPage />
+      </Suspense>
+    ),
   },
   {
     path: "*",

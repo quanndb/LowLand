@@ -19,6 +19,7 @@ import LowLandLogo from "src/components/navigation/logo";
 import { usePathname, useRouter } from "src/routes/hooks";
 import { cart } from "src/redux/selectors/CartSelector";
 import { Avatar } from "@mui/material";
+import UserDrawer from "./common/UserDrawer";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   const router = useRouter();
@@ -114,6 +115,10 @@ const Header = () => {
     dispatch(DrawerManagerSlice.actions.setOpenCartDrawer(true));
   };
 
+  const handleOpenUserDrawer = () => {
+    dispatch(DrawerManagerSlice.actions.setOpenUserDrawer(true));
+  };
+
   return (
     <Container
       maxWidth="100%"
@@ -140,7 +145,7 @@ const Header = () => {
           setShowNav={setShowNav}
         />
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton>
+          <IconButton onClick={handleOpenUserDrawer}>
             <Avatar></Avatar>
           </IconButton>
           <IconButton
@@ -163,6 +168,7 @@ const Header = () => {
           )}
         </Box>
         <CartDrawer />
+        <UserDrawer />
       </Container>
     </Container>
   );

@@ -8,7 +8,7 @@ const HomeBanner = () => {
     <Container disableGutters sx={{ marginBottom: "100px" }}>
       <Container
         sx={{
-          backgroundImage: `linear-gradient(180deg, rgba(5, 8, 39, 0.4), rgba(5, 8, 39, 0.4)), url("https://assets.website-files.com/5be96251aaba7a7b19ecdf69/5be96251aaba7a58aaecdfba_Header-Pic.jpg")`,
+          backgroundImage: `linear-gradient(180deg, rgba(5, 8, 39, 0.4), rgba(5, 8, 39, 0.4)), url("/static/images/banner.jpg")`,
           height: "530px",
           backgroundPosition: "center bottom",
           backgroundRepeat: "no-repeat,",
