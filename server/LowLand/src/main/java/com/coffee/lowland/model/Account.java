@@ -27,6 +27,7 @@ public class Account implements UserDetails {
     String fullName;
     @Enumerated(value = EnumType.STRING)
     Role role;
+    String avatar;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -52,4 +53,6 @@ public class Account implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

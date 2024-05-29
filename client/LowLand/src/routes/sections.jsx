@@ -23,11 +23,11 @@ const DefaultLayout = lazy(() => import("src/layouts/defaultLayout"));
 const routes = createBrowserRouter([
   {
     element: (
-      <DefaultLayout>
-        <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading />}>
+        <DefaultLayout>
           <Outlet />
-        </Suspense>
-      </DefaultLayout>
+        </DefaultLayout>
+      </Suspense>
     ),
     children: [
       {
@@ -79,6 +79,7 @@ const routes = createBrowserRouter([
       </Suspense>
     ),
   },
+
   {
     path: "user",
     element: (
@@ -89,7 +90,11 @@ const routes = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/404" replace />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Navigate to="/404" replace />
+      </Suspense>
+    ),
   },
 ]);
 

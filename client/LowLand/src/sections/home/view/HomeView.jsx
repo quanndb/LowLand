@@ -4,6 +4,9 @@ import HomeMagazine from "../magazine";
 import HomeBlog from "../blogStory";
 import ShowCase from "src/components/ShowCase";
 import SectionTitle from "src/components/SectionTitle";
+import AllProducts from "src/sections/products/view/allProducts";
+import { SwiperProducts } from "src/sections/detailProduct/view/SwiperProducts";
+import { PRODUCTS } from "src/mock/itemProduct";
 
 const HomeView = () => {
   return (
@@ -12,9 +15,9 @@ const HomeView = () => {
       <HomeStory />
 
       <SectionTitle>FEATURED MUGS</SectionTitle>
-
+      <SwiperProducts list={PRODUCTS}/>
       <SectionTitle>MORE PRODUCTS</SectionTitle>
-
+      <AllProducts />
       <HomeMagazine />
 
       <ShowCase imageURL={"/static/images/showCase.jpg"} />

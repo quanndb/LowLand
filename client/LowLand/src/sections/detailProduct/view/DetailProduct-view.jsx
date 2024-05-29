@@ -13,14 +13,12 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { CustomSwiper } from "src/components/CustomSwiper";
 import Image from "src/components/Image";
 import ProductImage from "src/components/ProductImage";
-import ProductItem from "src/components/ProductItem";
 import SectionTitle from "src/components/SectionTitle";
 import CartManagerSlice from "src/redux/slices/CartManager";
 import { useRouter } from "src/routes/hooks";
-import { SwiperSlide } from "swiper/react";
+import { SwiperProducts } from "./SwiperProducts";
 
 const formatMapping = {
   ice: { displayName: "ice", unit: "" },
@@ -339,30 +337,7 @@ const DetailProductView = ({ product, list }) => {
       <SectionTitle>YOU MIGHT ALSO LIKE THESE</SectionTitle>
 
       <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
-        <CustomSwiper sx={{ mb: "20px" }}>
-          {list.map((item) => {
-            return (
-              <SwiperSlide key={item.id}>
-                <ProductItem
-                  imageURL={item.imageURL}
-                  isSale={item.isSale}
-                  name={item.name}
-                  salePrices={item.salePrices}
-                  originalPrices={item.originalPrices}
-                  id={item.id}
-
-                  // sx={{
-                  //   ư{
-                  //     xs:"100%",
-                  //     md:"350px"
-                  //   }
-                  // }}
-                />
-              </SwiperSlide>
-            );
-          })}
-        </CustomSwiper>
-
+        <SwiperProducts maxWidth={"lg"} list={list}/>
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Button
             variant="contained"
