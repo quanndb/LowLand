@@ -32,7 +32,7 @@ public class SecurityConfig {
 
 
     String[] PUBLIC_ENDPOINTS = {
-           "auth/login","auth/register","auth/user"
+           "auth/login","auth/register","auth/user", 
     };
     @Bean
     public PasswordEncoder passwordEncoder (){

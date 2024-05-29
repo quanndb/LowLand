@@ -20,7 +20,7 @@ root.render(
         <ToastContainer
           autoClose={2000}
           pauseOnHover={false}
-          position="top-center"
+          position="bottom-left"
         />
         <RouterProvider router={routes}>
           <App />
