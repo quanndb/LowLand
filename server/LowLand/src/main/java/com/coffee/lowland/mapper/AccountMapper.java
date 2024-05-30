@@ -13,7 +13,7 @@ import org.mapstruct.MappingTarget;
 public interface AccountMapper {
     UserResponse toUserResponse(Account request);
 
-    void updateAccount(@MappingTarget Account account, UpdateAccountRequest request);
+//    void updateAccount(@MappingTarget Account account, UpdateAccountRequest request);
 //
 //    @Mapping(target = "roles", ignore = true)
 //    void updateUser(@MappingTarget User user, UserUpdateRequest request);

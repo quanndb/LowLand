@@ -44,10 +44,10 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'com.cloudinary:cloudinary-http44:1.32.2'
 
-	//payOS
-//    implementation(files("${projectDir}/libs/payos.jar"))
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar.enabled = false

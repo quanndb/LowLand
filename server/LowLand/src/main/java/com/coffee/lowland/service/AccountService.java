@@ -24,12 +24,8 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public boolean accountExitst(String username){
-        return accountRepository.existsAccountByUsername(username);
-    }
-
-    public Account findAccountByUsername(String username){
-        return accountRepository.findByUsername(username)
-                .orElseThrow(()-> new AppExceptions(ErrorCode.USERNAME_NOT_EXIST));
+    public Account findAccountByEmail(String username){
+        return accountRepository.findAccountByEmail(username)
+                .orElseThrow(()-> new AppExceptions(ErrorCode.EMAIL_NOT_EXIST));
     }
 }

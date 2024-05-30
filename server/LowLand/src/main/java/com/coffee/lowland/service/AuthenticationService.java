@@ -27,6 +27,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -34,6 +35,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +52,12 @@ public class AuthenticationService {
     PasswordEncoder passwordEncoder;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        var account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(()->new AppExceptions(ErrorCode.USERNAME_NOT_EXIST));
+        var account = accountRepository.findAccountByEmail(request.getEmail())
+                .orElseThrow(()->new AppExceptions(ErrorCode.EMAIL_NOT_EXIST));
         boolean authenticate = passwordEncoder.matches(request.getPassword(),
                 account.getPassword());
 
-        if(!authenticate) throw new AppExceptions(ErrorCode.USERNAME_PASSWORD_INVALID);
+        if(!authenticate) throw new AppExceptions(ErrorCode.EMAIL_PASSWORD_INVALID);
 
         var token = generateToken(account);
 
@@ -65,15 +67,20 @@ public class AuthenticationService {
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        Account account = accountRepository.findByUsername(name).orElseThrow(() -> new AppExceptions(ErrorCode.USER_NOT_EXISTED));
+        Account account = accountRepository.findAccountByEmail(name).orElseThrow(() -> new AppExceptions(ErrorCode.USER_NOT_EXISTED));
         return accountMapper.toUserResponse(account);
+    }
+
+    @Transactional
+    public List<Account> findAccountByID(int id){
+        return accountRepository.spGetAccountByAccountID(id);
     }
 
     private String generateToken(Account account) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(account.getUsername())
+                .subject(account.getEmail())
                 .issuer("lowland")
                 .issueTime(new Date(System.currentTimeMillis()))
                 .expirationTime(new Date(System.currentTimeMillis() + 60*60*1000))

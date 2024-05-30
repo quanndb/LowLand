@@ -2,18 +2,19 @@ package com.coffee.lowland.controller;
 
 
 import com.coffee.lowland.DTO.request.AuthenticationRequest;
-import com.coffee.lowland.DTO.request.UserRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import com.coffee.lowland.DTO.response.AuthenticationResponse;
 
 import com.coffee.lowland.DTO.response.UserResponse;
+import com.coffee.lowland.model.Account;
 import com.coffee.lowland.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,7 +30,7 @@ public class AuthController {
 //    }
 
     @PostMapping("/login")
-    public APIResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    public APIResponse<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
         return APIResponse.<AuthenticationResponse>builder().code(2000).result(result).build();
     }
@@ -39,6 +40,14 @@ public class AuthController {
         return APIResponse.<UserResponse>builder()
                 .code(2000)
                 .result(authenticationService.getMyInfo())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public APIResponse<?> getUser(@PathVariable int id){
+        return APIResponse.<List<Account>>builder()
+                .code(2000)
+                .result(authenticationService.findAccountByID(id))
                 .build();
     }
 }

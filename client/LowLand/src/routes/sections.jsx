@@ -23,11 +23,11 @@ const DefaultLayout = lazy(() => import("src/layouts/defaultLayout"));
 const routes = createBrowserRouter([
   {
     element: (
-      <Suspense fallback={<Loading />}>
-        <DefaultLayout>
+      <DefaultLayout>
+        <Suspense fallback={<Loading />}>
           <Outlet />
-        </DefaultLayout>
-      </Suspense>
+        </Suspense>
+      </DefaultLayout>
     ),
     children: [
       {

@@ -11,8 +11,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    String username;
+    String email;
     String fullName;
-
-    String avatar;
+    int gender;
+    String phoneNumber;
+    String address;
 }

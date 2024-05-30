@@ -30,7 +30,7 @@ const LoginView = () => {
   const handleLogin = () => {
     authAPI
       .login({
-        username: username,
+        email: username,
         password: password,
       })
       .then((res) => {
