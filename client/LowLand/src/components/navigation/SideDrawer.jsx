@@ -13,6 +13,12 @@ function SideDrawer({ children, open, drawer }) {
       case "cart": {
         dispatch(DrawerManagerSlice.actions.setOpenCartDrawer(false));
       }
+      case "blogComment": {
+        dispatch(DrawerManagerSlice.actions.setOpenBlogCommentDrawer(false));
+      }
+      case "user": {
+        dispatch(DrawerManagerSlice.actions.setOpenUserDrawer(false));
+      }
       default: {
       }
     }
@@ -31,7 +37,7 @@ function SideDrawer({ children, open, drawer }) {
         onClick={handleCloseDrawer}
       />
 
-      <Box display={"flex"} width={"100%"} justifyContent={"center"}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
         {children}
       </Box>
     </Box>
@@ -39,7 +45,12 @@ function SideDrawer({ children, open, drawer }) {
 
   return (
     <>
-      <Drawer anchor={"right"} open={open} onClose={handleCloseDrawer}>
+      <Drawer
+        anchor={"right"}
+        open={open}
+        onClose={handleCloseDrawer}
+        sx={{ display: "flex", flexDirection: "column" }}
+      >
         {DrawerList}
       </Drawer>
     </>

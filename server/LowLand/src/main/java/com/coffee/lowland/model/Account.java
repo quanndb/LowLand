@@ -1,8 +1,11 @@
 package com.coffee.lowland.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,43 +17,21 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Account implements UserDetails {
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String username;
-
-    private String password;
-
-    private String fullName;
-
+    int accountID;
+    String email;
+    String password;
+    String fullName;
+    int gender;
+    String phoneNumber;
+    String address;
+    String createdDate;
+    String createdBy;
+    String updatedDate;
+    String updatedBy;
     @Enumerated(value = EnumType.STRING)
     Role role;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

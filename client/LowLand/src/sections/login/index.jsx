@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Button,
@@ -16,8 +16,12 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import authAPI from "src/services/API/authAPI";
 import DefaultLayout from "src/layouts/defaultLayout";
 import LowLandLogo from "src/components/navigation/logo";
+import { toast } from "react-toastify";
+import { useRouter } from "src/routes/hooks";
 
 const LoginView = () => {
+  const router = useRouter();
+
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
@@ -26,22 +30,32 @@ const LoginView = () => {
   const handleLogin = () => {
     authAPI
       .login({
-        username: username,
+        email: username,
         password: password,
       })
-      .then((res) => localStorage.setItem("accessToken", res.accessToken))
-      .catch((error) => console.log(error))
+      .then((res) => {
+        localStorage.setItem("accessToken", res.accessToken);
+        toast.success("Logged in successfully");
+        router.replace("/");
+      })
+      .catch((error) => toast.error(error))
       .finally(() => console.log("Done!"));
   };
+
+  useEffect(() => {
+    if (localStorage.accessToken) router.replace("/");
+  }, []);
+
   return (
     <DefaultLayout notShowHeader={true}>
       <Container
         sx={{
-          margin: "80px 0px",
+          margin: "0px 0px",
           alignSelf: "center",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "100vh",
         }}
       >
         <Grid

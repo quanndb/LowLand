@@ -33,7 +33,7 @@ const SubcribeForm = () => {
       </Typography>
       <Box
         sx={{
-          backgroundColor: "var(--background-color)",
+          backgroundColor: "#fff",
           padding: "20px 20px",
           display: "flex",
           borderRadius: "10px",
@@ -44,6 +44,7 @@ const SubcribeForm = () => {
           label="youremail@lowlandcoffee.com"
           variant="outlined"
           color="info"
+          sx={{ zIndex: 0 }}
         />
         <Button
           color="secondary"
@@ -62,8 +63,7 @@ const ContactFooter = () => {
     <Container
       sx={{
         backgroundColor: "#fff",
-        padding: "20px",
-        marginBottom: "30px",
+        padding: "20px ",
         boxShadow:
           "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;",
       }}
@@ -72,7 +72,7 @@ const ContactFooter = () => {
         <Grid item sx={{ margin: "10px" }}>
           <Box
             sx={{
-              backgroundImage: `url("static/images/logo.jpg")`,
+              backgroundImage: `url("/static/images/logo.jpg")`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               height: "120px",
@@ -93,6 +93,7 @@ const ContactFooter = () => {
               width: "200px",
               fontWeight: "600",
               fontStyle: "italic",
+              textAlign: "center",
             }}
           >
             "Delivering the best coffee life since 1996. From coffee geeks to

@@ -7,7 +7,7 @@ const LowLandLogo = () => {
         height: "60px",
         width: "60px",
         borderRadius: "50%",
-        backgroundImage: "url(static/images/logo.jpg)",
+        backgroundImage: "url(/static/images/logo.jpg)",
         backgroundSize: "contain",
         margin: "0px 5px",
         boxShadow:

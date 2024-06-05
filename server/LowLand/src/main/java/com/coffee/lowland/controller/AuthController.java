@@ -1,54 +1,53 @@
 package com.coffee.lowland.controller;
 
 
+import com.coffee.lowland.DTO.request.AuthenticationRequest;
+import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.AuthenticationResponse;
+
+import com.coffee.lowland.DTO.response.UserResponse;
 import com.coffee.lowland.model.Account;
-import com.coffee.lowland.model.AuthenticationResponse;
-import com.coffee.lowland.model.Role;
-import com.coffee.lowland.service.AccountService;
 import com.coffee.lowland.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/v1/auth")
-@CrossOrigin(origins = "http://localhost:5173/")
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class AuthController {
 
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private AuthenticationService authenticationService;
+    AuthenticationService authenticationService;
 
-
-    @PostMapping("/register")
-    public ResponseEntity<String> registerCustomer(@RequestBody Account account) {
-
-        ResponseEntity<String> response = null;
-        account.setRole(Role.USER);
-        if(accountService.accountExitst(account.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
-        try {
-            Account newAccount = accountService.createAccount(account);
-            if (newAccount.getId() > 0) {
-                return ResponseEntity.status(HttpStatus.CREATED)
-                        .body("Customer is created successfully for username = " + account.getUsername());
-            }
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An exception occurred from server with exception = " + exception);
-        }
-        return response;
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<String> registerCustomer(@RequestBody AuthenticationRequest account) {
+//
+//    }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody Account request) {
-        AuthenticationResponse response = authenticationService.authenticate(request);
-        if(response.getAccessToken()!=null){
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username or password is invalid");
-        }
+    public APIResponse<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
+        AuthenticationResponse result = authenticationService.authenticate(request);
+        return APIResponse.<AuthenticationResponse>builder().code(2000).result(result).build();
+    }
+
+    @GetMapping("/user")
+    public APIResponse<UserResponse> getUser(){
+        return APIResponse.<UserResponse>builder()
+                .code(2000)
+                .result(authenticationService.getMyInfo())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public APIResponse<?> getUser(@PathVariable int id){
+        return APIResponse.<List<Account>>builder()
+                .code(2000)
+                .result(authenticationService.findAccountByID(id))
+                .build();
     }
 }
