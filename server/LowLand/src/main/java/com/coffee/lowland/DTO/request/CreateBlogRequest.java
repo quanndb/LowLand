@@ -5,13 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreatePayRequest {
-    int amount;
-    int orderCode;
-    List<OrderDetailRequest> items;
+public class CreateBlogRequest {
+    String title;
+    String content;
+    String imageURL;
+    String createdDate;
+    String createdBy;
+    String updatedDate;
+    String updatedBy;
 }

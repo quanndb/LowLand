@@ -21,6 +21,9 @@ public enum ErrorCode {
     EMAIL_NOT_EXIST(4006, "Email is not exist", HttpStatus.BAD_REQUEST),
     EMAIL_PASSWORD_INVALID(4007, "Invalid email or password", HttpStatus.BAD_REQUEST),
     EMAIL_NULL(4008,"Email can not be null", HttpStatus.BAD_REQUEST),
+    BLOG_NOT_EXISTED(4020,"Your blogID is not existed", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_EXISTED(4030,"Your orderID is not existed", HttpStatus.BAD_REQUEST)
+
     ;
 
     int code;
