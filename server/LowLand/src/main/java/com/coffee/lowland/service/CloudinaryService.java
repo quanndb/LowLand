@@ -59,5 +59,4 @@ public class CloudinaryService {
         fo.close();
         return file;
     }
-
 }

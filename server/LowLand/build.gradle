@@ -34,6 +34,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	//spring security
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -47,7 +48,6 @@ dependencies {
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
 }
 
 jar.enabled = false

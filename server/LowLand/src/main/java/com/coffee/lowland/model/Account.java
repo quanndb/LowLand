@@ -25,6 +25,7 @@ public class Account {
     String email;
     String password;
     String fullName;
+    @Column(name = "gioitinh")
     int gender;
     String phoneNumber;
     String address;
