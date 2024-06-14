@@ -19,7 +19,7 @@ const NotFound = lazy(() => import("src/pages/not-found"));
 const DetailBlogPage = lazy(() => import("src/pages/detail-blog"));
 const CheckoutPage = lazy(() => import("src/pages/checkout"));
 const DefaultLayout = lazy(() => import("src/layouts/defaultLayout"));
-
+const SignUpPage = lazy(() => import("src/pages/signUp"));
 const routes = createBrowserRouter([
   {
     element: (
@@ -68,6 +68,14 @@ const routes = createBrowserRouter([
     element: (
       <Suspense fallback={<Loading />}>
         <LoginPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "signUp",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <SignUpPage />
       </Suspense>
     ),
   },

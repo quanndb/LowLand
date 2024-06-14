@@ -20,6 +20,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
   {
     id: 1,
@@ -42,6 +59,23 @@ export const PRODUCTS = [
       milk: 24,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
   {
     id: 2,
@@ -64,6 +98,23 @@ export const PRODUCTS = [
       milk: 24,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
   {
     id: 3,
@@ -86,6 +137,23 @@ export const PRODUCTS = [
       milk: 24,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
   {
     id: 4,
@@ -108,6 +176,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
   {
     id: 5,
@@ -130,6 +215,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
   {
     id: 6,
@@ -152,6 +254,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
 
   {
@@ -175,6 +294,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
 
   {
@@ -198,6 +334,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
 
   {
@@ -221,6 +374,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
 
   {
@@ -244,6 +414,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
 
   {
@@ -267,6 +454,23 @@ export const PRODUCTS = [
       milk: 12,
     },
     type: "product",
+    size : [
+      {
+        id: 0,
+        name:"M",
+        price:0
+      },
+      {
+        id:1,
+        name: "L",
+        price: 6000,
+      },
+      {
+        id: 2,
+        name:"XL",
+        price:10000
+      }
+    ]
   },
 ];
 

@@ -67,7 +67,30 @@ const DetailProductView = ({ product, list }) => {
     toast.success("Add to cart successfully!");
   };
 
+  // const handleAddToCart = (id, name, imageURL, quantity, price) => {
+  //   // Logic to find the selected size price
+  //   const selectedSize = product.size.find(size => size.id === 1); // Example: assume size L is selected
+  //   const sizePrice = selectedSize ? selectedSize.price : 0;
+
+  //   // Calculate total price including size price
+  //   const totalPrice = (product.isSale ? product.salePrices : product.originalPrices) + sizePrice;
+
+  //   const newItem = {
+  //     productID: id,
+  //     productName: name,
+  //     imageURL: imageURL,
+  //     quantity: quantity,
+  //     price: totalPrice, // Pass the total price to the cart
+  //   };
+  //   dispatch(CartManagerSlice.actions.addToCart(newItem));
+  //   toast.success("Add to cart successfully!");
+  // };
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(0);
+  const handleSizeSelect = (sizeId, sizePrice) => {
+    setSelectedSize(sizeId);
+  };
+
   const handleChangQuantity = (value) => {
     let regex = /^-?\d+$/;
     if (value === "") {
@@ -88,6 +111,28 @@ const DetailProductView = ({ product, list }) => {
     handleChangQuantity(quantity - 1);
   };
 
+  const calculateTotalPrice = () => {
+    if (selectedSize !== null) {
+      const size = product.size.find((size) => size.id === selectedSize);
+      if (size) {
+        const sizePrice = size.price;
+        return product.isSale
+          ? product.salePrices + sizePrice
+          : product.originalPrices + sizePrice;
+      }
+    }
+    return product.isSale ? product.salePrices : product.originalPrices;
+  };
+  const calculateOldPrice = () => {
+    if (selectedSize !== null) {
+      const size = product.size.find((size) => size.id === selectedSize);
+      if (size) {
+        const sizePrice = size.price;
+        return product.originalPrices + sizePrice;
+      }
+    }
+    return product.originalPrices;
+  };
   return (
     <>
       <Container maxWidth={"lg"}>
@@ -163,7 +208,7 @@ const DetailProductView = ({ product, list }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {product.salePrices}
+                  {calculateTotalPrice()}
                   <sup>đ</sup>
                 </span>
                 <span
@@ -174,7 +219,7 @@ const DetailProductView = ({ product, list }) => {
                     marginLeft: "10px",
                   }}
                 >
-                  {product.originalPrices}
+                  {calculateOldPrice()}
                   <sup>đ</sup>
                 </span>
               </Typography>
@@ -190,11 +235,52 @@ const DetailProductView = ({ product, list }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {product.originalPrices}
+                  {calculateTotalPrice()}
                   <sup>đ</sup>
                 </span>
               </Typography>
             )}
+
+            <Box>
+              <Typography
+                sx={{
+                  opacity: "0.7",
+                  fontSize: "14px",
+                  mb: "10px",
+                  marginRight: "10px",
+                }}
+              >
+                Size
+              </Typography>
+
+              <List sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                {product.size.map((size) => (
+                  <ListItemButton
+                    key={size.id}
+                    onClick={() => handleSizeSelect(size.id, size.price)}
+                    sx={{
+                      border: "1px solid #ccc",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      textAlign: "center",
+                      backgroundColor:
+                        size.id === selectedSize
+                          ? "var(--secondary-color)"
+                          : "transparent",
+                      color: size.id === selectedSize ? "white" : "dark",
+                      "&:hover": {
+                        "background-color": "var(--secondary-color)",
+                        opacity: ".7",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <ListItemText primary={size.name} />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Box>
 
             <Typography sx={{ opacity: "0.5", fontSize: "12px", mb: "10px" }}>
               QUANTITY
@@ -216,7 +302,6 @@ const DetailProductView = ({ product, list }) => {
                 <input
                   value={quantity}
                   onChange={(e) => handleChangQuantity(e.target.value)}
-                  //handle press up and down button
                   onKeyDown={(e) => {
                     e.key === "ArrowUp" ? handleIncreaseQuantity() : "";
                     e.key === "ArrowDown" ? handleDecreaseQuantity() : "";

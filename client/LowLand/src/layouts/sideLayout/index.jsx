@@ -12,7 +12,7 @@ const SideLayout = ({ children, title }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "500px",
+          height: "700px",
         }}
       >
         {children}

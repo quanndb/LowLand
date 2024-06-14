@@ -20,7 +20,7 @@ import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
 import { useRouter } from "src/routes/hooks";
 import { useEffect, useRef, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridFooter } from "@mui/x-data-grid";
 import CreateIcon from "@mui/icons-material/Create";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -112,8 +112,6 @@ const UserView = ({ user, orders }) => {
   const [email, setEmail] = useState(null);
   const [phone, setPhone] = useState(null);
   const [address, setAddress] = useState(null);
-
-  // const inputRef = useRef();
 
   const handleChangeAvatar = (e) => {
     const input = e.target.files[0];
@@ -242,15 +240,11 @@ const UserView = ({ user, orders }) => {
                 <MenuItem value="Transfering">Transfering</MenuItem>
               </Select>
 
-                
-                <TextField>
-                  
-                </TextField>
-
+              <TextField></TextField>
             </FormControl>
             <Box sx={{ height: 632, width: "100%" }}>
               <DataGrid
-                rows={paginatedOrders}
+                rows={filteredOrders}
                 columns={[
                   { field: "id", headerName: "Order ID", width: 90 },
                   {
@@ -266,10 +260,8 @@ const UserView = ({ user, orders }) => {
                     headerName: "Customer Name",
                     width: 150,
                   },
-                  // { field: "phone", headerName: "Phone", width: 150 },
                   { field: "orderDate", headerName: "Order Date", width: 150 },
                   { field: "status", headerName: "Status", width: 110 },
-                  // { field: "address", headerName: "Address", width: 200 },
                   {
                     field: "total",
                     headerName: "Total",
@@ -277,21 +269,33 @@ const UserView = ({ user, orders }) => {
                     type: "number",
                   },
                 ]}
-                components={{}}
-                disableColumnMenu
-                hideFooterPagination
-                autoPageSize
+                autoHeight 
+                pageSize={itemsPerPage}
+                pageSizeOptions={[5,10]}
+                initialState={{
+                  pagination: {
+                    paginationModel: { pageSize: 10, page: 0 },
+                  },
+                }}
+                // components={{
+                //   footer: () => (
+                //     <GridFooter>
+                //       <Pagination
+                //         count={Math.ceil(filteredOrders.length / itemsPerPage)}
+                //         page={page}
+                //         onChange={handlePageChange}
+                //         sx={{
+                //           mt: 4,
+                //           display: "flex",
+                //           justifyContent: "center",
+                //         }}
+                //       />
+                //     </GridFooter>
+                //   ),
+                // }}
                 disableSelectionOnClick
-                hideFooter
-                // disableVirtualization
               />
             </Box>
-            <Pagination
-              count={Math.ceil(orders.length / itemsPerPage)}
-              page={page}
-              onChange={handlePageChange}
-              sx={{ mt: 4, display: "flex", justifyContent: "center" }}
-            />
           </Grid>
         </Grid>
       </Paper>
