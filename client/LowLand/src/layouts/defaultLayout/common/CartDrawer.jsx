@@ -1,8 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Typography, Button, Divider } from "@mui/material";
+import { Box, Typography, Button, Divider, IconButton } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
 import SideDrawer from "src/components/navigation/SideDrawer";
 import { cartDrawer } from "src/redux/selectors/DrawerSelector";
@@ -12,6 +14,7 @@ import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import CartManagerSlice from "src/redux/slices/CartManager";
 import { formatPrice } from "src/utils/format-number";
 import { useRouter } from "src/routes/hooks";
+import useGetResize from "src/hooks/use-get-resize";
 
 const EmptyCartContent = () => {
   const router = useRouter();
@@ -62,13 +65,31 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
   const dispatch = useDispatch();
 
   const handleSetQuantity = (e) => {
-    if (e.target.value > 0 && e.target.value < 10001)
+    let regex = /^-?\d+$/;
+    if (e === "") {
       dispatch(
         CartManagerSlice.actions.setQuantity({
           productID: productID,
-          quantity: Number(e.target.value),
+          quantity: Number(1),
         })
       );
+    }
+    if (!regex.test(e)) {
+      return;
+    }
+    if (e > 0 && e < 10000)
+      dispatch(
+        CartManagerSlice.actions.setQuantity({
+          productID: productID,
+          quantity: Number(e),
+        })
+      );
+  };
+  const handleIncreaseQuantity = () => {
+    handleSetQuantity(quantity + 1);
+  };
+  const handleDecreaseQuantity = () => {
+    handleSetQuantity(quantity - 1);
   };
 
   const handleRemoveItem = () => {
@@ -105,19 +126,46 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
             </Typography>
           </Box>
         </Box>
-        <input
-          type="number"
-          style={{
-            width: "40px",
-            height: "30px",
-            textAlign: "center",
-            fontWeight: "600",
-            fontSize: "15px",
-            overflow: "hidden",
-          }}
-          value={quantity}
-          onChange={handleSetQuantity}
-        />
+        <Box sx={{ display: "flex", position: "relative" }}>
+          <IconButton
+            sx={{
+              position: "absolute",
+              zIndex: 1,
+              left: 0,
+              transform: "translateY(10%)",
+            }}
+            onClick={handleDecreaseQuantity}
+          >
+            <RemoveCircleIcon color="secondary" />
+          </IconButton>
+          <input
+            value={quantity}
+            onChange={(e) => handleSetQuantity(e.target.value)}
+            //handle press up and down button
+            onKeyDown={(e) => {
+              e.key === "ArrowUp" ? handleIncreaseQuantity() : "";
+              e.key === "ArrowDown" ? handleDecreaseQuantity() : "";
+            }}
+            style={{
+              fontSize: "18px",
+              height: "50px",
+              width: "100px",
+              padding: "8px",
+              textAlign: "center",
+            }}
+          />
+          <IconButton
+            sx={{
+              position: "absolute",
+              zIndex: 1,
+              right: 0,
+              transform: "translateY(10%)",
+            }}
+            onClick={handleIncreaseQuantity}
+          >
+            <AddCircleIcon color="secondary" />
+          </IconButton>
+        </Box>
       </Box>
       <Box
         sx={{
@@ -238,6 +286,8 @@ const CartLayout = ({ data }) => {
 const CartContent = () => {
   const cartList = useSelector(cart);
 
+  const [windowWidth, setWindowWidth] = useGetResize();
+
   return (
     <Box
       sx={{
@@ -248,8 +298,8 @@ const CartContent = () => {
         pt: "60px",
         px: "10px",
         height: "100%",
-        width: "fit-content",
         maxWidth: "800px",
+        width: windowWidth < 400 ? windowWidth : "400px",
       }}
     >
       {cartList.length ? <CartLayout data={cartList} /> : <EmptyCartContent />}

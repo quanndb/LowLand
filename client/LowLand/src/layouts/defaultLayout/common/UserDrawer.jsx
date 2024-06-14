@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SideDrawer from "src/components/navigation/SideDrawer";
 import { userDrawer } from "src/redux/selectors/DrawerSelector";
@@ -14,10 +15,15 @@ import {
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 import { useRouter } from "src/routes/hooks";
 import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
+import useGetResize from "src/hooks/use-get-resize";
 
 const UserDrawerContent = () => {
+  const [windowWidth, setWindowWidth] = useGetResize();
+
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -38,6 +44,7 @@ const UserDrawerContent = () => {
         display: "flex",
         flexDirection: "column",
         maxWidth: "800px",
+        minWidth: windowWidth < 350 ? windowWidth : "350px",
         mt: "50px",
       }}
     >
@@ -45,7 +52,7 @@ const UserDrawerContent = () => {
       <List>
         <ListItem disablePadding>
           <ListItemButton
-            sx={{ padding: "5px 100px 5px 20px" }}
+            sx={{ pl: "20px", pr: "80px" }}
             onClick={() => {
               router.push("/user");
               handleCloseUserDrawer();
@@ -58,8 +65,16 @@ const UserDrawerContent = () => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
+          <ListItemButton sx={{ pl: "20px", pr: "80px" }}>
+            <ListItemIcon>
+              <ShoppingCartIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Your cart"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
           <ListItemButton
-            sx={{ padding: "5px 100px 5px 20px" }}
+            sx={{ pl: "20px", pr: "80px" }}
             color={"error"}
             onClick={handleLogout}
           >

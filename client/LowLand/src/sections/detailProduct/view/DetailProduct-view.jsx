@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+
 import { StarBorder } from "@mui/icons-material";
 import {
   List,
@@ -9,16 +13,22 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  IconButton,
 } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import HomeIcon from "@mui/icons-material/Home";
+
 import Image from "src/components/Image";
 import ProductImage from "src/components/ProductImage";
 import SectionTitle from "src/components/SectionTitle";
 import CartManagerSlice from "src/redux/slices/CartManager";
 import { useRouter } from "src/routes/hooks";
 import { SwiperProducts } from "./SwiperProducts";
+import {
+  BreadcrumItem,
+  CustomizedBreadcrumbs,
+} from "src/components/CustomBreadcum";
 
 const formatMapping = {
   ice: { displayName: "ice", unit: "" },
@@ -58,15 +68,43 @@ const DetailProductView = ({ product, list }) => {
   };
 
   const [quantity, setQuantity] = useState(1);
-  const handleChangQuantity = (e) => {
-    if (e.target.value > 0 && e.target.value < 10000) {
-      setQuantity(Number(e.target.value));
+  const handleChangQuantity = (value) => {
+    let regex = /^-?\d+$/;
+    if (value === "") {
+      setQuantity(1);
     }
+    if (!regex.test(value)) {
+      return;
+    }
+    if (value > 0 && value < 10000) {
+      setQuantity(Number(value));
+    }
+  };
+
+  const handleIncreaseQuantity = () => {
+    handleChangQuantity(quantity + 1);
+  };
+  const handleDecreaseQuantity = () => {
+    handleChangQuantity(quantity - 1);
   };
 
   return (
     <>
       <Container maxWidth={"lg"}>
+        <CustomizedBreadcrumbs sx={{ mt: "40px" }}>
+          <BreadcrumItem
+            component="a"
+            href="/"
+            label="Home"
+            icon={<HomeIcon fontSize="small" />}
+          />
+          <BreadcrumItem component="a" href="/products" label="Products" />
+          <BreadcrumItem
+            component="a"
+            href={`/products/${product.id}`}
+            label={`${product.name}`}
+          />
+        </CustomizedBreadcrumbs>
         <Grid container sx={{ my: "100px" }}>
           <Grid item md={6} xs={12}>
             <ProductImage
@@ -174,18 +212,46 @@ const DetailProductView = ({ product, list }) => {
                   },
                 }}
               >
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={handleChangQuantity}
-                  style={{
-                    fontSize: "23px",
-                    height: "100%",
-                    width: "100%",
-                    padding: "8px",
-                    textAlign: "center",
-                  }}
-                />
+                <Box sx={{ display: "flex", position: "relative" }}>
+                  <IconButton
+                    sx={{
+                      position: "absolute",
+                      zIndex: 1,
+                      left: 0,
+                      transform: "translateY(10%)",
+                    }}
+                    onClick={handleDecreaseQuantity}
+                  >
+                    <RemoveCircleIcon color="secondary" />
+                  </IconButton>
+                  <input
+                    value={quantity}
+                    onChange={(e) => handleChangQuantity(e.target.value)}
+                    //handle press up and down button
+                    onKeyDown={(e) => {
+                      e.key === "ArrowUp" ? handleIncreaseQuantity() : "";
+                      e.key === "ArrowDown" ? handleDecreaseQuantity() : "";
+                    }}
+                    style={{
+                      fontSize: "23px",
+                      height: "100%",
+                      width: "100%",
+                      padding: "8px",
+                      textAlign: "center",
+                    }}
+                  />
+                  <IconButton
+                    sx={{
+                      position: "absolute",
+                      zIndex: 1,
+                      right: 0,
+                      transform: "translateY(10%)",
+                    }}
+                    onClick={handleIncreaseQuantity}
+                  >
+                    <AddCircleIcon color="secondary" />
+                  </IconButton>
+                </Box>
               </Grid>
 
               <Grid item md={6} xs={12}>
@@ -337,7 +403,7 @@ const DetailProductView = ({ product, list }) => {
       <SectionTitle>YOU MIGHT ALSO LIKE THESE</SectionTitle>
 
       <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
-        <SwiperProducts maxWidth={"lg"} list={list}/>
+        <SwiperProducts maxWidth={"lg"} list={list} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Button
             variant="contained"
