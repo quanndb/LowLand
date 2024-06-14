@@ -199,89 +199,74 @@ const DetailProductView = ({ product, list }) => {
             <Typography sx={{ opacity: "0.5", fontSize: "12px", mb: "10px" }}>
               QUANTITY
             </Typography>
-
-            <Grid container>
-              <Grid
-                item
-                md={3}
-                xs={12}
-                sx={{
-                  mb: {
-                    md: "0px",
-                    xs: "10px",
-                  },
-                }}
-              >
-                <Box sx={{ display: "flex", position: "relative" }}>
-                  <IconButton
-                    sx={{
-                      position: "absolute",
-                      zIndex: 1,
-                      left: 0,
-                      transform: "translateY(10%)",
-                    }}
-                    onClick={handleDecreaseQuantity}
-                  >
-                    <RemoveCircleIcon color="secondary" />
-                  </IconButton>
-                  <input
-                    value={quantity}
-                    onChange={(e) => handleChangQuantity(e.target.value)}
-                    //handle press up and down button
-                    onKeyDown={(e) => {
-                      e.key === "ArrowUp" ? handleIncreaseQuantity() : "";
-                      e.key === "ArrowDown" ? handleDecreaseQuantity() : "";
-                    }}
-                    style={{
-                      fontSize: "23px",
-                      height: "100%",
-                      width: "100%",
-                      padding: "8px",
-                      textAlign: "center",
-                    }}
-                  />
-                  <IconButton
-                    sx={{
-                      position: "absolute",
-                      zIndex: 1,
-                      right: 0,
-                      transform: "translateY(10%)",
-                    }}
-                    onClick={handleIncreaseQuantity}
-                  >
-                    <AddCircleIcon color="secondary" />
-                  </IconButton>
-                </Box>
-              </Grid>
-
-              <Grid item md={6} xs={12}>
-                <Button
-                  variant="contained"
+            {/*  */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", position: "relative", mr: "20px" }}>
+                <IconButton
                   sx={{
-                    height: "100%",
-                    ml: {
-                      xs: "0px",
-                      md: "10px",
-                    },
-                    padding: "8px",
-                    width: "100%",
+                    position: "absolute",
+                    zIndex: 1,
+                    left: 0,
+                    transform: "translateY(10%)",
                   }}
-                  onClick={() =>
-                    handleAddToCart(
-                      product.id,
-                      product.name,
-                      product.imageURL,
-                      quantity,
-                      product.isSale
-                        ? product.salePrices
-                        : product.originalPrices
-                    )
-                  }
+                  onClick={handleDecreaseQuantity}
                 >
-                  ADD TO CART
-                </Button>
-              </Grid>
-            </Grid>
+                  <RemoveCircleIcon color="secondary" />
+                </IconButton>
+                <input
+                  value={quantity}
+                  onChange={(e) => handleChangQuantity(e.target.value)}
+                  //handle press up and down button
+                  onKeyDown={(e) => {
+                    e.key === "ArrowUp" ? handleIncreaseQuantity() : "";
+                    e.key === "ArrowDown" ? handleDecreaseQuantity() : "";
+                  }}
+                  style={{
+                    fontSize: "23px",
+                    height: "100%",
+                    width: "100%",
+                    padding: "8px",
+                    textAlign: "center",
+                  }}
+                />
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    zIndex: 1,
+                    right: 0,
+                    transform: "translateY(10%)",
+                  }}
+                  onClick={handleIncreaseQuantity}
+                >
+                  <AddCircleIcon color="secondary" />
+                </IconButton>
+              </Box>
+
+              <Button
+                variant="contained"
+                sx={{
+                  height: "100%",
+                  ml: {
+                    xs: "0px",
+                    md: "10px",
+                  },
+                  padding: "8px",
+                  width: "100%",
+                }}
+                onClick={() =>
+                  handleAddToCart(
+                    product.id,
+                    product.name,
+                    product.imageURL,
+                    quantity,
+                    product.isSale ? product.salePrices : product.originalPrices
+                  )
+                }
+              >
+                ADD TO CART
+              </Button>
+            </Box>
+            {/*  */}
           </Grid>
         </Grid>
 

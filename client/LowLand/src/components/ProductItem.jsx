@@ -9,9 +9,8 @@ const ProductItem = ({
   originalPrices,
   salePrices,
   isSale,
-  id
+  id,
 }) => {
-
   const router = useRouter();
 
   return (
@@ -19,18 +18,17 @@ const ProductItem = ({
       sx={{
         ...sx,
         position: "relative",
-        display:"flex", alignItems:"center",
+        display: "flex",
+        alignItems: "center",
         flexDirection: "column",
-      }
-    }
-    onClick={() => router.push(`/products/${id}`)}
-
+      }}
+      onClick={() => router.push(`/products/${id}`)}
     >
-
-      <ProductImage isSale={isSale} imageURL={imageURL} sx={{width: {
-        xs:"280px",
-        md:"350px"
-      }, height: "400px", position: "relative"}}/>
+      <ProductImage
+        isSale={isSale}
+        imageURL={imageURL}
+        sx={{ width: "100%", height: "400px", position: "relative" }}
+      />
       <Typography sx={{ textAlign: "center", marginTop: "30px" }}>
         {name}
       </Typography>
