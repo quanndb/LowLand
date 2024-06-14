@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import { Outlet, Navigate, createBrowserRouter } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 
 import Loading from "src/components/Loading";
 import { fetchBlogById } from "./loaders/blogLoader";
@@ -18,6 +17,7 @@ const ProductsPage = lazy(() => import("src/pages/products"));
 const LoginPage = lazy(() => import("src/pages/login"));
 const NotFound = lazy(() => import("src/pages/not-found"));
 const DetailBlogPage = lazy(() => import("src/pages/detail-blog"));
+const CheckoutPage = lazy(() => import("src/pages/checkout"));
 const DefaultLayout = lazy(() => import("src/layouts/defaultLayout"));
 
 const routes = createBrowserRouter([
@@ -81,12 +81,21 @@ const routes = createBrowserRouter([
   },
 
   {
-    path: "user",
     element: (
-      <Suspense fallback={<Loading />}>
-        <UserPage />
-      </Suspense>
+      <ProtectedRoute>
+        <Outlet />
+      </ProtectedRoute>
     ),
+    children: [
+      {
+        path: "user",
+        element: <UserPage />,
+      },
+      {
+        path: "checkout",
+        element: <CheckoutPage />,
+      },
+    ],
   },
   {
     path: "*",

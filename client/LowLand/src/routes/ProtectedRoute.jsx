@@ -1,18 +1,17 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { jwtDecode } from "jwt-decode";
+import Loading from "src/components/Loading";
 
 const ProtectedRoute = () => {
   const accessToken = localStorage.getItem("accessToken");
-  if (!accessToken || jwtDecode(accessToken).role != "ADMIN") {
+  if (!accessToken) {
     return <Navigate to={"/"} />;
   }
   return (
-    <DashboardLayout>
-      <Suspense>
-        <Outlet />
-      </Suspense>
-    </DashboardLayout>
+    <Suspense fallback={<Loading />}>
+      <Outlet />
+    </Suspense>
   );
 };
 

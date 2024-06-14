@@ -2,7 +2,7 @@ import { Box, Container, Grid } from "@mui/material";
 import ProductItem from "src/components/ProductItem";
 const AllProducts = ({ products }) => {
   return (
-    <Container maxWidth={"xl"}>
+    <Container maxWidth={"lg"}>
       <Box>
         <Grid
           container
