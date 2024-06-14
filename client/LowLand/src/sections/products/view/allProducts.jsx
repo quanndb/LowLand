@@ -1,18 +1,19 @@
 import { Box, Grid } from "@mui/material";
 import ProductItem from "src/components/ProductItem";
-import { PRODUCTS } from "src/mock/itemProduct.js";
-const AllProducts = () => {
+const AllProducts = ({ products }) => {
   return (
-    <Box>
+    <Box maxWidth={"xxl"}>
       <Grid
         container
         sx={{
           justifyContent: "center",
           gap: "15px",
+          // gap: "75px",
+
           width: "100%",
         }}
       >
-        {PRODUCTS.map((item) => {
+        {products.map((item) => {
           return (
             <Grid item md={3} xs={12} key={item.id}>
               <ProductItem

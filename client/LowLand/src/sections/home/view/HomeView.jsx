@@ -17,7 +17,7 @@ const HomeView = () => {
       <SectionTitle>FEATURED MUGS</SectionTitle>
       <SwiperProducts list={PRODUCTS}/>
       <SectionTitle>MORE PRODUCTS</SectionTitle>
-      <AllProducts />
+      <AllProducts products={PRODUCTS}/>
       <HomeMagazine />
 
       <ShowCase imageURL={"/static/images/showCase.jpg"} />

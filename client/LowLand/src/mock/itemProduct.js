@@ -87,6 +87,187 @@ export const PRODUCTS = [
     },
     type: "product",
   },
+  {
+    id: 4,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: false,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+  {
+    id: 5,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: false,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+  {
+    id: 6,
+    imageURL: "/static/images/product3.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: false,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+
+  {
+    id: 7,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: false,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+
+  {
+    id: 8,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: true,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+
+  {
+    id: 9,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: true,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+
+  {
+    id: 10,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: false,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
+
+  {
+    id: 11,
+    imageURL: "/static/images/product2.jpg",
+    name: "Black Tea Cup",
+    title:
+      "Amet suscipit omnis eum necessitatibus quos doloribus. Ut placeat et corrupti.",
+    originalPrices: 70000,
+    salePrices: 50000,
+    isSale: false,
+    detail:
+      "Quas vel perferendis accusantium eum cum voluptates libero doloribus voluptates. A et quia qui quia. Reprehenderit quisquam omnis omnis velit commodi. Animi quaerat sed repellendus. Perspiciatis rerum commodi dolore consequatur voluptates accusantium velit. Aut dicta iusto neque ea voluptates. Ducimus est ut neque sunt eum iusto. Consequatur quia occaecati enim omnis repudiandae labore.",
+    materials: {
+      ice: 0,
+      milk_type: "almond",
+      flavor_syrup: "caramel",
+      whipped_cream: "Có",
+      sugar: 8,
+      cafe: 15,
+      milk: 12,
+    },
+    type: "product",
+  },
 ];
 
 // Object.entries(myObject).forEach(([key, value]) => {
