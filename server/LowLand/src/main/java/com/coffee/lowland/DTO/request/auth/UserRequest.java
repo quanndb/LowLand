@@ -1,6 +1,5 @@
-package com.coffee.lowland.DTO.request;
+package com.coffee.lowland.DTO.request.auth;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    @NotEmpty(message = "EMAIL_NULL")
-    String email;
-    String password;
+public class UserRequest {
+    String accessToken;
 }

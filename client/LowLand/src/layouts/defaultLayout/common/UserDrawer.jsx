@@ -65,14 +65,6 @@ const UserDrawerContent = () => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton sx={{ pl: "20px", pr: "80px" }}>
-            <ListItemIcon>
-              <ShoppingCartIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Your cart"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
           <ListItemButton
             sx={{ pl: "20px", pr: "80px" }}
             color={"error"}

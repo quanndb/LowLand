@@ -8,11 +8,7 @@ const ProtectedRoute = () => {
   if (!accessToken) {
     return <Navigate to={"/"} />;
   }
-  return (
-    <Suspense fallback={<Loading />}>
-      <Outlet />
-    </Suspense>
-  );
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

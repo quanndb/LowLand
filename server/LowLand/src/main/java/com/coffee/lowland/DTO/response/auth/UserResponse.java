@@ -1,7 +1,5 @@
-package com.coffee.lowland.DTO.request;
+package com.coffee.lowland.DTO.response.auth;
 
-import com.coffee.lowland.model.Role;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,10 +10,11 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountRegisterRequest {
-    @NotEmpty(message = "EMAIL_NULL")
+public class UserResponse {
     String email;
-    String password;
-    Role role;
     String fullName;
+    int gender;
+    String phoneNumber;
+    String address;
+    String avatar;
 }

@@ -1,9 +1,11 @@
-package com.coffee.lowland.DTO.request;
+package com.coffee.lowland.DTO.request.blog;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,8 +14,8 @@ public class CreateBlogRequest {
     String title;
     String content;
     String imageURL;
-    String createdDate;
+    LocalDateTime createdDate;
     String createdBy;
-    String updatedDate;
+    LocalDateTime updatedDate;
     String updatedBy;
 }

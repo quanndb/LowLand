@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.request;
+package com.coffee.lowland.DTO.request.auth;
 
 import lombok.*;
         import lombok.experimental.FieldDefaults;

@@ -13,7 +13,7 @@ const DetailProductPage = () => {
   return (
     <>
       <Helmet>
-        <title> | LowLand</title>
+        <title>{product[0].name} | LowLand</title>
       </Helmet>
       <DetailProductView product={product[0]} list={PRODUCTS} />
     </>

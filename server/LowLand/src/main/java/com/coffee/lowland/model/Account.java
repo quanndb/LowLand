@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,17 +22,14 @@ import java.util.List;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int accountID;
+    int accountId;
     String email;
     String password;
     String fullName;
     int gender;
     String phoneNumber;
     String address;
-    String createdDate;
-    String createdBy;
-    String updatedDate;
-    String updatedBy;
     @Enumerated(value = EnumType.STRING)
     Role role;
+    String imageURL;
 }

@@ -16,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productImageID;
+    int productImageId;
     String imageURL;
     String imageName;
-    int productID;
+    int productId;
 }

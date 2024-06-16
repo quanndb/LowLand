@@ -1,6 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Typography, Button, Divider, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Divider,
+  IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -15,6 +25,7 @@ import CartManagerSlice from "src/redux/slices/CartManager";
 import { formatPrice } from "src/utils/format-number";
 import { useRouter } from "src/routes/hooks";
 import useGetResize from "src/hooks/use-get-resize";
+import { useEffect } from "react";
 
 const EmptyCartContent = () => {
   const router = useRouter();
@@ -61,7 +72,15 @@ const EmptyCartContent = () => {
   );
 };
 
-const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
+const CartItem = ({
+  id,
+  productID,
+  imageURL,
+  productName,
+  price,
+  quantity,
+  size,
+}) => {
   const dispatch = useDispatch();
 
   const handleSetQuantity = (e) => {
@@ -69,7 +88,7 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
     if (e === "") {
       dispatch(
         CartManagerSlice.actions.setQuantity({
-          productID: productID,
+          id: id,
           quantity: Number(1),
         })
       );
@@ -80,7 +99,7 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
     if (e > 0 && e < 10000)
       dispatch(
         CartManagerSlice.actions.setQuantity({
-          productID: productID,
+          id: id,
           quantity: Number(e),
         })
       );
@@ -93,7 +112,16 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
   };
 
   const handleRemoveItem = () => {
-    dispatch(CartManagerSlice.actions.removeFromCart(productID));
+    dispatch(CartManagerSlice.actions.removeFromCart(id));
+  };
+
+  const handleChangeSize = (e) => {
+    dispatch(
+      CartManagerSlice.actions.setSize({
+        id: id,
+        size: e.target.value,
+      })
+    );
   };
 
   return (
@@ -110,6 +138,7 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
         <Box
@@ -124,9 +153,12 @@ const CartItem = ({ productID, imageURL, productName, price, quantity }) => {
             <Typography sx={{ fontWeight: "600", opacity: "0.8" }}>
               {productName}
             </Typography>
+            <Typography>
+              Size: <span>{size}</span>
+            </Typography>
           </Box>
         </Box>
-        <Box sx={{ display: "flex", position: "relative" }}>
+        <Box sx={{ display: "flex", position: "relative", mt: 2, mx: "auto" }}>
           <IconButton
             sx={{
               position: "absolute",
@@ -207,12 +239,14 @@ const CartListItem = ({ data }) => {
       {data.map((item) => {
         return (
           <CartItem
-            key={item.productID}
+            id={item.id}
+            key={item.id}
             productID={item.productID}
             imageURL={item.imageURL}
             productName={item.productName}
             price={item.price}
             quantity={item.quantity}
+            size={item.size}
           />
         );
       })}
@@ -221,6 +255,8 @@ const CartListItem = ({ data }) => {
 };
 
 const CartFooter = ({ total }) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -255,7 +291,15 @@ const CartFooter = ({ total }) => {
         </Box>
       </Box>
       <Divider sx={{ mb: "20px" }} />
-      <Button variant="contained">CONTINUE TO CHECKOUT</Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          router.push("/checkout");
+          dispatch(DrawerManagerSlice.actions.setOpenCartDrawer(false));
+        }}
+      >
+        CONTINUE TO CHECKOUT
+      </Button>
     </Box>
   );
 };
@@ -299,7 +343,7 @@ const CartContent = () => {
         px: "10px",
         height: "100%",
         maxWidth: "800px",
-        width: windowWidth < 400 ? windowWidth : "400px",
+        width: windowWidth < 450 ? windowWidth : "450px",
       }}
     >
       {cartList.length ? <CartLayout data={cartList} /> : <EmptyCartContent />}

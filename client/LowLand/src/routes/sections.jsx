@@ -90,9 +90,9 @@ const routes = createBrowserRouter([
 
   {
     element: (
-      <ProtectedRoute>
-        <Outlet />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute />
+      </Suspense>
     ),
     children: [
       {

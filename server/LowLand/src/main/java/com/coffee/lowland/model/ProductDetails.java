@@ -17,8 +17,8 @@ public class ProductDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productDetailsID;
+    int productDetailsId;
     int price;
-    int productID;
-    int productSizeID;
+    int productId;
+    int productSizeId;
 }

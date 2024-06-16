@@ -1,10 +1,8 @@
 package com.coffee.lowland.service;
 
-import com.coffee.lowland.DTO.request.AuthenticationRequest;
-import com.coffee.lowland.DTO.request.IntrospectRequest;
-import com.coffee.lowland.DTO.response.AuthenticationResponse;
-import com.coffee.lowland.DTO.response.IntrospectResponse;
-import com.coffee.lowland.DTO.response.UserResponse;
+import com.coffee.lowland.DTO.request.auth.AuthenticationRequest;
+import com.coffee.lowland.DTO.response.auth.AuthenticationResponse;
+import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.AccountMapper;
@@ -16,26 +14,19 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +52,11 @@ public class AuthenticationService {
 
         var token = generateToken(account);
 
-        return AuthenticationResponse.builder().accessToken(token).authenticated(true).build();
+        return AuthenticationResponse.builder()
+                .accessToken(token)
+                .authenticated(true)
+                .userResponse(accountMapper.toUserResponse(account))
+                .build();
     }
 
     public UserResponse getMyInfo() {

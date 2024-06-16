@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -17,11 +20,11 @@ public class ProductSize {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productSizeID;
+    int productSizeId;
     String name;
     String description;
-    String createdDate;
+    LocalDateTime createdDate;
     String createdBy;
-    String updatedDate;
+    LocalDateTime updatedDate;
     String updatedBy;
 }

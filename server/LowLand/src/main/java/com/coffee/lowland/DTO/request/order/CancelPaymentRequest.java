@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.request;
+package com.coffee.lowland.DTO.request.order;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -17,10 +17,10 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productID;
+    int productId;
     String productName;
     boolean isActive;
     String description;
-    int productTypeID;
+    int productTypeId;
 }
 

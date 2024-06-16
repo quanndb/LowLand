@@ -1,14 +1,12 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.request.CancelPaymentRequest;
-import com.coffee.lowland.DTO.request.CreatePayRequest;
+import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
+import com.coffee.lowland.DTO.request.order.CreatePayRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.DTO.response.UserResponse;
 import com.coffee.lowland.service.PayService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

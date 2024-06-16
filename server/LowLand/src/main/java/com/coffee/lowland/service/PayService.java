@@ -1,10 +1,9 @@
 package com.coffee.lowland.service;
 
-import com.coffee.lowland.DTO.request.CancelPaymentRequest;
-import com.coffee.lowland.DTO.request.CreatePayRequest;
+import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
+import com.coffee.lowland.DTO.request.order.CreatePayRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

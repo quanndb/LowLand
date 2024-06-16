@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -17,12 +20,12 @@ public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int blogID;
+    int blogId;
     String title;
     String content;
     String imageUrl;
-    String createdDate;
+    LocalDateTime createdDate;
     String createdBy;
-    String updatedDate;
+    LocalDateTime updatedDate;
     String updatedBy;
 }

@@ -8,23 +8,33 @@ const CartManagerSlice = createSlice({
       let isExisted = false;
       state.forEach((item) => {
         if (item.productID === action.payload.productID) {
-          item.quantity += Number(action.payload.quantity);
-          isExisted = true;
-          return;
+          if (item.size === action.payload.size) {
+            item.quantity += Number(action.payload.quantity);
+            isExisted = true;
+            return;
+          }
         }
       });
       if (!isExisted) state.push(action.payload);
     },
     setQuantity(state, action) {
       state.forEach((item) => {
-        if (item.productID === action.payload.productID) {
+        if (item.id === action.payload.id) {
           item.quantity = action.payload.quantity;
           return;
         }
       });
     },
+    setSize(state, action) {
+      state.forEach((item) => {
+        if (item.id === action.payload.id) {
+          item.size = action.payload.size;
+          return;
+        }
+      });
+    },
     removeFromCart(state, action) {
-      return state.filter((item) => item.productID !== action.payload);
+      return state.filter((item) => item.id !== action.payload);
     },
   },
 });

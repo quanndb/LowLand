@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.response;
+package com.coffee.lowland.DTO.response.auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,4 +10,5 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationResponse {
     String accessToken;
     boolean authenticated;
+    UserResponse userResponse;
 }

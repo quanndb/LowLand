@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 import { StarBorder } from "@mui/icons-material";
 import {
@@ -29,6 +30,8 @@ import {
   BreadcrumItem,
   CustomizedBreadcrumbs,
 } from "src/components/CustomBreadcum";
+import { formatPrice } from "src/utils/format-number";
+import { ca } from "date-fns/locale";
 
 const formatMapping = {
   ice: { displayName: "ice", unit: "" },
@@ -54,41 +57,34 @@ const MaterialItem = ({ displayName, value, unit }) => {
 const DetailProductView = ({ product, list }) => {
   const router = useRouter();
 
+  const id = uuidv4();
+
   const dispatch = useDispatch();
-  const handleAddToCart = (id, name, imageURL, quantity, price) => {
+  const handleAddToCart = (
+    productID,
+    name,
+    imageURL,
+    quantity,
+    price,
+    size
+  ) => {
     const newItem = {
-      productID: id,
+      id: id,
+      productID: productID,
       productName: name,
       imageURL: imageURL,
       quantity: quantity,
       price: price,
+      size: size,
     };
     dispatch(CartManagerSlice.actions.addToCart(newItem));
     toast.success("Add to cart successfully!");
   };
 
-  // const handleAddToCart = (id, name, imageURL, quantity, price) => {
-  //   // Logic to find the selected size price
-  //   const selectedSize = product.size.find(size => size.id === 1); // Example: assume size L is selected
-  //   const sizePrice = selectedSize ? selectedSize.price : 0;
-
-  //   // Calculate total price including size price
-  //   const totalPrice = (product.isSale ? product.salePrices : product.originalPrices) + sizePrice;
-
-  //   const newItem = {
-  //     productID: id,
-  //     productName: name,
-  //     imageURL: imageURL,
-  //     quantity: quantity,
-  //     price: totalPrice, // Pass the total price to the cart
-  //   };
-  //   dispatch(CartManagerSlice.actions.addToCart(newItem));
-  //   toast.success("Add to cart successfully!");
-  // };
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(0);
-  const handleSizeSelect = (sizeId, sizePrice) => {
-    setSelectedSize(sizeId);
+  const [selectedSize, setSelectedSize] = useState(product.size[0].name);
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
   };
 
   const handleChangQuantity = (value) => {
@@ -113,7 +109,7 @@ const DetailProductView = ({ product, list }) => {
 
   const calculateTotalPrice = () => {
     if (selectedSize !== null) {
-      const size = product.size.find((size) => size.id === selectedSize);
+      const size = product.size.find((size) => size.name === selectedSize);
       if (size) {
         const sizePrice = size.price;
         return product.isSale
@@ -125,7 +121,7 @@ const DetailProductView = ({ product, list }) => {
   };
   const calculateOldPrice = () => {
     if (selectedSize !== null) {
-      const size = product.size.find((size) => size.id === selectedSize);
+      const size = product.size.find((size) => size.name === selectedSize);
       if (size) {
         const sizePrice = size.price;
         return product.originalPrices + sizePrice;
@@ -208,7 +204,7 @@ const DetailProductView = ({ product, list }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {calculateTotalPrice()}
+                  {formatPrice(calculateTotalPrice())}
                   <sup>đ</sup>
                 </span>
                 <span
@@ -219,7 +215,7 @@ const DetailProductView = ({ product, list }) => {
                     marginLeft: "10px",
                   }}
                 >
-                  {calculateOldPrice()}
+                  {formatPrice(calculateOldPrice())}
                   <sup>đ</sup>
                 </span>
               </Typography>
@@ -235,7 +231,7 @@ const DetailProductView = ({ product, list }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {calculateTotalPrice()}
+                  {formatPrice(calculateTotalPrice())}
                   <sup>đ</sup>
                 </span>
               </Typography>
@@ -257,7 +253,7 @@ const DetailProductView = ({ product, list }) => {
                 {product.size.map((size) => (
                   <ListItemButton
                     key={size.id}
-                    onClick={() => handleSizeSelect(size.id, size.price)}
+                    onClick={() => handleSizeSelect(size.name)}
                     sx={{
                       border: "1px solid #ccc",
                       padding: "5px 10px",
@@ -265,12 +261,12 @@ const DetailProductView = ({ product, list }) => {
                       cursor: "pointer",
                       textAlign: "center",
                       backgroundColor:
-                        size.id === selectedSize
+                        size.name === selectedSize
                           ? "var(--secondary-color)"
                           : "transparent",
-                      color: size.id === selectedSize ? "white" : "dark",
+                      color: size.name === selectedSize ? "white" : "dark",
                       "&:hover": {
-                        "background-color": "var(--secondary-color)",
+                        backgroundColor: "var(--secondary-color)",
                         opacity: ".7",
                         color: "white",
                       },
@@ -344,7 +340,10 @@ const DetailProductView = ({ product, list }) => {
                     product.name,
                     product.imageURL,
                     quantity,
-                    product.isSale ? product.salePrices : product.originalPrices
+                    product.isSale
+                      ? calculateTotalPrice()
+                      : calculateOldPrice(),
+                    selectedSize
                   )
                 }
               >

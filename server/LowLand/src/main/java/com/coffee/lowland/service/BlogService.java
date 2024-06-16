@@ -1,13 +1,9 @@
 package com.coffee.lowland.service;
 
-import com.coffee.lowland.DTO.request.CreateBlogRequest;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.model.Blog;
 import com.coffee.lowland.repository.BlogRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +16,7 @@ public class BlogService {
     }
 
     public Blog updateBlog(Blog request){
-        Blog foundBlog = blogRepository.findById(request.getBlogID()).orElseThrow(()->
+        Blog foundBlog = blogRepository.findById(request.getBlogId()).orElseThrow(()->
                 new AppExceptions(ErrorCode.BLOG_NOT_EXISTED)
         );
         return blogRepository.save(foundBlog);

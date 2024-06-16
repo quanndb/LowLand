@@ -11,6 +11,7 @@ export const CustomSwiper = ({ children, sx }) => {
       }}
       slidesPerView={2}
       modules={[Pagination]}
+      spaceBetween={32}
       breakpoints={{
         0: {
           slidesPerView: 1,
@@ -18,9 +19,9 @@ export const CustomSwiper = ({ children, sx }) => {
         768: {
           slidesPerView: 2,
         },
-        1200 :{
-            slidesPerView: 3,
-        }
+        1200: {
+          slidesPerView: 3,
+        },
       }}
       style={{ paddingBottom: "50px", ...sx }}
     >
