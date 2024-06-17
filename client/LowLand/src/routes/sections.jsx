@@ -7,6 +7,7 @@ import { fetchProductById } from "./loaders/productLoader";
 
 import DetailProductPage from "src/pages/detaill-product";
 import UserPage from "src/pages/UserPage";
+import DefaultLayout from "src/layouts/defaultLayout";
 
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
 const HomePage = lazy(() => import("src/pages/home"));
@@ -18,7 +19,6 @@ const LoginPage = lazy(() => import("src/pages/login"));
 const NotFound = lazy(() => import("src/pages/not-found"));
 const DetailBlogPage = lazy(() => import("src/pages/detail-blog"));
 const CheckoutPage = lazy(() => import("src/pages/checkout"));
-const DefaultLayout = lazy(() => import("src/layouts/defaultLayout"));
 const SignUpPage = lazy(() => import("src/pages/signUp"));
 const routes = createBrowserRouter([
   {

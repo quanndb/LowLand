@@ -3,6 +3,7 @@ package com.coffee.lowland.controller;
 import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import com.coffee.lowland.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,11 +20,10 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping
-    public APIResponse<?> createOrder(@RequestBody CreateOrderRequest request){
+    public APIResponse<?> createOrder(@RequestBody @Valid CreateOrderRequest request){
         return APIResponse.builder()
                 .code(2000)
-                .message("Create order successfully")
-                .result(orderService.createOrder(request))
+                .message(orderService.createOrder(request))
                 .build();
     }
 }

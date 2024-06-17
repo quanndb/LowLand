@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -11,6 +9,7 @@ import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Box from "@mui/material/Box";
+import { Avatar, Button } from "@mui/material";
 
 import CartDrawer from "./common/CartDrawer";
 import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
@@ -18,8 +17,9 @@ import { useResponsive } from "src/hooks/use-responsive";
 import LowLandLogo from "src/components/navigation/logo";
 import { usePathname, useRouter } from "src/routes/hooks";
 import { cart } from "src/redux/selectors/CartSelector";
-import { Avatar } from "@mui/material";
 import UserDrawer from "./common/UserDrawer";
+import { user } from "src/redux/selectors/UserSelector";
+import { bool } from "prop-types";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   const router = useRouter();
@@ -103,11 +103,17 @@ const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
 };
 
 const Header = () => {
+  const dispatch = useDispatch();
+
+  const router = useRouter();
+
   const isMobile = useResponsive("down", 900);
 
   const [showNav, setShowNav] = useState(false);
 
-  const dispatch = useDispatch();
+  const userDetails = useSelector(user);
+
+  if (userDetails) console.log("ok");
 
   const quantityInCart = useSelector(cart).length;
 
@@ -145,9 +151,19 @@ const Header = () => {
           setShowNav={setShowNav}
         />
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton onClick={handleOpenUserDrawer}>
-            <Avatar></Avatar>
-          </IconButton>
+          <>
+            {userDetails ? (
+              <IconButton onClick={handleOpenUserDrawer}>
+                <Avatar
+                  src={userDetails.imageURL ? userDetails.imageURL : null}
+                ></Avatar>
+              </IconButton>
+            ) : (
+              <Button variant="contained" onClick={() => router.push("/login")}>
+                Login
+              </Button>
+            )}
+          </>
           <IconButton
             sx={{
               fontWeight: "bold",

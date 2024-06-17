@@ -17,7 +17,6 @@ public class CreateOrderRequest {
     String customerName;
     String phoneNumber;
     String address;
-    LocalDateTime createdDate;
     String createdBy;
     int accountId;
     List<OrderDetails> items;

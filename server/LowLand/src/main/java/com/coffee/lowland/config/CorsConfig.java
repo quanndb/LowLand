@@ -10,14 +10,17 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-    @Value("${ORIGIN}")
-    private String ORIGIN;
+    @Value("${ORIGIN_CLIENT}")
+    private String ORIGIN_CLIENT;
+    @Value("${ORIGIN_ADMIN}")
+    private String ORIGIN_ADMIN;
 
     @Bean
     public CorsFilter corsFilter(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.addAllowedOrigin(ORIGIN);
+        corsConfiguration.addAllowedOrigin(ORIGIN_CLIENT);
+        corsConfiguration.addAllowedOrigin(ORIGIN_ADMIN);
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
 

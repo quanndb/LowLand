@@ -215,8 +215,6 @@ const CustomerInformation = ({ name, phone }) => {
 const CheckoutView = () => {
   const products = useSelector(cart);
 
-  console.log(products);
-
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 

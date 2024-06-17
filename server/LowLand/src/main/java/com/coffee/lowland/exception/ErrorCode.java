@@ -22,8 +22,10 @@ public enum ErrorCode {
     EMAIL_PASSWORD_INVALID(4007, "Invalid email or password", HttpStatus.BAD_REQUEST),
     EMAIL_NULL(4008,"Email can not be null", HttpStatus.BAD_REQUEST),
     BLOG_NOT_EXISTED(4020,"Your blogID is not existed", HttpStatus.BAD_REQUEST),
-    ORDER_NOT_EXISTED(4030,"Your orderID is not existed", HttpStatus.BAD_REQUEST)
-
+    ORDER_NOT_EXISTED(4030,"Your orderID is not existed", HttpStatus.BAD_REQUEST),
+    QUANTITY_AT_LEAST(4031, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),
+    PRODUCT_DETAIL_NOT_EMPTY(4032, "Product detail can not be empty", HttpStatus.BAD_REQUEST),
+    PRODUCT_DETAIL_NOT_FOUND(4033, "Could not found your product details ID", HttpStatus.BAD_REQUEST)
     ;
 
     int code;

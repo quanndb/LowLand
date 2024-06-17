@@ -20,6 +20,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useRouter } from "src/routes/hooks";
 import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
 import useGetResize from "src/hooks/use-get-resize";
+import UserManagerSlice from "src/redux/slices/UserManagerSlice";
 
 const UserDrawerContent = () => {
   const [windowWidth, setWindowWidth] = useGetResize();
@@ -29,7 +30,7 @@ const UserDrawerContent = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    dispatch(UserManagerSlice.actions.setUser(null));
     handleCloseUserDrawer();
     router.replace("/login");
   };

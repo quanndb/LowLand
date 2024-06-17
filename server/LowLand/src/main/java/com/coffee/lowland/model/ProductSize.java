@@ -21,7 +21,7 @@ public class ProductSize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int productSizeId;
-    String name;
+    String sizeName;
     String description;
     LocalDateTime createdDate;
     String createdBy;

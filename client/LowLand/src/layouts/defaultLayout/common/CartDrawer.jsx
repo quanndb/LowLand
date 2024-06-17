@@ -21,7 +21,7 @@ import { cartDrawer } from "src/redux/selectors/DrawerSelector";
 import { cart } from "src/redux/selectors/CartSelector";
 import Image from "src/components/Image";
 import DrawerManagerSlice from "src/redux/slices/DrawerManagerSlice";
-import CartManagerSlice from "src/redux/slices/CartManager";
+import CartManagerSlice from "src/redux/slices/CartManagerSlice";
 import { formatPrice } from "src/utils/format-number";
 import { useRouter } from "src/routes/hooks";
 import useGetResize from "src/hooks/use-get-resize";

@@ -1,12 +1,11 @@
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
-import { Suspense } from "react";
-import { jwtDecode } from "jwt-decode";
-import Loading from "src/components/Loading";
+import { user } from "src/redux/selectors/UserSelector";
 
 const ProtectedRoute = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  if (!accessToken) {
-    return <Navigate to={"/"} />;
+  const userDetails = useSelector(user);
+  if (!userDetails) {
+    return <Navigate to={"login"} replace={true} />;
   }
   return <Outlet />;
 };

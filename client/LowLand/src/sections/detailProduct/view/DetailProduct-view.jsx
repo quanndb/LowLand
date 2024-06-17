@@ -23,7 +23,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import Image from "src/components/Image";
 import ProductImage from "src/components/ProductImage";
 import SectionTitle from "src/components/SectionTitle";
-import CartManagerSlice from "src/redux/slices/CartManager";
+import CartManagerSlice from "src/redux/slices/CartManagerSlice";
 import { useRouter } from "src/routes/hooks";
 import { SwiperProducts } from "./SwiperProducts";
 import {

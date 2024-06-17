@@ -16,5 +16,5 @@ public class UserResponse {
     int gender;
     String phoneNumber;
     String address;
-    String avatar;
+    String imageURL;
 }
