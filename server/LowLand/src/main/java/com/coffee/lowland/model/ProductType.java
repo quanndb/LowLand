@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -15,10 +17,9 @@ public class ProductType {
     int productTypeId;
     String code;
     String typeName;
-    int productId;
     String description;
-    String createdDate;
+    LocalDateTime createdDate;
     String createdBy;
-    String updatedDate;
+    LocalDateTime updatedDate;
     String updatedBy;
 }
