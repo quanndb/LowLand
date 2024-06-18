@@ -32,7 +32,7 @@ public class SecurityConfig {
 
 
     String[] PUBLIC_ENDPOINTS = {
-            "auth/**","pay/**", "product/**", "order/**"
+            "auth/**","pay/**", "product/**", "orders/**"
     };
     @Bean
     public PasswordEncoder passwordEncoder (){

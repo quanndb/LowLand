@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Objects;
 
@@ -55,5 +56,14 @@ public class GlobalExceptionHandler {
                 .message(errorCode.getMessage())
                 .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
+    @ExceptionHandler(value = WebClientResponseException.class)
+    ResponseEntity<APIResponse<?>> handlePayExceptions(Exception exceptions){
+        APIResponse<?> apiResponse = APIResponse.builder()
+                .code(ErrorCode.INVALID_ORDER.getCode())
+                .message(ErrorCode.INVALID_ORDER.getMessage())
+                .build();
+        return ResponseEntity.status(ErrorCode.INVALID_ORDER.getStatusCode()).body(apiResponse);
     }
 }

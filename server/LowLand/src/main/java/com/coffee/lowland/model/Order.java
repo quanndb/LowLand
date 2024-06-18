@@ -24,11 +24,14 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int orderId;
-    String orderCode;
+    int orderCode;
     String customerName;
     String phoneNumber;
     String address;
     int status;
     LocalDateTime createdDate;
+    String paymentLink;
+    String note;
+    String message;
     int accountId;
 }

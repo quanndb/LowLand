@@ -66,11 +66,6 @@ public class AuthenticationService {
         return accountMapper.toUserResponse(account);
     }
 
-    @Transactional
-    public List<Account> findAccountByID(int id){
-        return accountRepository.spGetAccountByAccountID(id);
-    }
-
     private String generateToken(Account account) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 

@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "src/routes/hooks";
 import SideLayout from "src/layouts/sideLayout";
 import UserManagerSlice from "src/redux/slices/UserManagerSlice";
+import { set } from "lodash";
 
 const LoginView = () => {
   const router = useRouter();
@@ -33,18 +34,33 @@ const LoginView = () => {
   const [showPass, setShowPass] = useState(false);
 
   const handleLogin = () => {
+    if (!username || !password) {
+      setUserName(null);
+      setPassword(null);
+      toast.error("Username and password cannot be empty");
+      return;
+    }
     authAPI
       .login({
         email: username,
         password: password,
       })
       .then((res) => {
-        dispatch(UserManagerSlice.actions.setUser(res.userResponse));
-        toast.success("Logged in successfully");
-        router.replace("/");
+        if (res && res.userResponse) {
+          dispatch(UserManagerSlice.actions.setUser(res.userResponse));
+          toast.success("Logged in successfully");
+          router.replace("/");
+        } else {
+          toast.error("Invalid login response");
+        }
       })
-      .catch((error) => toast.error(error))
-      .finally(() => console.log("Done!"));
+      .catch((error) => {
+        const errorMessage = error.response?.data?.message || "Login failed";
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        console.log("Login attempt finished");
+      });
   };
 
   return (
@@ -105,6 +121,8 @@ const LoginView = () => {
               value={username}
               onChange={(e) => setUserName(e.target.value)}
               sx={{ width: "100%", marginBottom: "20px" }}
+              error={username === null}
+              helperText={username === null ? "Please enter your username" : ""}
             />
             <TextField
               label="Password"
@@ -120,6 +138,8 @@ const LoginView = () => {
                   </InputAdornment>
                 ),
               }}
+              error={password === null}
+              helperText={password === null ? "Please enter your password" : ""}
               sx={{ width: "100%", marginBottom: "20px" }}
             />
             <Button

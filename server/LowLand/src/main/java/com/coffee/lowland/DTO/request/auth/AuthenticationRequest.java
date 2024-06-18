@@ -12,7 +12,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationRequest {
-    @NotEmpty(message = "EMAIL_NULL")
+    @NotEmpty(message = "EMAIL_PASSWORD_NULL")
     String email;
+    @NotEmpty(message = "EMAIL_PASSWORD_NULL")
     String password;
 }

@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RandomCodeService {
     final AtomicLong counter = new AtomicLong(System.currentTimeMillis() % 1000000000);
 
-    public String generateCode() {
+    public int generateCode() {
         long uniqueNumber = counter.incrementAndGet() % 100000000;
-        return String.format("%08d", uniqueNumber);
+        return  Integer.parseInt(String.format("%08d", uniqueNumber));
     }
 }

@@ -7,9 +7,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(5000, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(5002, "Invalid key", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -20,12 +20,14 @@ public enum ErrorCode {
     EMAIL_INVALID(4005, "Email must not be blank", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_EXIST(4006, "Email is not exist", HttpStatus.BAD_REQUEST),
     EMAIL_PASSWORD_INVALID(4007, "Invalid email or password", HttpStatus.BAD_REQUEST),
-    EMAIL_NULL(4008,"Email can not be null", HttpStatus.BAD_REQUEST),
+    EMAIL_PASSWORD_NULL(4008,"Email and password can not be null", HttpStatus.BAD_REQUEST),
     BLOG_NOT_EXISTED(4020,"Your blogID is not existed", HttpStatus.BAD_REQUEST),
-    ORDER_NOT_EXISTED(4030,"Your orderID is not existed", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_EXISTED(4030,"Your order is not existed", HttpStatus.BAD_REQUEST),
     QUANTITY_AT_LEAST(4031, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),
     PRODUCT_DETAIL_NOT_EMPTY(4032, "Product detail can not be empty", HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_NOT_FOUND(4033, "Could not found your product details ID", HttpStatus.BAD_REQUEST)
+    PRODUCT_DETAIL_NOT_FOUND(4033, "Could not found your product details ID", HttpStatus.BAD_REQUEST),
+    INVALID_ORDER(4034, "Invalid order is requested!", HttpStatus.BAD_REQUEST),
+    RESOLVED_ORDER(4035,"Your order has been resolved already", HttpStatus.BAD_REQUEST)
     ;
 
     int code;

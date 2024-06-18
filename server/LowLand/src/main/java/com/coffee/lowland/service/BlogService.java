@@ -28,4 +28,8 @@ public class BlogService {
         );
         blogRepository.deleteById(blogID);
     }
+
+    public boolean blogExists(int blogId){
+        return blogRepository.existsById(blogId);
+    }
 }

@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -17,7 +15,7 @@ public class CreateOrderRequest {
     String customerName;
     String phoneNumber;
     String address;
-    String createdBy;
     int accountId;
     List<OrderDetails> items;
+    String message;
 }
