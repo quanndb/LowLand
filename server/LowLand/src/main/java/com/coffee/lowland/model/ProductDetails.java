@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +23,8 @@ public class ProductDetails {
     float price;
     int productId;
     int productSizeId;
+    LocalDateTime createdDate;
+    String createdBy;
+    LocalDateTime updatedDate;
+    String updatedBy;
 }

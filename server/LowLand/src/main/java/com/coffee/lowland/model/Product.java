@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,9 +20,14 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int productId;
+    String code;
     String productName;
     boolean isActive;
     String description;
     int productTypeId;
+    LocalDateTime createdDate;
+    String createdBy;
+    LocalDateTime updatedDate;
+    String updatedBy;
 }
 

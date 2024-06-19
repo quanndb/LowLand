@@ -28,7 +28,12 @@ public enum ErrorCode {
     PRODUCT_DETAIL_NOT_FOUND(4033, "Could not found your product details ID", HttpStatus.BAD_REQUEST),
     INVALID_ORDER(4034, "Invalid order is requested!", HttpStatus.BAD_REQUEST),
     RESOLVED_ORDER(4035,"Your order has been resolved already", HttpStatus.BAD_REQUEST),
-    PRODUCT_TYPE_EXISTED(4040,"Product type existed",HttpStatus.BAD_REQUEST)
+    PRODUCT_TYPE_EXISTED(4040,"Product type code existed",HttpStatus.BAD_REQUEST),
+    PRODUCT_TYPE_NOT_FOUND(4041,"Product type not found",HttpStatus.BAD_REQUEST),
+    PRODUCT_Size_EXISTED(4042,"Product size name existed",HttpStatus.BAD_REQUEST),
+    PRODUCT_Size_NOT_FOUND(4043,"Product size not found",HttpStatus.BAD_REQUEST),
+    PRODUCT_EXISTED(4044,"Product code existed",HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_FOUND(4041,"Product not found",HttpStatus.BAD_REQUEST),
     ;
 
     int code;

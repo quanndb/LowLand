@@ -7,11 +7,15 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductSizeRepository extends JpaRepository<ProductSize, Integer> {
-    ProductSize findBySizeName(String code);
+    @Override
+    Optional<ProductSize> findById(Integer integer);
+
+    Optional<ProductSize> findBySizeName(String code);
 
     @Procedure
-    List<ProductType> spGetAllProductSize(String keyWord, int pageNumber);
+    List<ProductSize> spGetAllProductSize(String keyWord, int pageNumber);
 }

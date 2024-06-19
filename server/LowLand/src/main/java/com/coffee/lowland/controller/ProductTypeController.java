@@ -1,5 +1,6 @@
 package com.coffee.lowland.controller;
 
+import com.coffee.lowland.DTO.request.productType.ProductTypeDto;
 import com.coffee.lowland.DTO.response.APIResponse;
 
 import com.coffee.lowland.DTO.response.ProductTypeResponse;
@@ -9,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
@@ -30,8 +33,18 @@ public class ProductTypeController {
                 .build();
     }
 
+    @GetMapping("/GetById")
+    public APIResponse<Object> GetAll(@RequestParam int Id){
+        Optional<ProductType> data = _service.GetById(Id);
+
+        return APIResponse.<Object>builder()
+                .code(2000)
+                .result(data)
+                .build();
+    }
+
     @PostMapping("/CreateOrUpdate")
-    public APIResponse<Boolean> CreateOrUpdate(@RequestBody ProductType data) {
+    public APIResponse<Boolean> CreateOrUpdate(@RequestBody ProductTypeDto data) {
         return APIResponse.<Boolean>builder()
                 .code(2000)
                 .message("Change success!")
@@ -40,12 +53,11 @@ public class ProductTypeController {
 
 
     @GetMapping("/Delete")
-    public APIResponse<String> Delete(@RequestParam int id){
-        _service.Delete(id);
-        String _str = "Xóa thành công!";
-        return APIResponse.<String>builder()
+    public APIResponse<Boolean> Delete(@RequestParam int id){
+        return APIResponse.<Boolean>builder()
                 .code(2000)
-                .result(_str)
+                .result(_service.Delete(id))
+                .message("Deleted success!")
                 .build();
     }
 }

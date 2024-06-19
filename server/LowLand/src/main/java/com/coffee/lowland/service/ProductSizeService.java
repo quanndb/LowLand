@@ -1,5 +1,10 @@
 package com.coffee.lowland.service;
 
+import com.coffee.lowland.DTO.request.productType.ProductSizeDto;
+import com.coffee.lowland.DTO.request.productType.ProductTypeDto;
+import com.coffee.lowland.exception.AppExceptions;
+import com.coffee.lowland.exception.ErrorCode;
+import com.coffee.lowland.mapper.ProductTypeMapper;
 import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.model.ProductType;
 import com.coffee.lowland.repository.ProductSizeRepository;
@@ -8,44 +13,50 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @Slf4j
 public class ProductSizeService {
-    private ProductSizeRepository _repo;
+    ProductSizeRepository _repo;
+    ProductTypeMapper _map;
 
-    public int CreateOrUpdate(ProductSize data){
-        ProductSize modelCheck = _repo.findBySizeName(data.getSizeName());
-        if(modelCheck != null){
-            if(modelCheck.getProductSizeId() != data.getProductSizeId()){
-                return 2; //Bị trùng name
-            }
+    public boolean CreateOrUpdate(ProductSizeDto data){
+        Optional<ProductSize> modelCheck = _repo.findBySizeName(data.getSizeName());
+        if(modelCheck.isPresent()){
+            if(modelCheck.get().getProductSizeId() != data.getProductSizeId())
+                throw new AppExceptions(ErrorCode.PRODUCT_Size_EXISTED);
         }
-        ProductSize model = new ProductSize();
-        if(data.getProductSizeId() > 0){
-            model = _repo.findById(data.getProductSizeId()).get();
-            if(model == null || model.getProductSizeId() <= 0) return 3; // Không tìm thấy id
-            model.setUpdatedDate(LocalDateTime.now());
+        Optional<ProductSize> res = _repo.findById(data.getProductSizeId());
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+        if(res.isPresent()){
+            res.get().setUpdatedBy(userName);
+            res.get().setUpdatedDate(now);
+            _map.MapProductSize(res.get(),data);
+            _repo.save(res.get());
         }
-        else model.setCreatedDate(LocalDateTime.now());
-
-        model.setSizeName(data.getSizeName());
-        model.setDescription(data.getDescription());
-
-
-        _repo.save(model);
-        return 1; //Thành công
+        else {
+            if(data.getProductSizeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
+            ProductSize newModel = new ProductSize();
+            newModel.setCreatedBy(userName);
+            newModel.setCreatedDate(now);
+            _map.MapProductSize(newModel,data);
+            _repo.save(newModel);
+        }
+        return true;
     }
 
     @Transactional
-    public List<ProductType> GetAll(String keyWords, int pageNumber){
-        List<ProductType> lst = _repo.spGetAllProductSize(keyWords,10000000);
+    public List<ProductSize> GetAll(String keyWords, int pageNumber){
+        List<ProductSize> lst = _repo.spGetAllProductSize(keyWords,1);
         return lst;
     }
 
@@ -56,7 +67,19 @@ public class ProductSizeService {
     }*/
 
     public boolean Delete(int id){
+        Optional<ProductSize> res = _repo.findById(id);
+        if(res.isEmpty()){
+            throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
+        }
         _repo.deleteById(id);
         return true;
+    }
+
+    public Optional<ProductSize> GetById(int id){
+        Optional<ProductSize> res = _repo.findById(id);
+        if(res.isEmpty()){
+            throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
+        }
+        return res;
     }
 }

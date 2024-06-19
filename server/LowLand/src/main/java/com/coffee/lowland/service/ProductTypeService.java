@@ -1,8 +1,10 @@
 package com.coffee.lowland.service;
+import com.coffee.lowland.DTO.request.productType.ProductTypeDto;
 import com.coffee.lowland.DTO.response.Pagination;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.ProductTypeMapper;
+import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.model.ProductType;
 import com.coffee.lowland.repository.ProductTypeRepository;
 import jakarta.transaction.Transactional;
@@ -26,9 +28,9 @@ import java.util.Optional;
 @Slf4j
 public class ProductTypeService {
     ProductTypeRepository _repo;
-    ProductTypeMapper productTypeMapper;
+    ProductTypeMapper _map;
 
-    public boolean CreateOrUpdate(ProductType data){
+    public boolean CreateOrUpdate(ProductTypeDto data){
         Optional<ProductType> modelCheck = _repo.findByCode(data.getCode());
         if(modelCheck.isPresent()){
             if(modelCheck.get().getProductTypeId() != data.getProductTypeId())
@@ -40,14 +42,16 @@ public class ProductTypeService {
             if(res.isPresent()){
                 res.get().setUpdatedBy(userName);
                 res.get().setUpdatedDate(now);
-                productTypeMapper.updatePT(res.get(),data);
+                _map.MapProductType(res.get(),data);
                 _repo.save(res.get());
             }
             else {
-                if(data.getProductTypeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_TYPE_EXISTED);
-                data.setCreatedBy(userName);
-                data.setCreatedDate(now);
-                _repo.save(data);
+                if(data.getProductTypeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);
+                ProductType newModel = new ProductType();
+                newModel.setCreatedBy(userName);
+                newModel.setCreatedDate(now);
+                _map.MapProductType(newModel,data);
+                _repo.save(newModel);
             }
         return true;
     }
@@ -56,6 +60,8 @@ public class ProductTypeService {
     public List<ProductType> GetAll(String keyWords, int pageNumber){
         return _repo.spGetAllProductType(keyWords,1);
     }
+
+
     @Transactional
     public int GetTotalPage(String keyWords){
         log.error(keyWords);
@@ -63,8 +69,18 @@ public class ProductTypeService {
     }
 
     public boolean Delete(int id){
+        Optional<ProductType> res = _repo.findById(id);
+        if(res.isEmpty()){
+            throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);
+        }
         _repo.deleteById(id);
         return true;
     }
-
+    public Optional<ProductType> GetById(int id){
+        Optional<ProductType> res = _repo.findById(id);
+        if(res.isEmpty()){
+            throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);
+        }
+        return res;
+    }
 }
