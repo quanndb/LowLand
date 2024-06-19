@@ -19,10 +19,11 @@ import { emphasize, styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
 import { useRouter } from "src/routes/hooks";
-import { useEffect, useRef, useState } from "react";
-import { DataGrid, GridFooter } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import CreateIcon from "@mui/icons-material/Create";
 import SideLayout from "src/layouts/sideLayout";
+import UpdateModal from "./updateModal";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -43,12 +44,12 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     },
   };
 });
+
 const CustomizedBreadcrumbs = ({ sx, title }) => {
   const router = useRouter();
   function handleClick(event, href) {
     event.preventDefault();
     router.replace(href);
-    console.log(event);
   }
   return (
     <Box role="presentation" sx={{ ...sx }}>
@@ -81,53 +82,68 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const UserView = ({ user, orders }) => {
-  // Khởi tạo state cho trạng thái và phân trang
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
-
-  // Hàm xử lý khi trang thay đổi
   const handlePageChange = (event, value) => {
     setPage(value);
   };
-
-  // Hàm xử lý khi trạng thái thay đổi
+  const statusMap = {
+    0: "Waiting",
+    1: "Paid",
+    2: "Delivered",
+    3: "Canceled",
+  };
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
     setPage(1);
   };
+  const filteredOrders = orders
+  ? status !== ""
+    ? orders.filter((order) => order.status === parseInt(status))
+    : orders
+  : [];
 
-  // Lọc dữ liệu theo trạng thái đã chọn
-  const filteredOrders = status
-    ? orders.filter((order) => order.status === status)
-    : orders;
-
-  // Tính toán dữ liệu cần hiển thị trên trang
   const paginatedOrders = filteredOrders.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
+  const ordersWithId = paginatedOrders.map((order, index) => ({
+    ...order,
+    id: index + 1 + (page - 1) * itemsPerPage,
+    status: statusMap[order.status],
+    totalMoney: `${order.totalMoney.toLocaleString()} VNĐ`,
+    // createdDate: formatDate(order.createdDate),
+  }));
 
   const [file, setFile] = useState(null);
-  const [fullName, setFullName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [phone, setPhone] = useState(null);
-  const [address, setAddress] = useState(null);
+  const [fullName, setFullName] = useState(user.fullName || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [phone, setPhone] = useState(user.phoneNumber || "");
+  const [address, setAddress] = useState(user.address || "");
 
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  
+  const handleClickRow = (params) => {
+    setSelectedOrder(params.row); 
+    // console.log(params.row);
+    setOpenModal(true); 
+  };
+  
+  const handleCloseModal = () => {
+    setOpenModal(false); 
+  };
   const handleChangeAvatar = (e) => {
     const input = e.target.files[0];
-
     input.preview = URL.createObjectURL(input);
-    console.log(input.preview);
     setFile(input);
   };
 
-  const handleUpdate = (e) => {
-    console.log(fullName);
-    console.log(email);
-    console.log(phone);
-    console.log(address);
+  const handleUpdate = () => {
+    console.log(fullName, email, phone, address);
   };
+
   useEffect(() => {
     return () => {
       file && URL.revokeObjectURL(file.preview);
@@ -189,27 +205,27 @@ const UserView = ({ user, orders }) => {
               </Box>
               <TextField
                 sx={{ m: 2, width: "100%" }}
-                value={email ? email : user.email ? user.email : ""}
+                value={email}
                 label="Email"
                 disabled
                 onChange={(e) => setEmail(e.target.value)}
               ></TextField>
               <TextField
                 sx={{ m: 2, width: "100%" }}
-                value={fullName ? fullName : user.fullName ? user.fullName : ""}
+                value={fullName}
                 label="Full Name"
                 onChange={(e) => setFullName(e.target.value)}
               ></TextField>
               <TextField
                 sx={{ m: 2, width: "100%" }}
                 label="Phone Number"
-                value={phone ? phone : user.phoneNumber ? user.phoneNumber : ""}
+                value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               ></TextField>
               <TextField
                 sx={{ m: 2, width: "100%" }}
                 label="Address"
-                value={address ? address : user.address ? user.address : ""}
+                value={address}
                 onChange={(e) => setAddress(e.target.value)}
               ></TextField>
               <Button
@@ -230,30 +246,40 @@ const UserView = ({ user, orders }) => {
                   label="Status"
                 >
                   <MenuItem value="">All</MenuItem>
-                  <MenuItem value="Waiting">Waiting</MenuItem>
-                  <MenuItem value="Delivered">Delivered</MenuItem>
-                  <MenuItem value="Canceled">Canceled</MenuItem>
-                  <MenuItem value="Transfering">Transfering</MenuItem>
+                  <MenuItem value="0">Waiting</MenuItem>
+                  <MenuItem value="1">Paid</MenuItem>
+                  <MenuItem value="2">Delivered</MenuItem>
+                  <MenuItem value="3">Canceled</MenuItem>
                 </Select>
-
-                <TextField></TextField>
               </FormControl>
               <Box sx={{ height: 632, width: "100%" }}>
                 <DataGrid
-                  rows={filteredOrders}
+                  rows={ordersWithId}
                   columns={[
-                    { field: "id", headerName: "Order code", width: 90 },
+                    { field: "id", headerName: "STT", width: 10 },
+                    { field: "orderCode", headerName: "Order code", width: 90 },
                     {
-                      field: "imageURL",
+                      field: "imageUrl",
                       headerName: "Items",
                       width: 90,
-                      renderCell: (params) => (
-                        <Avatar
-                          sx={{ mt: 1 }}
-                          alt="avatar"
-                          src={params.value}
-                        />
-                      ),
+                      renderCell: (params) => {
+                        return <Avatar
+                        sx={{ mt: 1 }}
+                        alt="avatar"
+                        src={params.value}
+                      />;
+                        
+                      },
+                    },
+                    {
+                      field: "productName",
+                      headerName: "Product Name",
+                      width: 150,
+                    },
+                    {
+                      field: "quantity",
+                      headerName: "Quantity",
+                      width: 85,
                     },
                     {
                       field: "customerName",
@@ -261,18 +287,29 @@ const UserView = ({ user, orders }) => {
                       width: 150,
                     },
                     {
-                      field: "orderDate",
-                      headerName: "Order Date",
+                      field: "phoneNumber",
+                      headerName: "phone Number",
                       width: 150,
                     },
-                    { field: "status", headerName: "Status", width: 110 },
                     {
-                      field: "total",
+                      field: "address",
+                      headerName: "Address ",
+                      width: 150,
+                    },
+                    {
+                      field: "createdDate",
+                      headerName: "Created Date ",
+                      width: 170,
+                    },
+                    { field: "status", headerName: "Status", width: 90 },
+                    {
+                      field: "totalMoney",
                       headerName: "Total",
                       width: 120,
                       type: "number",
                     },
                   ]}
+                  onRowClick={handleClickRow}
                   autoHeight
                   pageSize={itemsPerPage}
                   pageSizeOptions={[5, 10]}
@@ -281,30 +318,31 @@ const UserView = ({ user, orders }) => {
                       paginationModel: { pageSize: 10, page: 0 },
                     },
                   }}
-                  // components={{
-                  //   footer: () => (
-                  //     <GridFooter>
-                  //       <Pagination
-                  //         count={Math.ceil(filteredOrders.length / itemsPerPage)}
-                  //         page={page}
-                  //         onChange={handlePageChange}
-                  //         sx={{
-                  //           mt: 4,
-                  //           display: "flex",
-                  //           justifyContent: "center",
-                  //         }}
-                  //       />
-                  //     </GridFooter>
-                  //   ),
-                  // }}
                   disableSelectionOnClick
                 />
               </Box>
+              {/* <Pagination
+                count={Math.ceil(filteredOrders.length / itemsPerPage)}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                sx={{ mt: 2 }}
+              /> */}
             </Grid>
           </Grid>
         </Paper>
       </Container>
+
+
+      <UpdateModal
+        open={openModal}
+        handleClose={handleCloseModal}
+        order={selectedOrder}
+        handleUpdate={handleUpdate}
+      />
+
     </SideLayout>
   );
 };
+
 export default UserView;

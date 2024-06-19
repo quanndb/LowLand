@@ -8,6 +8,7 @@ import { UserView } from "src/sections/user/view";
 import { user } from "src/redux/selectors/UserSelector";
 import orderAPI from "src/services/API/orderAPI";
 
+import { toast } from "react-toastify";
 const UserPage = () => {
   const userInfo = useSelector(user);
 
@@ -22,16 +23,15 @@ const UserPage = () => {
       .catch((error) => toast.error(error))
       .finally();
   }, []);
-
-  console.log(myOrders);
-
   return (
     <>
       <Helmet>
         <title>UserPage | LowLand</title>
       </Helmet>
 
-      <UserView user={userInfo} orders={ORDERS} />
+      <UserView user={userInfo} 
+      orders={myOrders} 
+      />
     </>
   );
 };
