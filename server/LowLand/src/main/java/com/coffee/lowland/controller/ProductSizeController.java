@@ -1,22 +1,22 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.response.APIResponse;
-
 import com.coffee.lowland.DTO.response.ProductTypeResponse;
+import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.model.ProductType;
-import com.coffee.lowland.service.ProductTypeService;
+import com.coffee.lowland.service.ProductSizeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/ProductType")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class ProductTypeController {
-    ProductTypeService _service;
+public class ProductSizeController {
+    ProductSizeService _service;
+
 
     @GetMapping("/GetAll")
     public APIResponse<Object> GetAll(@RequestParam String keyWords, @RequestParam int pageNumber){
@@ -31,13 +31,13 @@ public class ProductTypeController {
     }
 
     @PostMapping("/CreateOrUpdate")
-    public APIResponse<String> CreateOrUpdate(@RequestBody ProductType data) {
+    public APIResponse<String> CreateOrUpdate(@RequestBody ProductSize data) {
         String _str = "";
         try {
             int check = _service.CreateOrUpdate(data);
             if(check == 1) _str = "Thêm mới thành công!";
-            if(check == 2) _str = "Mã loại sản phẩm được sử dụng!";
-            if(check == 3) _str = "Không tìm thấy loại sản phẩm!";
+            if(check == 2) _str = "Tên Size đax được sử dụng!";
+            if(check == 3) _str = "Không tìm thấy loại size sản phẩm!";
         }
         catch (Exception e){
             _str = "Đã xảy ra lỗi: " + e.getMessage();
