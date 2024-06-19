@@ -1,10 +1,10 @@
 package com.coffee.lowland.service;
 
-import com.coffee.lowland.DTO.request.order.CancelOrderRequest;
-import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
-import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
+import com.coffee.lowland.DTO.request.order.*;
 
-import com.coffee.lowland.DTO.request.order.UpdateOrderRequest;
+import com.coffee.lowland.DTO.response.order.GetOrderDetailsResponse;
+import com.coffee.lowland.DTO.response.order.GetOrderResponse;
+import com.coffee.lowland.DTO.response.order.GetOrdersResponse;
 import com.coffee.lowland.DTO.response.order.PayResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
@@ -23,13 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,16 +41,21 @@ public class OrderService {
     ProductDetailsRepository productDetailsRepository;
     OrderMapper orderMapper;
     RandomCodeService randomCodeService;
+    OrderDetailsService orderDetailsService;
     PayService payService;
+    DateService dateService;
 
-    public List<Order> getOrders(String searchKeyword, int pageNumber, int pageSize) {
-        return orderRepository.spGetOrders(searchKeyword, pageNumber, pageSize);
+    @Transactional
+    public List<GetOrdersResponse> getOrders() {
+        List<Object[]> orders = orderRepository.spGetAllOrders(0);
+        return getOrdersMapper(orders);
     }
 
     public String createOrder(CreateOrderRequest request){
         Order newOrder = orderMapper.toOrder(request);
         newOrder.setOrderCode(randomCodeService.generateCode());
         newOrder.setCreatedDate(LocalDateTime.now());
+        newOrder.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         newOrder = orderRepository.save(newOrder);
         List<OrderDetails> listOrderDetails = request.getItems();
         for(OrderDetails item : listOrderDetails){
@@ -90,8 +95,26 @@ public class OrderService {
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
         orderMapper.updateOrder(foundOrder, request);
+        foundOrder.setUpdatedDate(LocalDateTime.now());
+        foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         orderRepository.save(foundOrder);
         return "Update your order successfully!";
+    }
+
+    public String manageOrder(ApproveOrderRequest request){
+        Order foundOrder = orderRepository.findById(request.getOrderId())
+                .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
+        if(request.getStatus()==0 ||
+                request.getStatus()==1 ||
+                foundOrder.getStatus()==2 ||
+                foundOrder.getStatus()==3){
+            throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
+        }
+        orderMapper.approveOrder(foundOrder, request);
+        foundOrder.setUpdatedDate(LocalDateTime.now());
+        foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        orderRepository.save(foundOrder);
+        return "Update order successfully!";
     }
 
     public String payResult(Object request) {
@@ -115,11 +138,36 @@ public class OrderService {
         return "Payment success";
     }
 
-    public boolean orderExists(int orderId){
-        return orderRepository.existsById(orderId);
+    public GetOrderResponse getOrder(int orderId) {
+         Order foundOrder = orderRepository.findById(orderId)
+                .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
+        List<GetOrderDetailsResponse> items = orderDetailsService.getOrderDetailsByOrderId(foundOrder.getOrderId());
+        GetOrderResponse res = GetOrderResponse.builder().items(items).build();
+        orderMapper.getOrder(res, foundOrder);
+        return res;
     }
 
-    public Object getOrder(int orderId) {
-        return orderRepository.findById(orderId);
+    public List<GetOrdersResponse> getOrdersMapper(List<Object[]> request){
+        List<GetOrdersResponse> res = new ArrayList<>();
+        for(Object[] item : request){
+            res.add(
+                    GetOrdersResponse.builder()
+                            .orderCode((Integer)item[0])
+                            .customerName((String)item[1])
+                            .phoneNumber((String)item[2])
+                            .address((String)item[3])
+                            .createdDate(dateService.toLocalDateTime(item[4].toString()))
+                            .createdBy((String)item[5])
+                            .productName((String)item[6])
+                            .sizeName((String)item[7])
+                            .quantity((Integer)item[8])
+                            .price(((BigDecimal)item[9]).floatValue())
+                            .totalMoney(((BigDecimal)item[10]).floatValue())
+                            .imageUrl((String)item[11])
+                            .status((int)item[12])
+                            .build()
+            );
+        }
+        return res;
     }
 }

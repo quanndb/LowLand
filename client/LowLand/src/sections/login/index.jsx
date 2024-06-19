@@ -55,12 +55,9 @@ const LoginView = () => {
         }
       })
       .catch((error) => {
-        const errorMessage = error.response?.data?.message || "Login failed";
-        toast.error(errorMessage);
+        toast.error(error);
       })
-      .finally(() => {
-        console.log("Login attempt finished");
-      });
+      .finally(() => {});
   };
 
   return (

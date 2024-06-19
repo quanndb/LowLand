@@ -11,12 +11,11 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/ProductType")
+@RequestMapping("/ProductSize")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ProductSizeController {
     ProductSizeService _service;
-
 
     @GetMapping("/GetAll")
     public APIResponse<Object> GetAll(@RequestParam String keyWords, @RequestParam int pageNumber){

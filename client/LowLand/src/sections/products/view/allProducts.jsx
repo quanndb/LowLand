@@ -9,8 +9,9 @@ const AllProducts = ({ products }) => {
           sx={{
             justifyContent: "center",
             width: "100%",
+            margin: "auto",
           }}
-          spacing={4}
+          spacing={{ sm: 4, xs: 0 }}
         >
           {products.map((item) => {
             return (

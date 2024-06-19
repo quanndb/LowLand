@@ -44,7 +44,7 @@ public class PayService {
         WebClient webClient = webClientBuilder.baseUrl(PAY_SERVER).build();
         Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
-        List<Object[]> response = orderDetailsService.getOrderDetailsByOrderId(orderId);
+        List<Object[]> response = orderDetailsService.getOrderDetails(orderId);
 
         float amount = 0;
         List<PayOrderItem> items = new ArrayList<>();

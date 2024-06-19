@@ -32,7 +32,7 @@ public class ProductTypeService {
         ProductType model = new ProductType();
         if(data.getProductTypeId() > 0){
             model = _repo.findById(data.getProductTypeId()).get();
-            if(model == null || model.getProductTypeId() <= 0) return 3; // Không tìm thấy id của Product
+            if(model.getProductTypeId() <= 0) return 3; // Không tìm thấy id của Product
             model.setUpdatedDate(LocalDateTime.now());
         }
         else model.setCreatedDate(LocalDateTime.now());
@@ -47,8 +47,7 @@ public class ProductTypeService {
 
     @Transactional
     public List<ProductType> GetAll(String keyWords, int pageNumber){
-        List<ProductType> lst = _repo.spGetAllProductType(keyWords,1000000000);
-        return lst;
+        return _repo.spGetAllProductType(keyWords,1000000000);
     }
     @Transactional
     public int GetTotalPage(String keyWords){

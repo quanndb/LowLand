@@ -17,11 +17,6 @@ public interface OrderRepository extends CrudRepository<Order,Integer> {
 
     Optional<Order> findByOrderCode(int orderCode);
 
-    @Procedure(name = "spGetOrders")
-    List<Order> spGetOrders(
-            @Param("searchKeyword") String searchKeyword,
-            @Param("pageNumber") int pageNumber,
-            @Param("pageSize") int pageSize
-    );
-
+    @Procedure
+    List<Object[]> spGetAllOrders(int accountId);
 }

@@ -1,5 +1,6 @@
 package com.coffee.lowland.controller;
 
+import com.coffee.lowland.DTO.request.order.ApproveOrderRequest;
 import com.coffee.lowland.DTO.request.order.CancelOrderRequest;
 import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
 import com.coffee.lowland.DTO.request.order.UpdateOrderRequest;
@@ -22,12 +23,18 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping
-    public APIResponse<Object> getOrders( @RequestParam(value = "keyword", required = false) String keyword,
-                                          @RequestParam(value = "page", defaultValue = "0") int page,
-                                          @RequestParam(value = "size", defaultValue = "10") int size){
+    public APIResponse<Object> getOrders(){
         return APIResponse.builder()
                 .code(2000)
-                .result(orderService.getOrders(keyword, page, size))
+                .result(orderService.getOrders())
+                .build();
+    }
+
+    @PutMapping("/customer-order")
+    public APIResponse<Object> manageOrder(@RequestBody ApproveOrderRequest request){
+        return APIResponse.builder()
+                .code(2000)
+                .result(orderService.manageOrder(request))
                 .build();
     }
 

@@ -1,6 +1,5 @@
-package com.coffee.lowland.model;
+package com.coffee.lowland.DTO.response.order;
 
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,33 +7,24 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "`order`")
-public class Order {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int orderId;
+@Builder
+public class GetOrderResponse {
     int orderCode;
-    int accountId;
     String customerName;
     String phoneNumber;
     String address;
-    int status;
-    String createdBy;
     LocalDateTime createdDate;
-    String updatedBy;
+    String createdBy;
+    int status;
     LocalDateTime updatedDate;
+    String updatedBy;
     String paymentLink;
-    String note;
     String message;
+    String note;
+    List<GetOrderDetailsResponse> items;
 }
