@@ -6,6 +6,8 @@ import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
 import com.coffee.lowland.DTO.request.order.UpdateOrderRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import com.coffee.lowland.DTO.response.order.PayResponse;
+import com.coffee.lowland.exception.AppExceptions;
+import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -45,7 +47,7 @@ public class OrderController {
                 .result(orderService.getOrder(orderId))
                 .build();
     }
-    @PostMapping
+    @PostMapping("/new-order")
     public APIResponse<String> createOrder(@RequestBody @Valid CreateOrderRequest request){
         return APIResponse.<String>builder()
                 .code(2000)
@@ -61,11 +63,19 @@ public class OrderController {
                 .build();
     }
 
-    @PutMapping("/my-order")
+    @PutMapping("/my-orders")
     public APIResponse<String> updateOrder(@RequestBody UpdateOrderRequest request){
         return APIResponse.<String>builder()
                 .code(2000)
                 .result(orderService.updateOrder(request))
+                .build();
+    }
+
+    @GetMapping("/my-orders")
+    public APIResponse<Object> getMyOrder() {
+        return APIResponse.<Object>builder()
+                .code(2000)
+                .result(orderService.getMyOrders())
                 .build();
     }
 

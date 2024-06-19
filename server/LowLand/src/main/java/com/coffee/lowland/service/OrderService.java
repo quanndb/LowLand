@@ -9,6 +9,7 @@ import com.coffee.lowland.DTO.response.order.PayResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.OrderMapper;
+import com.coffee.lowland.model.Account;
 import com.coffee.lowland.model.Order;
 import com.coffee.lowland.model.OrderDetails;
 import com.coffee.lowland.repository.OrderDetailsRepository;
@@ -44,10 +45,19 @@ public class OrderService {
     OrderDetailsService orderDetailsService;
     PayService payService;
     DateService dateService;
+    AccountService accountService;
 
     @Transactional
     public List<GetOrdersResponse> getOrders() {
         List<Object[]> orders = orderRepository.spGetAllOrders(0);
+        return getOrdersMapper(orders);
+    }
+
+    @Transactional
+    public List<GetOrdersResponse> getMyOrders() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account foundAccount = accountService.findAccountByEmail(username);
+        List<Object[]> orders = orderRepository.spGetAllOrders(foundAccount.getAccountId());
         return getOrdersMapper(orders);
     }
 

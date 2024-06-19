@@ -22,6 +22,7 @@ import { useRouter } from "src/routes/hooks";
 import { useEffect, useRef, useState } from "react";
 import { DataGrid, GridFooter } from "@mui/x-data-grid";
 import CreateIcon from "@mui/icons-material/Create";
+import SideLayout from "src/layouts/sideLayout";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -134,172 +135,176 @@ const UserView = ({ user, orders }) => {
   }, [file]);
 
   return (
-    <Container
-      disableGutters
-      maxWidth={"100%"}
-      sx={{ backgroundColor: "var(--background-color)", height: "100vh" }}
-    >
-      <Box sx={{ p: "40px" }}>
-        <CustomizedBreadcrumbs sx={{ mb: "40px" }} />
-      </Box>
+    <SideLayout title={"User profile"}>
+      <Container disableGutters maxWidth={"100%"} sx={{ my: "50px" }}>
+        <Box sx={{ pb: "40px" }}>
+          <CustomizedBreadcrumbs />
+        </Box>
 
-      <Paper
-        sx={{ padding: "25px", width: "90%", margin: "auto", py: "100px" }}
-      >
-        <Grid container spacing={{ md: 3 }}>
-          <Grid
-            item
-            md={3}
-            xs={12}
-            sx={{
-              textAlign: "center",
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box
+        <Paper sx={{ padding: "25px", width: "100%", py: "100px" }}>
+          <Grid container spacing={{ md: 3 }}>
+            <Grid
+              item
+              md={3}
+              xs={12}
               sx={{
-                position: "relative",
-                width: "fit-content",
-                margin: "0 auto",
+                textAlign: "center",
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <Avatar
-                alt="avatar"
-                src={file ? file.preview : user.avatar ? user.avatar : ""}
-                sx={{ width: 180, height: 180, margin: "auto", mb: 3 }}
-              />
-              <IconButton
-                component={"label"}
+              <Box
                 sx={{
-                  position: "absolute",
-                  borderRadius: "50%",
-                  bottom: "10px",
-                  right: "15px",
-                  backgroundColor: "var(--secondary-color)",
-                  "&:hover": {
-                    backgroundColor: "var(--secondary-color)",
-                    opacity: ".8",
-                  },
+                  position: "relative",
+                  width: "fit-content",
+                  margin: "0 auto",
                 }}
               >
-                <CreateIcon sx={{ color: "white" }} />
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={(e) => handleChangeAvatar(e)}
+                <Avatar
+                  alt="avatar"
+                  src={file ? file.preview : user.imageURL ? user.imageURL : ""}
+                  sx={{ width: 180, height: 180, margin: "auto", mb: 3 }}
                 />
-              </IconButton>
-            </Box>
-
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              value={fullName ? fullName : user.fullname ? user.fullname : ""}
-              label="Full Name"
-              onChange={(e) => setFullName(e.target.value)}
-            ></TextField>
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              value={email ? email : user.email ? user.email : ""}
-              label="Email"
-              onChange={(e) => setEmail(e.target.value)}
-            ></TextField>
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              label="Phone Number"
-              value={phone ? phone : user.phone ? user.phone : ""}
-              onChange={(e) => setPhone(e.target.value)}
-            ></TextField>
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              label="Address"
-              value={address ? address : user.address ? user.address : ""}
-              onChange={(e) => setAddress(e.target.value)}
-            ></TextField>
-            <Button
-              sx={{ width: "50%", my: 3 }}
-              variant="contained"
-              onClick={handleUpdate}
-              disabled={!(fullName || email || address || phone)}
-            >
-              Cập nhật
-            </Button>
-          </Grid>
-          <Grid item md={9} xs={12}>
-            <FormControl sx={{ mb: 2, width: "100px" }}>
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={status}
-                onChange={handleStatusChange}
-                label="Status"
+                <IconButton
+                  component={"label"}
+                  sx={{
+                    position: "absolute",
+                    borderRadius: "50%",
+                    bottom: "10px",
+                    right: "15px",
+                    backgroundColor: "var(--secondary-color)",
+                    "&:hover": {
+                      backgroundColor: "var(--secondary-color)",
+                      opacity: ".8",
+                    },
+                  }}
+                >
+                  <CreateIcon sx={{ color: "white" }} />
+                  <VisuallyHiddenInput
+                    type="file"
+                    onChange={(e) => handleChangeAvatar(e)}
+                  />
+                </IconButton>
+              </Box>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                value={email ? email : user.email ? user.email : ""}
+                label="Email"
+                disabled
+                onChange={(e) => setEmail(e.target.value)}
+              ></TextField>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                value={fullName ? fullName : user.fullName ? user.fullName : ""}
+                label="Full Name"
+                onChange={(e) => setFullName(e.target.value)}
+              ></TextField>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                label="Phone Number"
+                value={phone ? phone : user.phoneNumber ? user.phoneNumber : ""}
+                onChange={(e) => setPhone(e.target.value)}
+              ></TextField>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                label="Address"
+                value={address ? address : user.address ? user.address : ""}
+                onChange={(e) => setAddress(e.target.value)}
+              ></TextField>
+              <Button
+                sx={{ width: "50%", my: 3 }}
+                variant="contained"
+                onClick={handleUpdate}
+                disabled={!(fullName || email || address || phone || file)}
               >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="Waiting">Waiting</MenuItem>
-                <MenuItem value="Delivered">Delivered</MenuItem>
-                <MenuItem value="Canceled">Canceled</MenuItem>
-                <MenuItem value="Transfering">Transfering</MenuItem>
-              </Select>
+                Cập nhật
+              </Button>
+            </Grid>
+            <Grid item md={9} xs={12}>
+              <FormControl sx={{ mb: 2, width: "100px" }}>
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={status}
+                  onChange={handleStatusChange}
+                  label="Status"
+                >
+                  <MenuItem value="">All</MenuItem>
+                  <MenuItem value="Waiting">Waiting</MenuItem>
+                  <MenuItem value="Delivered">Delivered</MenuItem>
+                  <MenuItem value="Canceled">Canceled</MenuItem>
+                  <MenuItem value="Transfering">Transfering</MenuItem>
+                </Select>
 
-              <TextField></TextField>
-            </FormControl>
-            <Box sx={{ height: 632, width: "100%" }}>
-              <DataGrid
-                rows={filteredOrders}
-                columns={[
-                  { field: "id", headerName: "Order ID", width: 90 },
-                  {
-                    field: "imageURL",
-                    headerName: "Items",
-                    width: 90,
-                    renderCell: (params) => (
-                      <Avatar sx={{ mt: 1 }} alt="avatar" src={params.value} />
-                    ),
-                  },
-                  {
-                    field: "customerName",
-                    headerName: "Customer Name",
-                    width: 150,
-                  },
-                  { field: "orderDate", headerName: "Order Date", width: 150 },
-                  { field: "status", headerName: "Status", width: 110 },
-                  {
-                    field: "total",
-                    headerName: "Total",
-                    width: 120,
-                    type: "number",
-                  },
-                ]}
-                autoHeight 
-                pageSize={itemsPerPage}
-                pageSizeOptions={[5,10]}
-                initialState={{
-                  pagination: {
-                    paginationModel: { pageSize: 10, page: 0 },
-                  },
-                }}
-                // components={{
-                //   footer: () => (
-                //     <GridFooter>
-                //       <Pagination
-                //         count={Math.ceil(filteredOrders.length / itemsPerPage)}
-                //         page={page}
-                //         onChange={handlePageChange}
-                //         sx={{
-                //           mt: 4,
-                //           display: "flex",
-                //           justifyContent: "center",
-                //         }}
-                //       />
-                //     </GridFooter>
-                //   ),
-                // }}
-                disableSelectionOnClick
-              />
-            </Box>
+                <TextField></TextField>
+              </FormControl>
+              <Box sx={{ height: 632, width: "100%" }}>
+                <DataGrid
+                  rows={filteredOrders}
+                  columns={[
+                    { field: "id", headerName: "Order code", width: 90 },
+                    {
+                      field: "imageURL",
+                      headerName: "Items",
+                      width: 90,
+                      renderCell: (params) => (
+                        <Avatar
+                          sx={{ mt: 1 }}
+                          alt="avatar"
+                          src={params.value}
+                        />
+                      ),
+                    },
+                    {
+                      field: "customerName",
+                      headerName: "Customer Name",
+                      width: 150,
+                    },
+                    {
+                      field: "orderDate",
+                      headerName: "Order Date",
+                      width: 150,
+                    },
+                    { field: "status", headerName: "Status", width: 110 },
+                    {
+                      field: "total",
+                      headerName: "Total",
+                      width: 120,
+                      type: "number",
+                    },
+                  ]}
+                  autoHeight
+                  pageSize={itemsPerPage}
+                  pageSizeOptions={[5, 10]}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { pageSize: 10, page: 0 },
+                    },
+                  }}
+                  // components={{
+                  //   footer: () => (
+                  //     <GridFooter>
+                  //       <Pagination
+                  //         count={Math.ceil(filteredOrders.length / itemsPerPage)}
+                  //         page={page}
+                  //         onChange={handlePageChange}
+                  //         sx={{
+                  //           mt: 4,
+                  //           display: "flex",
+                  //           justifyContent: "center",
+                  //         }}
+                  //       />
+                  //     </GridFooter>
+                  //   ),
+                  // }}
+                  disableSelectionOnClick
+                />
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </SideLayout>
   );
 };
 export default UserView;

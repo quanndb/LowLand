@@ -113,8 +113,6 @@ const Header = () => {
 
   const userDetails = useSelector(user);
 
-  if (userDetails) console.log("ok");
-
   const quantityInCart = useSelector(cart).length;
 
   const handleOpenCartDrawer = () => {

@@ -30,13 +30,13 @@ const LoginView = () => {
 
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [attemp, setAttempt] = useState(false);
 
   const [showPass, setShowPass] = useState(false);
 
   const handleLogin = () => {
     if (!username || !password) {
-      setUserName(null);
-      setPassword(null);
+      setAttempt(true);
       toast.error("Username and password cannot be empty");
       return;
     }
@@ -47,7 +47,7 @@ const LoginView = () => {
       })
       .then((res) => {
         if (res && res.userResponse) {
-          dispatch(UserManagerSlice.actions.setUser(res.userResponse));
+          dispatch(UserManagerSlice.actions.setUser(res));
           toast.success("Logged in successfully");
           router.replace("/");
         } else {
@@ -118,8 +118,10 @@ const LoginView = () => {
               value={username}
               onChange={(e) => setUserName(e.target.value)}
               sx={{ width: "100%", marginBottom: "20px" }}
-              error={username === null}
-              helperText={username === null ? "Please enter your username" : ""}
+              error={username === "" && attemp}
+              helperText={
+                username === "" && attemp ? "Please enter your username" : ""
+              }
             />
             <TextField
               label="Password"
@@ -135,8 +137,10 @@ const LoginView = () => {
                   </InputAdornment>
                 ),
               }}
-              error={password === null}
-              helperText={password === null ? "Please enter your password" : ""}
+              error={password === "" && attemp}
+              helperText={
+                password === "" && attemp ? "Please enter your password" : ""
+              }
               sx={{ width: "100%", marginBottom: "20px" }}
             />
             <Button

@@ -13,6 +13,7 @@ const SideLayout = ({ children, title }) => {
           justifyContent: "center",
           alignItems: "center",
         }}
+        disableGutters
       >
         {children}
       </Container>

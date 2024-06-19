@@ -30,7 +30,7 @@ const UserDrawerContent = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(UserManagerSlice.actions.setUser(null));
+    dispatch(UserManagerSlice.actions.removeUser());
     handleCloseUserDrawer();
     router.replace("/login");
   };
