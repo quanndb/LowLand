@@ -1,5 +1,8 @@
 package com.coffee.lowland.service;
 import com.coffee.lowland.DTO.response.Pagination;
+import com.coffee.lowland.exception.AppExceptions;
+import com.coffee.lowland.exception.ErrorCode;
+import com.coffee.lowland.mapper.ProductTypeMapper;
 import com.coffee.lowland.model.ProductType;
 import com.coffee.lowland.repository.ProductTypeRepository;
 import jakarta.transaction.Transactional;
@@ -7,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,34 +25,36 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @Slf4j
 public class ProductTypeService {
-    private ProductTypeRepository _repo;
+    ProductTypeRepository _repo;
+    ProductTypeMapper productTypeMapper;
 
-    public int CreateOrUpdate(ProductType data){
-        ProductType modelCheck = _repo.findByCode(data.getCode());
-        if(modelCheck != null){
-            if(modelCheck.getProductTypeId() != data.getProductTypeId()){
-                return 2; //Bị trùng code
+    public boolean CreateOrUpdate(ProductType data){
+        Optional<ProductType> modelCheck = _repo.findByCode(data.getCode());
+        if(modelCheck.isPresent()){
+            if(modelCheck.get().getProductTypeId() != data.getProductTypeId())
+                throw new AppExceptions(ErrorCode.PRODUCT_TYPE_EXISTED);
+        }
+            Optional<ProductType> res = _repo.findById(data.getProductTypeId());
+            String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+            if(res.isPresent()){
+                res.get().setUpdatedBy(userName);
+                res.get().setUpdatedDate(now);
+                productTypeMapper.updatePT(res.get(),data);
+                _repo.save(res.get());
             }
-        }
-        ProductType model = new ProductType();
-        if(data.getProductTypeId() > 0){
-            model = _repo.findById(data.getProductTypeId()).get();
-            if(model.getProductTypeId() <= 0) return 3; // Không tìm thấy id của Product
-            model.setUpdatedDate(LocalDateTime.now());
-        }
-        else model.setCreatedDate(LocalDateTime.now());
-
-        model.setCode(data.getCode());
-        model.setTypeName(data.getTypeName());
-        model.setDescription(data.getDescription());
-        _repo.save(model);
-
-        return 1; //Thành công
+            else {
+                if(data.getProductTypeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_TYPE_EXISTED);
+                data.setCreatedBy(userName);
+                data.setCreatedDate(now);
+                _repo.save(data);
+            }
+        return true;
     }
 
     @Transactional
     public List<ProductType> GetAll(String keyWords, int pageNumber){
-        return _repo.spGetAllProductType(keyWords,1000000000);
+        return _repo.spGetAllProductType(keyWords,1);
     }
     @Transactional
     public int GetTotalPage(String keyWords){

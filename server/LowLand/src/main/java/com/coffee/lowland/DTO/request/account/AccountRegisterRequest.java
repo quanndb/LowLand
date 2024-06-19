@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.request.auth;
+package com.coffee.lowland.DTO.request.account;
 
 import com.coffee.lowland.model.Role;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,6 +16,5 @@ public class AccountRegisterRequest {
     @NotEmpty(message = "EMAIL_NULL")
     String email;
     String password;
-    Role role;
     String fullName;
 }

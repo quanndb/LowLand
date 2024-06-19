@@ -17,7 +17,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
+    // to -> nho
     Order toOrder(CreateOrderRequest request);
+    // nho -> to
     void updateOrder(@MappingTarget Order order, UpdateOrderRequest request);
     void cancelOrder(@MappingTarget Order order, CancelOrderRequest request);
     void approveOrder(@MappingTarget Order order, ApproveOrderRequest request);
