@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ProductDetailsRepository extends JpaRepository<ProductDetails, Integer> {
     Optional<List<ProductDetails>> findByProductId(int productId);
-
+    void deleteAllByProductId(int ProductId);
 }
