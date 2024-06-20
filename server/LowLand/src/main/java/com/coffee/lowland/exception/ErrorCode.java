@@ -35,6 +35,7 @@ public enum ErrorCode {
     PRODUCT_Size_NOT_FOUND(4043,"Product size not found",HttpStatus.BAD_REQUEST),
     PRODUCT_EXISTED(4044,"Product code existed",HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND(4041,"Product not found",HttpStatus.BAD_REQUEST),
+    PRODUCT_IMAGE_NOT_FOUND(4051,"Product image not found",HttpStatus.BAD_REQUEST),
     ;
 
     int code;

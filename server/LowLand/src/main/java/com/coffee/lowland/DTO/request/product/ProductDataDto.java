@@ -13,4 +13,5 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDataDto extends ProductDto {
     List<ProductDetails> listDetail;
+    List<String> listImageBase64;
 }

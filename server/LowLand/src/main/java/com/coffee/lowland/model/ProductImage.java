@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,6 +20,11 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int productImageId;
     String imageURL;
+    String cloudImageId;
     String imageName;
     int productId;
+    LocalDateTime createdDate;
+    String createdBy;
+    LocalDateTime updatedDate;
+    String updatedBy;
 }

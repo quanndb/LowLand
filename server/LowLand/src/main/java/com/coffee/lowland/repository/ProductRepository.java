@@ -1,5 +1,6 @@
 package com.coffee.lowland.repository;
 
+import com.coffee.lowland.DTO.response.product.ProductRespone;
 import com.coffee.lowland.model.Product;
 import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.model.ProductType;
@@ -12,4 +13,6 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findByProductId(Integer productId);
     Optional<Product> findByCode(String code);
+    @Procedure
+    List<Object[]> spGetAllProductForView(int ProductID);
 }
