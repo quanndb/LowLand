@@ -1,6 +1,7 @@
 package com.coffee.lowland.service;
 
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
+import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.AccountMapper;
@@ -35,12 +36,16 @@ public class AccountService {
     public String createAccount(Account request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(request);
-        return "Create an account successfully!";
+        return "Create account successfully!";
     }
 
-//    public String updateAccount(UpdateAccountRequest request){
-//        Account foundAccount = accountRepository.findAccountByEmail(request.getEmail());
-//    }
+    public String updateAccount(UpdateAccountRequest request){
+        Account foundAccount = accountRepository.findById(request.getAccountId())
+                .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
+        accountMapper.updateAccount(foundAccount,request);
+        accountRepository.save(foundAccount);
+        return "Update account successfully!";
+    }
 
     public Account findAccountByEmail(String username){
         return accountRepository.findAccountByEmail(username)

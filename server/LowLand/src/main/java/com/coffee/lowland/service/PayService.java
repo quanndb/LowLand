@@ -57,6 +57,8 @@ public class PayService {
             items.add(item);
         }
 
+        amount+= (float) (amount*0.1);
+
         String payment_link = (String) Objects.requireNonNull(webClient.post()
                 .uri("/create-payment-link")
                 .bodyValue(CreatePayRequest.builder()

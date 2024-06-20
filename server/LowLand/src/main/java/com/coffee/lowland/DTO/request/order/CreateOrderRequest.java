@@ -15,7 +15,6 @@ public class CreateOrderRequest {
     String customerName;
     String phoneNumber;
     String address;
-    int accountId;
     List<OrderDetails> items;
     String message;
 }

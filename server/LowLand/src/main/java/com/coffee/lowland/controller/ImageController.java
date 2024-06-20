@@ -23,12 +23,17 @@ public class ImageController {
     CloudinaryService cloudinaryService;
 
     @PostMapping("/upload")
-    @ResponseBody
     public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
         if (ImageIO.read(multipartFile.getInputStream()) == null) {
             return new ResponseEntity<>("Image non valid!", HttpStatus.BAD_REQUEST);
         }
         Map result = cloudinaryService.upload(multipartFile);
-        return new ResponseEntity<>("image saved ! ", HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Object> upload(@RequestParam String id) throws IOException {
+        Map result = cloudinaryService.delete(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

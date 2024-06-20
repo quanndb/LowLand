@@ -17,6 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class GetOrdersResponse {
+    int orderId;
     int orderCode;
     String customerName;
     String phoneNumber;

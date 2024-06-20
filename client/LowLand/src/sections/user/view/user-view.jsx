@@ -99,10 +99,10 @@ const UserView = ({ user, orders }) => {
     setPage(1);
   };
   const filteredOrders = orders
-  ? status !== ""
-    ? orders.filter((order) => order.status === parseInt(status))
-    : orders
-  : [];
+    ? status !== ""
+      ? orders.filter((order) => order.status === parseInt(status))
+      : orders
+    : [];
 
   const paginatedOrders = filteredOrders.slice(
     (page - 1) * itemsPerPage,
@@ -124,15 +124,15 @@ const UserView = ({ user, orders }) => {
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  
+
   const handleClickRow = (params) => {
-    setSelectedOrder(params.row); 
+    setSelectedOrder(params.row.orderId);
     // console.log(params.row);
-    setOpenModal(true); 
+    setOpenModal(true);
   };
-  
+
   const handleCloseModal = () => {
-    setOpenModal(false); 
+    setOpenModal(false);
   };
   const handleChangeAvatar = (e) => {
     const input = e.target.files[0];
@@ -263,12 +263,13 @@ const UserView = ({ user, orders }) => {
                       headerName: "Items",
                       width: 90,
                       renderCell: (params) => {
-                        return <Avatar
-                        sx={{ mt: 1 }}
-                        alt="avatar"
-                        src={params.value}
-                      />;
-                        
+                        return (
+                          <Avatar
+                            sx={{ mt: 1 }}
+                            alt="avatar"
+                            src={params.value}
+                          />
+                        );
                       },
                     },
                     {
@@ -310,7 +311,6 @@ const UserView = ({ user, orders }) => {
                     },
                   ]}
                   onRowClick={handleClickRow}
-                  autoHeight
                   pageSize={itemsPerPage}
                   pageSizeOptions={[5, 10]}
                   initialState={{
@@ -333,14 +333,12 @@ const UserView = ({ user, orders }) => {
         </Paper>
       </Container>
 
-
       <UpdateModal
         open={openModal}
         handleClose={handleCloseModal}
         order={selectedOrder}
         handleUpdate={handleUpdate}
       />
-
     </SideLayout>
   );
 };

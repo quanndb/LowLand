@@ -20,22 +20,17 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CloudinaryService {
-    @Value("${CLOUD_NAME}")
-    String CLOUD_NAME;
-    @Value("${API_KEY}")
-    String API_KEY;
-    @Value("${API_SECRET}")
-    String API_SECRET;
+    Cloudinary cloudinary;
 
-    final Cloudinary cloudinary;
-
-    public CloudinaryService() {
+    public CloudinaryService(@Value("${CLOUD_NAME}") String cloudName,
+                             @Value("${API_KEY}") String apiKey,
+                             @Value("${API_SECRET}") String apiSecret) {
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cloud_name", CLOUD_NAME);
-        valuesMap.put("api_key", API_KEY);
-        valuesMap.put("api_secret", API_SECRET);
+        valuesMap.put("cloud_name", cloudName);
+        valuesMap.put("api_key", apiKey);
+        valuesMap.put("api_secret", apiSecret);
         cloudinary = new Cloudinary(valuesMap);
     }
 
@@ -54,9 +49,9 @@ public class CloudinaryService {
 
     private File convert(MultipartFile multipartFile) throws IOException {
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        FileOutputStream fo = new FileOutputStream(file);
-        fo.write(multipartFile.getBytes());
-        fo.close();
+        try (FileOutputStream fo = new FileOutputStream(file)) {
+            fo.write(multipartFile.getBytes());
+        }
         return file;
     }
 }

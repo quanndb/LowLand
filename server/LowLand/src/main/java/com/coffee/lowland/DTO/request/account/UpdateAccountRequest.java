@@ -9,5 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateAccountRequest {
-
+    int accountId;
+    String fullName;
+    String gender;
+    String phoneNumber;
+    String address;
+    String imageUrl;
 }

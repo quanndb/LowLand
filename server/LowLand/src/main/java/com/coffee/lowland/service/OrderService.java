@@ -20,10 +20,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +57,10 @@ public class OrderService {
         return getOrdersMapper(orders);
     }
 
-    public String createOrder(CreateOrderRequest request){
+    public int createOrder(CreateOrderRequest request){
         Order newOrder = orderMapper.toOrder(request);
+        int accountId = accountService.findAccountByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getAccountId();
+        newOrder.setAccountId(accountId);
         newOrder.setOrderCode(randomCodeService.generateCode());
         newOrder.setCreatedDate(LocalDateTime.now());
         newOrder.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -76,7 +74,7 @@ public class OrderService {
             item.setTotalMoney(PDPrice*item.getQuantity());
             orderDetailsRepository.save(item);
         }
-        return "Create an order successfully!";
+        return newOrder.getOrderId();
     }
 
     public String cancelOrder(CancelOrderRequest request){
@@ -162,19 +160,20 @@ public class OrderService {
         for(Object[] item : request){
             res.add(
                     GetOrdersResponse.builder()
-                            .orderCode((Integer)item[0])
-                            .customerName((String)item[1])
-                            .phoneNumber((String)item[2])
-                            .address((String)item[3])
-                            .createdDate(dateService.toLocalDateTime(item[4].toString()))
-                            .createdBy((String)item[5])
-                            .productName((String)item[6])
-                            .sizeName((String)item[7])
-                            .quantity((Integer)item[8])
-                            .price(((BigDecimal)item[9]).floatValue())
-                            .totalMoney(((BigDecimal)item[10]).floatValue())
-                            .imageUrl((String)item[11])
-                            .status((int)item[12])
+                            .orderId((Integer)item[0])
+                            .orderCode((Integer)item[1])
+                            .customerName((String)item[2])
+                            .phoneNumber((String)item[3])
+                            .address((String)item[4])
+                            .createdDate(dateService.toLocalDateTime(item[5].toString()))
+                            .createdBy((String)item[6])
+                            .productName((String)item[7])
+                            .sizeName((String)item[8])
+                            .quantity((Integer)item[9])
+                            .price(((BigDecimal)item[10]).floatValue())
+                            .totalMoney(((BigDecimal)item[11]).floatValue())
+                            .imageUrl((String)item[12])
+                            .status((int)item[13])
                             .build()
             );
         }

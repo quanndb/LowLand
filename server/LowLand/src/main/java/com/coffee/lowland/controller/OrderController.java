@@ -48,9 +48,10 @@ public class OrderController {
                 .build();
     }
     @PostMapping("/new-order")
-    public APIResponse<String> createOrder(@RequestBody @Valid CreateOrderRequest request){
-        return APIResponse.<String>builder()
+    public APIResponse<Integer> createOrder(@RequestBody @Valid CreateOrderRequest request){
+        return APIResponse.<Integer>builder()
                 .code(2000)
+                .message("Create order successfully!")
                 .result(orderService.createOrder(request))
                 .build();
     }

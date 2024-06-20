@@ -4,6 +4,11 @@ import {
   Box,
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
   Paper,
@@ -23,6 +28,12 @@ import { cart } from "src/redux/selectors/CartSelector";
 import Image from "src/components/Image";
 import { formatPrice } from "src/utils/format-number";
 import { useState } from "react";
+import { set } from "lodash";
+import orderAPI from "src/services/API/orderAPI";
+import { user } from "src/redux/selectors/UserSelector";
+import { toast } from "react-toastify";
+import { useRouter } from "src/routes/hooks";
+import payAPI from "src/services/API/payAPI";
 
 const ProductTable = ({ products }) => {
   return (
@@ -75,7 +86,18 @@ const ProductTable = ({ products }) => {
   );
 };
 
-const SubmitOrder = ({ data }) => {
+const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
+  const [order, setOrder] = useState({
+    customerName: userData.fullName,
+    phoneNumber: userData.phoneNumber,
+    address: userData.address,
+    items: data.map((product) => ({
+      productDetailsId: 1,
+      quantity: product.quantity,
+    })),
+    message: "",
+  });
+
   const caculateSubtotal = () => {
     const result = data.reduce((total, product) => {
       return total + product.price * product.quantity;
@@ -85,6 +107,19 @@ const SubmitOrder = ({ data }) => {
 
   const caculateTax = () => {
     return caculateSubtotal() * 0.05;
+  };
+
+  const handleOrder = () => {
+    orderAPI
+      .createOrder(order)
+      .then((res) => {
+        setOrderId(res);
+        toast.success("Create your order successfully");
+        setOpen(true);
+      })
+      .catch((err) => {
+        toast.error(err);
+      });
   };
 
   return (
@@ -99,7 +134,12 @@ const SubmitOrder = ({ data }) => {
           <Typography sx={{ fontWeight: "600", fontSize: "20px", mr: 3 }}>
             Message:
           </Typography>
-          <TextField label="Message for us" variant="standard" />
+          <TextField
+            label="Message for us"
+            variant="standard"
+            value={order.message}
+            onChange={(e) => setOrder({ ...order, message: e.target.value })}
+          />
         </Box>
         <Typography sx={{ mt: 2, fontSize: "14px" }}>
           Clicking "Order" means you agree to our{" "}
@@ -160,6 +200,7 @@ const SubmitOrder = ({ data }) => {
           color="secondary"
           variant="contained"
           sx={{ my: 2, width: "100%" }}
+          onClick={handleOrder}
         >
           Order
         </Button>
@@ -168,45 +209,42 @@ const SubmitOrder = ({ data }) => {
   );
 };
 
-const CustomerInformation = ({ name, phone }) => {
-  const [open, setOpen] = useState(false);
+const OrderPayment = ({ open, orderId }) => {
+  const router = useRouter();
+
+  const handleClose = () => {
+    router.replace("/user");
+  };
+
+  const handlePay = () => {
+    payAPI
+      .createPaymentLink(orderId)
+      .then((res) => {
+        window.open(res, "_blank");
+      })
+      .catch((err) => {
+        toast.error(err);
+      })
+      .finally(() => {
+        router.replace("/user");
+      });
+  };
+
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
-        component: "form",
-        onSubmit: (event) => {
-          event.preventDefault();
-          const formData = new FormData(event.currentTarget);
-          const formJson = Object.fromEntries(formData.entries());
-          const email = formJson.email;
-          console.log(email);
-          handleClose();
-        },
-      }}
-    >
-      <DialogTitle>Subscribe</DialogTitle>
+    <Dialog open={open}>
+      <DialogTitle>Pay for now!</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To subscribe to this website, please enter your email address here. We
-          will send updates occasionally.
+          Click pay now to pay for your order or you can pay later.
         </DialogContentText>
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          id="name"
-          name="email"
-          label="Email Address"
-          type="email"
-          fullWidth
-          variant="standard"
-        />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button type="submit">Subscribe</Button>
+        <Button onClick={handleClose} variant="contained">
+          Cancel
+        </Button>
+        <Button onClick={handlePay} variant="contained" color="success">
+          Pay now
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -215,8 +253,11 @@ const CustomerInformation = ({ name, phone }) => {
 const CheckoutView = () => {
   const products = useSelector(cart);
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const data = useSelector(user);
+
+  const [open, setOpen] = useState(false);
+
+  const [orderId, setOrderId] = useState(0);
 
   return (
     <SideLayout title="Checkout">
@@ -246,13 +287,19 @@ const CheckoutView = () => {
               <Typography sx={{ fontWeight: "600", mr: 3 }}>
                 Customer name:{" "}
                 <Typography component={"span"} color={"secondary"}>
-                  Vu Minh Quan
+                  {data.fullName}
                 </Typography>
               </Typography>
               <Typography sx={{ fontWeight: "600", mr: 3 }}>
                 Phone numer:{" "}
                 <Typography color={"secondary"} component={"span"}>
-                  0123456789
+                  {data.phoneNumber}
+                </Typography>
+              </Typography>
+              <Typography sx={{ fontWeight: "600", mr: 3 }}>
+                Address:{" "}
+                <Typography color={"secondary"} component={"span"}>
+                  {data.address}
                 </Typography>
               </Typography>
             </Box>
@@ -275,8 +322,15 @@ const CheckoutView = () => {
         </Paper>
 
         <Paper sx={{ p: 3, mt: 3 }}>
-          <SubmitOrder data={products} />
+          <SubmitOrder
+            data={products}
+            setOpen={setOpen}
+            userData={data}
+            setOrderId={setOrderId}
+          />
         </Paper>
+
+        <OrderPayment open={open} setOpen={setOpen} orderId={orderId} />
       </Container>
     </SideLayout>
   );
