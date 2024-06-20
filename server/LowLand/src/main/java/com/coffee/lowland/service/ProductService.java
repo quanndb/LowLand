@@ -11,12 +11,18 @@ import com.coffee.lowland.model.ProductDetails;
 import com.coffee.lowland.model.ProductType;
 import com.coffee.lowland.repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductService {
     ProductRepository _repo;
     ProductTypeMapper _map;
@@ -38,10 +44,10 @@ public class ProductService {
         Product save = new Product();
         Optional<Product> modelCheck = _repo.findByCode(data.getCode());
         if(modelCheck.isPresent()){
-            if(modelCheck.get().getProductTypeId() != data.getProductTypeId())
+            if(modelCheck.get().getProductId() != data.getProductId())
                 throw new AppExceptions(ErrorCode.PRODUCT_EXISTED);
         }
-        Optional<Product> res = _repo.findById(data.getProductTypeId());
+        Optional<Product> res = _repo.findById(data.getProductId());
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime now = LocalDateTime.now();
         if(res.isPresent()){
@@ -51,13 +57,12 @@ public class ProductService {
             save = _repo.save(res.get());
         }
         else {
-            if(data.getProductTypeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);
+            if(data.getProductId()>0) throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);
             Product newModel = new Product();
             newModel.setCreatedBy(userName);
             newModel.setCreatedDate(now);
             _map.MapProduct(newModel,data);
             save = _repo.save(newModel);
-
         }
         return save.getProductId();
     }
@@ -80,7 +85,7 @@ public class ProductService {
         return true;
     }
     public Optional<Product> GetById(int id){
-        Optional<Product> res = _repo.findById(id);
+        Optional<Product> res = _repo.findByProductId(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);
         }
