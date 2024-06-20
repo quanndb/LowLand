@@ -31,7 +31,6 @@ import {
   CustomizedBreadcrumbs,
 } from "src/components/CustomBreadcum";
 import { formatPrice } from "src/utils/format-number";
-import { ca } from "date-fns/locale";
 
 const formatMapping = {
   ice: { displayName: "ice", unit: "" },

@@ -252,7 +252,7 @@ const UserView = ({ user, orders }) => {
                   <MenuItem value="3">Canceled</MenuItem>
                 </Select>
               </FormControl>
-              <Box sx={{ height: 632, width: "100%" }}>
+              <Box sx={{ height: 667, width: "100%" }}>
                 <DataGrid
                   rows={ordersWithId}
                   columns={[
@@ -311,23 +311,18 @@ const UserView = ({ user, orders }) => {
                     },
                   ]}
                   onRowClick={handleClickRow}
-                  pageSize={itemsPerPage}
-                  pageSizeOptions={[5, 10]}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { pageSize: 10, page: 0 },
-                    },
-                  }}
-                  disableSelectionOnClick
+                  disableTooltip
                 />
               </Box>
-              {/* <Pagination
-                count={Math.ceil(filteredOrders.length / itemsPerPage)}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-                sx={{ mt: 2 }}
-              /> */}
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Pagination
+                  count={Math.ceil(filteredOrders.length / itemsPerPage)}
+                  page={page}
+                  onChange={handlePageChange}
+                  color="primary"
+                  sx={{ mt: 2 , transform:"translateY(-60px)"}}
+                />
+              </Box>
             </Grid>
           </Grid>
         </Paper>
