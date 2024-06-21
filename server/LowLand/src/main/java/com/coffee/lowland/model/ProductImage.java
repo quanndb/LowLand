@@ -19,7 +19,7 @@ public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int productImageId;
-    String imageURL;
+    String imageUrl;
     String cloudImageId;
     String imageName;
     int productId;

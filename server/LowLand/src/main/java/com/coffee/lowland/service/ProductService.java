@@ -47,12 +47,7 @@ public class ProductService {
         }
         List<String> images = data.getListImageBase64();
         for(String image : images){
-           CreateImageDTO img = _imageService.CreateImage(image);
-            ProductImage newImg = new ProductImage();
-            newImg.setProductId(ProductId);
-            newImg.setCloudImageId(img.getPublic_id());
-            newImg.setImageURL(img.getUrl());
-            _imgRepo.save(newImg);
+            _imageService.CreateImage(image, ProductId);
         }
         _detailService.Create(lst);
         return true;
@@ -94,7 +89,7 @@ public class ProductService {
             result.add(
                     ProductRespone.builder()
                             .productTypeName((String) item[0])
-                            .price((Integer) item[1])
+                            .price(((BigDecimal) item[1]).intValue())
                             .sizeName((String)item[2])
                             .imageName((String)item[3])
                             .imageUrl(item[4].toString())

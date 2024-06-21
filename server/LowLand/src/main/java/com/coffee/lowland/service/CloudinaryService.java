@@ -31,8 +31,8 @@ public class CloudinaryService {
         cloudinary = new Cloudinary(valuesMap);
     }
 
-    public Map upload(MultipartFile multipartFile) throws IOException {
-        File file = convert(multipartFile);
+    public Map upload(File file) throws IOException {
+        // File file = convert(multipartFile);
         Map result = cloudinary.uploader().upload(file, ObjectUtils.asMap("overwrite", true));
         if (!Files.deleteIfExists(file.toPath())) {
             throw new IOException("Failed to delete temporary file: " + file.getAbsolutePath());
@@ -45,19 +45,28 @@ public class CloudinaryService {
     }
 
     private File convert(MultipartFile multipartFile) throws IOException {
-        File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        File file = new File(String.valueOf(multipartFile));
         try (FileOutputStream fo = new FileOutputStream(file)) {
             fo.write(multipartFile.getBytes());
         }
         return file;
     }
 
-    public MultipartFile convertToMultipartFile(String base64String) throws IOException {
-        // Decode Base64 to bytes
+    public File convertToMultipartFile(String base64String) throws IOException {
+        if (base64String.startsWith("data:image/jpeg;base64,")) {
+            base64String = base64String.substring("data:image/jpeg;base64,".length());
+        } else if (base64String.startsWith("data:image/png;base64,")) {
+            base64String = base64String.substring("data:image/png;base64,".length());
+        }
         byte[] decodedBytes = Base64.getDecoder().decode(base64String);
 
-        // Create MultipartFile from bytes
-        return new BASE64DecodedMultipartFile(decodedBytes);
+        File tempFile = File.createTempFile("base64Temp", ".jpeg");
+        tempFile.deleteOnExit();
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(decodedBytes);
+        }
+
+        return tempFile;
     }
 
 }
