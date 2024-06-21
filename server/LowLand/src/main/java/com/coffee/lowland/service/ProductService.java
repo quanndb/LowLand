@@ -104,19 +104,38 @@ public class ProductService {
         return result;
     }
 
+    @Transactional
+    public List<ProductRespone> GetByID(int ProductID){
+        List<ProductRespone> result = new ArrayList<>();
+        List<Object[]> orders = _repo.spGetAllProductForView(ProductID);
+        for(Object[] item : orders){
+            result.add(
+                    ProductRespone.builder()
+                            .productTypeName((String) item[0])
+                            .price(((BigDecimal) item[1]).intValue())
+                            .sizeName((String)item[2])
+                            .imageName((String)item[3])
+                            .imageUrl(item[4].toString())
+                            .productId((Integer) item[5])
+                            .code((String)item[6])
+                            .productName((String)item[7])
+                            .description((String) item[8])
+                            .isActive((boolean)item[9])
+                            .build()
+            );
+        }
+        return result;
+    }
 
-   /* @Transactional
-    public int GetTotalPage(String keyWords){
-        log.error(keyWords);
-        return _repo.spGetProductTypes(keyWords);
-    }*/
+
+
 
     public boolean Delete(int id){
         Product res = _repo.findById(id).orElseThrow( () -> new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND));
         _repo.deleteById(id);
         return true;
     }
-    public Optional<Product> GetById(int id){
+    public Optional<Product> GetByProductId(int id){
         Optional<Product> res = _repo.findByProductId(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);

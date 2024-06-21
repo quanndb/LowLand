@@ -3,6 +3,7 @@ package com.coffee.lowland.mapper;
 import com.coffee.lowland.DTO.request.product.ProductDto;
 import com.coffee.lowland.DTO.request.productType.ProductSizeDto;
 import com.coffee.lowland.DTO.request.productType.ProductTypeDto;
+import com.coffee.lowland.model.Material;
 import com.coffee.lowland.model.Product;
 import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.model.ProductType;
@@ -16,4 +17,5 @@ public interface ProductTypeMapper {
     void MapProductType(@MappingTarget ProductType res, ProductTypeDto req);
     void MapProductSize(@MappingTarget ProductSize res, ProductSizeDto req);
     void MapProduct(@MappingTarget Product res, ProductDto req);
+    void MapMaterial(@MappingTarget Material res, ProductDto req);
 }
