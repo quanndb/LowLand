@@ -36,6 +36,9 @@ const CartManagerSlice = createSlice({
     removeFromCart(state, action) {
       return state.filter((item) => item.id !== action.payload);
     },
+    clearCart(state) {
+      return [];
+    },
   },
 });
 export default CartManagerSlice;

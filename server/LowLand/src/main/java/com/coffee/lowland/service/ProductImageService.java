@@ -23,7 +23,7 @@ public class ProductImageService {
     ImageMapper _mapper;
 
     public CreateImageDTO CreateImage(String imageBase64) throws IOException {
-        MultipartFile file =  _service.base64ToMultipart(imageBase64);
+        MultipartFile file =  _service.convertToMultipartFile(imageBase64);
         Object response =  _service.upload(file);
         return _mapper.DataToCreateImageDTO(response);
     }

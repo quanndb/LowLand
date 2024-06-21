@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class ProductController {
                 .build();
     }
     @PostMapping("/CreateOrUpdate")
-    public APIResponse<Boolean> CreateOrUpdate(@RequestBody ProductDataDto data) {
+    public APIResponse<Boolean> CreateOrUpdate(@RequestBody ProductDataDto data) throws IOException {
         return APIResponse.<Boolean>builder()
                 .code(2000)
                 .message("Change success!")

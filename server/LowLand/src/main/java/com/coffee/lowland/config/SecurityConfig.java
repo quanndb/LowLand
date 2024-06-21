@@ -30,9 +30,10 @@ public class SecurityConfig {
     @Value("${SECRET_KEY}")
     String SECRET_KEY;
 
-
     String[] PUBLIC_ENDPOINTS = {
-            "images/**", "auth/**","pay/**", "product/**", "orders/**","ProductType/**","ProductSize/**"
+            "images/**", "auth/**","pay/**",
+            "product/**", "orders/**","ProductType/**",
+            "ProductSize/**", "accounts/**"
     };
     @Bean
     public PasswordEncoder passwordEncoder (){

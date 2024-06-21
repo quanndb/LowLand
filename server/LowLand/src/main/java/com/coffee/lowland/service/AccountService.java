@@ -2,6 +2,7 @@ package com.coffee.lowland.service;
 
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
+import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.AccountMapper;
@@ -12,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,11 @@ public class AccountService {
     AccountMapper accountMapper;
 
     public String registerUser(AccountRegisterRequest account){
+        accountRepository
+                .findAccountByEmail(account.getEmail())
+                .ifPresent(foundAccount -> {
+                    throw new AppExceptions(ErrorCode.ACCOUNT_EXISTED);
+                });
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         Account newAccount = new Account();
         accountMapper.createAccount(newAccount,account);
@@ -34,17 +41,24 @@ public class AccountService {
     }
 
     public String createAccount(Account request){
+        accountRepository
+                .findAccountByEmail(request.getEmail())
+                .ifPresent(account -> {
+                    throw new AppExceptions(ErrorCode.ACCOUNT_EXISTED);
+                });
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(request);
         return "Create account successfully!";
     }
 
-    public String updateAccount(UpdateAccountRequest request){
-        Account foundAccount = accountRepository.findById(request.getAccountId())
+    public UserResponse updateAccount(UpdateAccountRequest request){
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account foundAccount = accountRepository.findAccountByEmail(currentUser)
                 .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
         accountMapper.updateAccount(foundAccount,request);
         accountRepository.save(foundAccount);
-        return "Update account successfully!";
+
+        return accountMapper.toUserResponse(foundAccount);
     }
 
     public Account findAccountByEmail(String username){

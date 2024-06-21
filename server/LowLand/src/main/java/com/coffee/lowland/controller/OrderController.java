@@ -65,8 +65,8 @@ public class OrderController {
     }
 
     @PutMapping("/my-orders")
-    public APIResponse<String> updateOrder(@RequestBody UpdateOrderRequest request){
-        return APIResponse.<String>builder()
+    public APIResponse<?> updateOrder(@RequestBody UpdateOrderRequest request){
+        return APIResponse.builder()
                 .code(2000)
                 .result(orderService.updateOrder(request))
                 .build();

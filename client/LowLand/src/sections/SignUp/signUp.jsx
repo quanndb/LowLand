@@ -16,9 +16,13 @@ import authAPI from "src/services/API/authAPI";
 import LowLandLogo from "src/components/navigation/logo";
 import { useRouter } from "src/routes/hooks";
 import SideLayout from "src/layouts/sideLayout";
+import accountAPI from "src/services/API/accountAPI";
+import { toast } from "react-toastify";
 
 const SignUpPageView = () => {
   const router = useRouter();
+
+  const [attempt, setAttempt] = useState(false);
 
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -29,18 +33,29 @@ const SignUpPageView = () => {
   const [showPass, setShowPass] = useState(false);
 
   const handleSignUp = () => {
-    authAPI
-      .login({
+    if (!username || !password || !confirmPass || !fullName || !phone) {
+      setAttempt(true);
+      toast.error("Please fill all fields");
+      return;
+    }
+    if (password !== confirmPass) {
+      toast.error("Password not match");
+      return;
+    }
+    accountAPI
+      .register({
         email: username,
         password: password,
+        fullName: fullName,
+        phoneNumber: phone,
       })
       .then((res) => {
-        localStorage.setItem("accessToken", res.accessToken);
-        toast.success("Logged in successfully");
-        router.replace("/");
+        router.push("/login");
+        toast.success("Sign up successfully");
       })
-      .catch((error) => toast.error(error))
-      .finally(() => console.log("Done!"));
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   return (
@@ -100,6 +115,8 @@ const SignUpPageView = () => {
               value={username}
               onChange={(e) => setUserName(e.target.value)}
               sx={{ width: "100%", marginBottom: "20px" }}
+              error={username === "" && attempt}
+              helperText={username === "" && attempt && "Email cannot be empty"}
             />
             <TextField
               label="Password"
@@ -116,6 +133,10 @@ const SignUpPageView = () => {
                 ),
               }}
               sx={{ width: "100%", marginBottom: "20px" }}
+              error={password === "" && attempt}
+              helperText={
+                password === "" && attempt && "Password cannot be empty"
+              }
             />
             <TextField
               label="ConfirmPass"
@@ -132,18 +153,30 @@ const SignUpPageView = () => {
                 ),
               }}
               sx={{ width: "100%", marginBottom: "20px" }}
+              error={confirmPass === "" && attempt}
+              helperText={
+                confirmPass === "" && attempt && "Password cannot be empty"
+              }
             />
             <TextField
               label="FullName"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               sx={{ width: "100%", marginBottom: "20px" }}
+              error={fullName === "" && attempt}
+              helperText={
+                fullName === "" && attempt && "FullName cannot be empty"
+              }
             />
             <TextField
               label="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               sx={{ width: "100%", marginBottom: "20px" }}
+              error={phone === "" && attempt}
+              helperText={
+                phone === "" && attempt && "Phone Number cannot be empty"
+              }
             />
 
             <Button

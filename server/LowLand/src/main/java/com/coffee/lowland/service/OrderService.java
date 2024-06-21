@@ -96,7 +96,7 @@ public class OrderService {
         return "Your order has been cancelled successfully!";
     }
 
-    public String updateOrder(UpdateOrderRequest request){
+    public Order updateOrder(UpdateOrderRequest request){
         Order foundOrder = orderRepository.findById(request.getOrderId())
                 .orElseThrow(() -> new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         if(foundOrder.getStatus()!=0){
@@ -106,7 +106,7 @@ public class OrderService {
         foundOrder.setUpdatedDate(LocalDateTime.now());
         foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         orderRepository.save(foundOrder);
-        return "Update your order successfully!";
+        return orderRepository.save(foundOrder);
     }
 
     public String manageOrder(ApproveOrderRequest request){

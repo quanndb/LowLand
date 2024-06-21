@@ -24,6 +24,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import CreateIcon from "@mui/icons-material/Create";
 import SideLayout from "src/layouts/sideLayout";
 import UpdateModal from "./updateModal";
+import accountAPI from "src/services/API/accountAPI";
+import { useDispatch } from "react-redux";
+import UserManagerSlice from "src/redux/slices/UserManagerSlice";
+import { toast } from "react-toastify";
+import orderAPI from "src/services/API/orderAPI";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -82,6 +87,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const UserView = ({ user, orders }) => {
+  const [orderList, setOrderList] = useState(orders);
+  useEffect(() => {
+    if (orders !== null && orders !== undefined) {
+      setOrderList(orders);
+    }
+  }, [orders]);
+  const dispatch = useDispatch();
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
@@ -98,22 +110,21 @@ const UserView = ({ user, orders }) => {
     setStatus(event.target.value);
     setPage(1);
   };
-  const filteredOrders = orders
+  let filteredOrders = orderList
     ? status !== ""
-      ? orders.filter((order) => order.status === parseInt(status))
-      : orders
+      ? orderList.filter((order) => order.status === parseInt(status))
+      : orderList
     : [];
 
-  const paginatedOrders = filteredOrders.slice(
+  let paginatedOrders = filteredOrders.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
-  const ordersWithId = paginatedOrders.map((order, index) => ({
+  let ordersWithId = paginatedOrders.map((order, index) => ({
     ...order,
     id: index + 1 + (page - 1) * itemsPerPage,
     status: statusMap[order.status],
     totalMoney: `${order.totalMoney.toLocaleString()} VNĐ`,
-    // createdDate: formatDate(order.createdDate),
   }));
 
   const [file, setFile] = useState(null);
@@ -140,8 +151,41 @@ const UserView = ({ user, orders }) => {
     setFile(input);
   };
 
+  const handleUpdateOrder = (updatedOrder) => {
+    orderAPI
+      .updateOrder(updatedOrder)
+      .then((res) => {
+        toast.success("Update order successfully");
+        setOrderList((prevOrderList) => {
+          if (!Array.isArray(prevOrderList)) {
+            return [];
+          }
+          return prevOrderList.map((item) =>
+            item.orderId === res.orderId ? { ...item, ...res } : item
+          );
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message || "Error updating order");
+      });
+  };
+
   const handleUpdate = () => {
-    console.log(fullName, email, phone, address);
+    accountAPI
+      .update({
+        fullName: fullName,
+        phoneNumber: phone,
+        address: address,
+        // imageURL: file ? file.preview : user.imageURL,
+      })
+      .then((res) => {
+        dispatch(UserManagerSlice.actions.updateUser(res));
+        toast.success("Update successfully");
+      })
+      .catch((error) => {
+        toast.error(error);
+      })
+      .finally(() => {});
   };
 
   useEffect(() => {
@@ -208,7 +252,6 @@ const UserView = ({ user, orders }) => {
                 value={email}
                 label="Email"
                 disabled
-                onChange={(e) => setEmail(e.target.value)}
               ></TextField>
               <TextField
                 sx={{ m: 2, width: "100%" }}
@@ -312,6 +355,8 @@ const UserView = ({ user, orders }) => {
                   ]}
                   onRowClick={handleClickRow}
                   disableTooltip
+                  pageSizeOptions={[0]}
+                  disableRowSelectionOnClick
                 />
               </Box>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -320,7 +365,7 @@ const UserView = ({ user, orders }) => {
                   page={page}
                   onChange={handlePageChange}
                   color="primary"
-                  sx={{ mt: 2 , transform:"translateY(-60px)"}}
+                  sx={{ mt: 2, transform: "translateY(-60px)" }}
                 />
               </Box>
             </Grid>
@@ -332,7 +377,7 @@ const UserView = ({ user, orders }) => {
         open={openModal}
         handleClose={handleCloseModal}
         order={selectedOrder}
-        handleUpdate={handleUpdate}
+        updateOrder={handleUpdateOrder}
       />
     </SideLayout>
   );

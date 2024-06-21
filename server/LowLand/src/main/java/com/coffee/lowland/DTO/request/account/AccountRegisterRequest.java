@@ -17,4 +17,5 @@ public class AccountRegisterRequest {
     String email;
     String password;
     String fullName;
+    String phoneNumber;
 }

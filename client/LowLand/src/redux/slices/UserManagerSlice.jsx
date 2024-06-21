@@ -8,6 +8,9 @@ const UserManagerSlice = createSlice({
       state.user = action.payload.userResponse;
       state.accessToken = action.payload.accessToken;
     },
+    updateUser: (state, action) => {
+      state.user = action.payload;
+    },
     removeUser: (state) => {
       state.user = null;
       state.accessToken = null;

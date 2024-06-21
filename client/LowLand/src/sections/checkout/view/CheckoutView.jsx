@@ -1,8 +1,9 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Dialog,
   DialogActions,
@@ -34,6 +35,7 @@ import { user } from "src/redux/selectors/UserSelector";
 import { toast } from "react-toastify";
 import { useRouter } from "src/routes/hooks";
 import payAPI from "src/services/API/payAPI";
+import CartManagerSlice from "src/redux/slices/CartManagerSlice";
 
 const ProductTable = ({ products }) => {
   return (
@@ -87,6 +89,7 @@ const ProductTable = ({ products }) => {
 };
 
 const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
+  const dispatch = useDispatch();
   const [order, setOrder] = useState({
     customerName: userData.fullName,
     phoneNumber: userData.phoneNumber,
@@ -115,6 +118,7 @@ const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
       .then((res) => {
         setOrderId(res);
         toast.success("Create your order successfully");
+        dispatch(CartManagerSlice.actions.clearCart());
         setOpen(true);
       })
       .catch((err) => {
@@ -210,6 +214,7 @@ const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
 };
 
 const OrderPayment = ({ open, orderId }) => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleClose = () => {
@@ -217,6 +222,7 @@ const OrderPayment = ({ open, orderId }) => {
   };
 
   const handlePay = () => {
+    setLoading(true);
     payAPI
       .createPaymentLink(orderId)
       .then((res) => {
@@ -227,25 +233,34 @@ const OrderPayment = ({ open, orderId }) => {
       })
       .finally(() => {
         router.replace("/user");
+        setLoading(false);
       });
   };
 
   return (
     <Dialog open={open}>
-      <DialogTitle>Pay for now!</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Click pay now to pay for your order or you can pay later.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} variant="contained">
-          Cancel
-        </Button>
-        <Button onClick={handlePay} variant="contained" color="success">
-          Pay now
-        </Button>
-      </DialogActions>
+      {loading ? (
+        <Box sx={{ p: 3 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <DialogTitle>Pay for now!</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Click pay now to pay for your order or you can pay later.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} variant="contained">
+              Cancel
+            </Button>
+            <Button onClick={handlePay} variant="contained" color="success">
+              Pay now
+            </Button>
+          </DialogActions>
+        </>
+      )}
     </Dialog>
   );
 };

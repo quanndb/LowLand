@@ -24,6 +24,7 @@ import { formatPrice } from "src/utils/format-number";
 import Image from "src/components/Image";
 import payAPI from "src/services/API/payAPI";
 import { set } from "lodash";
+import { useRouter } from "src/routes/hooks";
 
 const ProductTable = ({ products }) => {
   return (
@@ -81,7 +82,7 @@ const ModalContent = ({
   open,
   handleClose,
   order,
-  handleUpdate,
+  updateOrder,
   setIsLoading,
 }) => {
   const [updatedOrder, setUpdatedOrder] = useState({
@@ -100,7 +101,7 @@ const ModalContent = ({
     message: "",
     items: [],
   });
-
+  const router = useRouter();
   useEffect(() => {
     if (open) {
       orderAPI
@@ -135,8 +136,12 @@ const ModalContent = ({
     }));
   };
   const handleSubmit = () => {
-    handleUpdate(updatedOrder);
+    handleUpdate();
     handleClose();
+  };
+
+  const handleUpdate = () => {
+    updateOrder(updatedOrder);
   };
 
   const orderStatus = {
@@ -186,6 +191,7 @@ const ModalContent = ({
             label="Customer Name"
             fullWidth
             value={updatedOrder.customerName}
+            disabled={updatedOrder.status !== 0}
             onChange={handleChange}
             sx={{ mr: 2 }}
           />
@@ -195,6 +201,7 @@ const ModalContent = ({
             label="Phone Number"
             fullWidth
             value={updatedOrder.phoneNumber}
+            disabled={updatedOrder.status !== 0}
             onChange={handleChange}
           />
         </Box>
@@ -204,6 +211,7 @@ const ModalContent = ({
           label="Address"
           fullWidth
           value={updatedOrder.address}
+          disabled={updatedOrder.status !== 0}
           onChange={handleChange}
         />
         <TextField
@@ -212,6 +220,7 @@ const ModalContent = ({
           label="Message"
           fullWidth
           value={updatedOrder.message}
+          disabled={updatedOrder.status !== 0}
           onChange={handleChange}
         />
         <Box sx={{ display: "flex" }}>
@@ -260,26 +269,37 @@ const ModalContent = ({
         <ProductTable products={updatedOrder.items} />
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Box sx={{ mt: 2, px: 2 }}>
-            <Typography variant="h6" textAlign={"right"} fontWeight={600}>
-              Subtotal: {formatPrice(caculateTotal())} VNĐ
+            <Typography variant="h6" textAlign={"right"} fontWeight={500}>
+              Subtotal:{" "}
+              <span style={{ marginLeft: "40px" }}>
+                {formatPrice(caculateTotal())} VNĐ
+              </span>
             </Typography>
-            <Typography variant="h6" textAlign={"right"} fontWeight={600}>
-              Tax (10%): {formatPrice(Math.floor(caculateTotal() * 0.1))} VNĐ
+            <Typography variant="h6" textAlign={"right"} fontWeight={500}>
+              Tax (10%):{" "}
+              <span style={{ marginLeft: "40px" }}>
+                {formatPrice(Math.floor(caculateTotal() * 0.1))} VNĐ
+              </span>
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Typography
               variant="h6"
               textAlign={"right"}
-              color={"error"}
+              color={"secondary"}
               fontWeight={600}
+              fontSize={"23px"}
             >
-              Total: {formatPrice(Math.floor(caculateTotal() * 1.1))} VNĐ
+              Total:{" "}
+              <span style={{ marginLeft: "40px" }}>
+                {formatPrice(Math.floor(caculateTotal() * 1.1))} VNĐ
+              </span>
             </Typography>
             <Button
               sx={{ mt: 2, width: "100%" }}
               variant="contained"
               onClick={handlePay}
               disabled={updatedOrder.status !== 0}
+              color="success"
             >
               Pay now
             </Button>
@@ -291,7 +311,12 @@ const ModalContent = ({
         <Button onClick={handleClose} variant="contained" color="primary">
           Cancel
         </Button>
-        <Button onClick={handleSubmit} variant="contained" color="success">
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="error"
+          disabled={updatedOrder.status !== 0}
+        >
           Update
         </Button>
       </DialogActions>
@@ -299,24 +324,25 @@ const ModalContent = ({
   );
 };
 
-const UpdateModal = ({ open, handleClose, order, handleUpdate }) => {
+const UpdateModal = ({ open, handleClose, order, orderList, updateOrder }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xl">
-      <Box sx={{ p: 3 }}>
-        {isLoading ? (
+      {isLoading ? (
+        <Box sx={{ p: 3 }}>
           <CircularProgress />
-        ) : (
-          <ModalContent
-            open={open}
-            order={order}
-            handleUpdate={handleUpdate}
-            handleClose={handleClose}
-            setIsLoading={setIsLoading}
-          />
-        )}
-      </Box>
+        </Box>
+      ) : (
+        <ModalContent
+          open={open}
+          order={order}
+          handleClose={handleClose}
+          setIsLoading={setIsLoading}
+          orderList={orderList}
+          updateOrder={updateOrder}
+        />
+      )}
     </Dialog>
   );
 };

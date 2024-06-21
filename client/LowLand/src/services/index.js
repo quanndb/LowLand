@@ -1,4 +1,5 @@
 import axios from "axios";
+import UserManagerSlice from "src/redux/slices/UserManagerSlice";
 import { store } from "src/redux/store"; // Import the Redux store
 
 const instance = axios.create({
@@ -35,6 +36,9 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
+    if (error.response.data.code === 4002) {
+      store.dispatch(UserManagerSlice.actions.removeUser());
+    }
     throw error.response.data.message;
   }
 );
