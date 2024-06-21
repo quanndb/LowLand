@@ -93,7 +93,7 @@ const ModalContent = ({
     address: "",
     createdDate: "",
     createdBy: "",
-    status: "",
+    status: 0,
     updatedDate: "",
     updatedBy: "",
     paymentLink: "",
@@ -145,10 +145,22 @@ const ModalContent = ({
   };
 
   const orderStatus = {
-    0: "Pending",
-    1: "Paid",
-    2: "Delivered",
-    3: "Canceled",
+    0: {
+      name: "Pending",
+      color: "#f1c40f",
+    },
+    1: {
+      name: "Paid",
+      color: "#2ecc71",
+    },
+    2: {
+      name: "Delivered",
+      color: "#3498db",
+    },
+    3: {
+      name: "Cancelled",
+      color: "#e74c3c",
+    },
   };
 
   const caculateTotal = () => {
@@ -245,15 +257,19 @@ const ModalContent = ({
             disabled
             sx={{ mr: 2 }}
           />
-          <TextField
-            margin="dense"
-            name="status"
-            label="Status"
-            fullWidth
-            value={orderStatus[updatedOrder.status]}
-            disabled
-            onChange={handleChange}
-          />
+          <Box>
+            <Typography variant="caption">Status</Typography>
+            <Typography
+              sx={{
+                padding: "8px 40px",
+                color: "white",
+                fontWeight: "600",
+                backgroundColor: `${orderStatus[updatedOrder.status].color}`,
+              }}
+            >
+              {orderStatus[updatedOrder.status].name}
+            </Typography>
+          </Box>
         </Box>
         {/* updatedDate, updatedBy, message */}
 

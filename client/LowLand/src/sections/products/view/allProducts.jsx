@@ -1,5 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import ProductItem from "src/components/ProductItem";
+import { formatPrice } from "src/utils/format-number";
 const AllProducts = ({ products }) => {
   return (
     <Container maxWidth={"lg"}>
@@ -15,14 +16,14 @@ const AllProducts = ({ products }) => {
         >
           {products.map((item) => {
             return (
-              <Grid item md={4} sm={6} xs={12} key={item.id}>
+              <Grid item md={4} sm={6} xs={12} key={item.productId}>
                 <ProductItem
-                  id={item.id}
-                  imageURL={item.imageURL}
-                  isSale={item.isSale}
-                  name={item.name}
-                  salePrices={item.salePrices}
-                  originalPrices={item.originalPrices}
+                  id={item.productId}
+                  imageURL={item.imageUrl}
+                  isSale={false}
+                  name={item.productName}
+                  salePrices={formatPrice(item.price)}
+                  originalPrices={formatPrice(item.price)}
                 />
               </Grid>
             );

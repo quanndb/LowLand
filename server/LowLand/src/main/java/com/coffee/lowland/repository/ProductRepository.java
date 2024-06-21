@@ -14,5 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findByProductId(Integer productId);
     Optional<Product> findByCode(String code);
     @Procedure
-    List<Object[]> spGetAllProductForView(int ProductID);
+    List<Object[]> spGetAllProductForView(int ProductID, int inputRow);
 }

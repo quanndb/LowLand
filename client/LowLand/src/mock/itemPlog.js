@@ -39,7 +39,7 @@ export const BLOGS = [
           {
             type: "link",
             data: {
-              title: "Facebook quandeptrai",
+              title: "Facebook",
               href: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             },
           },

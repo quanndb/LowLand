@@ -20,6 +20,7 @@ import { cart } from "src/redux/selectors/CartSelector";
 import UserDrawer from "./common/UserDrawer";
 import { user } from "src/redux/selectors/UserSelector";
 import { bool } from "prop-types";
+import { useScrollToTop } from "src/hooks/use-scroll-to-top";
 
 const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   const router = useRouter();
@@ -103,6 +104,8 @@ const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
 };
 
 const Header = () => {
+  useScrollToTop();
+
   const dispatch = useDispatch();
 
   const router = useRouter();

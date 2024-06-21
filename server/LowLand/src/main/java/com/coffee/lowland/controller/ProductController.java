@@ -25,10 +25,10 @@ public class ProductController {
     ProductService _service;
 
     @GetMapping("/GetAll")
-    public APIResponse<Object> GetAll(@RequestParam int ProductId){
+    public APIResponse<Object> GetAll(@RequestParam int ProductId, @RequestParam int inputRow){
         return APIResponse.<Object>builder()
                 .code(2000)
-                .result(_service.GetAll(ProductId))
+                .result(_service.GetAll(ProductId, inputRow))
                 .build();
     }
     @GetMapping("/GetById")

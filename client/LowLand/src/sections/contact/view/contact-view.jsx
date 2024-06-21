@@ -115,15 +115,15 @@ const FormWrap = () => {
             >
               CoffeeStyle. Inc
             </Typography>
-            <Typography>Hamlyn Heights</Typography>
-            <Typography>VIC 3215</Typography>
-            <Typography sx={{ marginBottom: "30px" }}>Australia</Typography>
+            <Typography>Minh Khai</Typography>
+            <Typography>Cau Dien</Typography>
+            <Typography sx={{ marginBottom: "30px" }}>Ha Noi</Typography>
             <Typography>CALL US</Typography>
             <Typography sx={{ marginBottom: "30px" }}>
-              +1 (415) 555-1212
+              +84 (415) 555-1212
             </Typography>
             <Typography>EMAIL US</Typography>
-            <Typography>us@coffeestyle.io</Typography>
+            <Typography>us@lowlandCoffee.io</Typography>
           </Grid>
         </Grid>
       </Container>
@@ -159,10 +159,10 @@ const IntroductionBehindForm = () => {
           }}
         >
           <Typography sx={{ marginTop: "20px" }}>PRESS</Typography>
-          <Typography sx={{ marginTop: "20px" }}>Robb Kohler</Typography>
+          <Typography sx={{ marginTop: "20px" }}>Vu Minh Quan</Typography>
           <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
             <Typography sx={{ marginTop: "20px" }}>086-374-4962</Typography>
-            <Typography>robb.kohler@coffeestyle.com</Typography>
+            <Typography>quanvm@lowlandCoffee.com</Typography>
           </Box>
         </Grid>
         <Grid
@@ -179,10 +179,10 @@ const IntroductionBehindForm = () => {
           }}
         >
           <Typography sx={{ marginTop: "20px" }}>PRESS</Typography>
-          <Typography sx={{ marginTop: "20px" }}>Robb Kohler</Typography>
+          <Typography sx={{ marginTop: "20px" }}>Nguyen Anh Quan</Typography>
           <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
-            <Typography sx={{ marginTop: "20px" }}>086-374-4962</Typography>
-            <Typography>robb.kohler@coffeestyle.com</Typography>
+            <Typography sx={{ marginTop: "20px" }}>086-374-42242</Typography>
+            <Typography>quanna@lowlandCoffee.com</Typography>
           </Box>
         </Grid>
         <Grid
@@ -199,10 +199,10 @@ const IntroductionBehindForm = () => {
           }}
         >
           <Typography sx={{ marginTop: "20px" }}>PRESS</Typography>
-          <Typography sx={{ marginTop: "20px" }}>Robb Kohler</Typography>
+          <Typography sx={{ marginTop: "20px" }}>Le Minh Khoi</Typography>
           <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
-            <Typography sx={{ marginTop: "20px" }}>086-374-4962</Typography>
-            <Typography>robb.kohler@coffeestyle.com</Typography>
+            <Typography sx={{ marginTop: "20px" }}>0923-421-4962</Typography>
+            <Typography>khoilm@lowlandCoffee.com</Typography>
           </Box>
         </Grid>
       </Grid>
@@ -234,15 +234,15 @@ const ContactView = () => {
                 unShowOverlay={true}
               />
               <Typography variant="" sx={{ opacity: ".6" }}>
-                UNITED KINGDOM
+                CAU GIAY
               </Typography>
               <Typography sx={{ fontWeight: "bold" }}>
-                Canary Wharf, London
+                Cau Giay, Ha Noi
               </Typography>
-              <Typography sx={{ opacity: ".6" }}>Jubilee Place</Typography>
-              <Typography sx={{ opacity: ".6" }}>London</Typography>
+              <Typography sx={{ opacity: ".6" }}>Num 41, Cau Giay</Typography>
+              <Typography sx={{ opacity: ".6" }}>Ha Noi</Typography>
               <Typography sx={{ opacity: ".6", marginBottom: "30px" }}>
-                E14 5NY
+                Viet Nam
               </Typography>
               <Typography sx={{ opacity: ".6" }}>OPENING TIMES</Typography>
               <Typography sx={{ opacity: ".6" }}>
@@ -262,15 +262,15 @@ const ContactView = () => {
                 unShowOverlay={true}
               />
               <Typography variant="" sx={{ opacity: ".6" }}>
-                UNITED KINGDOM
+                MINH KHAI
               </Typography>
               <Typography sx={{ fontWeight: "bold" }}>
-                Canary Wharf, London
+                Nguyen Xa, Cau Dien, Ha Noi
               </Typography>
-              <Typography sx={{ opacity: ".6" }}>Jubilee Place</Typography>
-              <Typography sx={{ opacity: ".6" }}>London</Typography>
+              <Typography sx={{ opacity: ".6" }}>Num 316, Street 30</Typography>
+              <Typography sx={{ opacity: ".6" }}>Nguyen Xa</Typography>
               <Typography sx={{ opacity: ".6", marginBottom: "30px" }}>
-                E14 5NY
+                Cau Dien
               </Typography>
               <Typography sx={{ opacity: ".6" }}>OPENING TIMES</Typography>
               <Typography sx={{ opacity: ".6" }}>

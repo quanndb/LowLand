@@ -1,5 +1,6 @@
 package com.coffee.lowland.DTO.response.auth;
 
+import com.coffee.lowland.model.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,4 +18,5 @@ public class UserResponse {
     String phoneNumber;
     String address;
     String imageURL;
+    Role role;
 }

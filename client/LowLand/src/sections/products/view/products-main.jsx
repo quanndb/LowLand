@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-const ProductsMain = ({ categories, products }) => {
+const ProductsMain = ({ products }) => {
   const [active, setActive] = useState(0);
-  const [menu, setMenu] = useState("ALL PRODUCTS");
+  const [menu, setMenu] = useState("All products");
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -40,11 +40,11 @@ const ProductsMain = ({ categories, products }) => {
   };
   const filterProducts = () => {
     return products.filter((product) => {
-      const matchesMenu = menu === "ALL PRODUCTS";
+      const matchesMenu =
+        menu === "All products" || product.productTypeName === menu;
       const matchesSearch =
-        product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.originalPrices.toString().includes(search) ||
-        product.salePrices.toString().includes(search);
+        product.productName.toLowerCase().includes(search.toLowerCase()) ||
+        product.price.toString().includes(search);
 
       return matchesMenu && matchesSearch;
     });
@@ -99,9 +99,11 @@ const ProductsMain = ({ categories, products }) => {
             label="Menu"
             onChange={handleChange}
           >
-            <MenuItem value={"ALL PRODUCTS"}>ALL PRODUCTS</MenuItem>
-            <MenuItem value={"COFFEE MUGS"}>COFFEE MUGS</MenuItem>
-            <MenuItem value={"TEA MUGS"}>TEA MUGS</MenuItem>
+            <MenuItem value={"All products"}>All products</MenuItem>
+            <MenuItem value={"Black coffee"}>Black coffee</MenuItem>
+            <MenuItem value={"Brown coffee"}>Brown coffee</MenuItem>
+            <MenuItem value={"Smell coffee"}>Smell coffee</MenuItem>
+            <MenuItem value={"Weasel coffee"}>Weasel coffee</MenuItem>
           </Select>
         </FormControl>
 

@@ -28,7 +28,7 @@ import SideLayout from "src/layouts/sideLayout";
 import { cart } from "src/redux/selectors/CartSelector";
 import Image from "src/components/Image";
 import { formatPrice } from "src/utils/format-number";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { set } from "lodash";
 import orderAPI from "src/services/API/orderAPI";
 import { user } from "src/redux/selectors/UserSelector";
@@ -71,6 +71,7 @@ const ProductTable = ({ products }) => {
                 <Image
                   imageURL={product.imageURL}
                   sx={{ height: 100, width: 100 }}
+                  unShowOverlay={true}
                 />
               </TableCell>
               <TableCell align="left">{product.productName}</TableCell>
@@ -91,15 +92,24 @@ const ProductTable = ({ products }) => {
 const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
   const dispatch = useDispatch();
   const [order, setOrder] = useState({
-    customerName: userData.fullName,
+    customerName: userData.customerName,
     phoneNumber: userData.phoneNumber,
     address: userData.address,
     items: data.map((product) => ({
-      productDetailsId: 1,
+      productDetailsId: product.productDetailsId,
       quantity: product.quantity,
     })),
     message: "",
   });
+
+  useEffect(() => {
+    setOrder((order) => ({
+      ...order,
+      customerName: userData.customerName,
+      phoneNumber: userData.phoneNumber,
+      address: userData.address,
+    }));
+  }, [userData]);
 
   const caculateSubtotal = () => {
     const result = data.reduce((total, product) => {
@@ -269,6 +279,9 @@ const CheckoutView = () => {
   const products = useSelector(cart);
 
   const data = useSelector(user);
+  const [customerName, setCustomerName] = useState(data.fullName);
+  const [phoneNumber, setPhoneNumber] = useState(data.phoneNumber);
+  const [address, setAddress] = useState(data.address);
 
   const [open, setOpen] = useState(false);
 
@@ -296,31 +309,40 @@ const CheckoutView = () => {
                 mt: 1,
                 display: "flex",
                 flexWrap: "wrap",
-                flexDirection: "column",
+                alignItems: "center",
               }}
             >
-              <Typography sx={{ fontWeight: "600", mr: 3 }}>
-                Customer name:{" "}
-                <Typography component={"span"} color={"secondary"}>
-                  {data.fullName}
+              <Box sx={{ mr: 3 }}>
+                <Typography sx={{ fontWeight: "600", mr: 3 }}>
+                  Customer name:{" "}
                 </Typography>
-              </Typography>
-              <Typography sx={{ fontWeight: "600", mr: 3 }}>
-                Phone numer:{" "}
-                <Typography color={"secondary"} component={"span"}>
-                  {data.phoneNumber}
+                <TextField
+                  color={"secondary"}
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                ></TextField>
+              </Box>
+              <Box sx={{ mr: 3 }}>
+                <Typography sx={{ fontWeight: "600", mr: 3 }}>
+                  Phone numer:{" "}
                 </Typography>
-              </Typography>
-              <Typography sx={{ fontWeight: "600", mr: 3 }}>
-                Address:{" "}
-                <Typography color={"secondary"} component={"span"}>
-                  {data.address}
+                <TextField
+                  color={"secondary"}
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                ></TextField>
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: "600", mr: 3 }}>
+                  Address:{" "}
                 </Typography>
-              </Typography>
+                <TextField
+                  color={"secondary"}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                ></TextField>
+              </Box>
             </Box>
-            <Button color="error" sx={{ textDecoration: "underline", pb: 0 }}>
-              Change
-            </Button>
           </Box>
         </Paper>
 
@@ -340,7 +362,11 @@ const CheckoutView = () => {
           <SubmitOrder
             data={products}
             setOpen={setOpen}
-            userData={data}
+            userData={{
+              customerName,
+              phoneNumber,
+              address,
+            }}
             setOrderId={setOrderId}
           />
         </Paper>

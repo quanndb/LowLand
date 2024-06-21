@@ -23,7 +23,7 @@ const BlogItem = ({ url, imageURL, title, description, date, sx }) => {
       href={url ? "/" : url}
       onClick={(e) => {
         e.preventDefault();
-        router.push(url);
+        router.replace(url);
       }}
     >
       <Image

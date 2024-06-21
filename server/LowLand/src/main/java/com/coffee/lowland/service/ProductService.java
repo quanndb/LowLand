@@ -82,9 +82,9 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductRespone> GetAll(int ProductID){
+    public List<ProductRespone> GetAll(int ProductID, int inputRow){
         List<ProductRespone> result = new ArrayList<>();
-        List<Object[]> orders = _repo.spGetAllProductForView(ProductID);
+        List<Object[]> orders = _repo.spGetAllProductForView(ProductID, inputRow);
         for(Object[] item : orders){
             result.add(
                     ProductRespone.builder()
@@ -105,9 +105,9 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductRespone> GetByID(int ProductID){
+    public List<ProductRespone> GetByID(int ProductID, int inputRow){
         List<ProductRespone> result = new ArrayList<>();
-        List<Object[]> orders = _repo.spGetAllProductForView(ProductID);
+        List<Object[]> orders = _repo.spGetAllProductForView(ProductID, inputRow);
         for(Object[] item : orders){
             result.add(
                     ProductRespone.builder()

@@ -111,7 +111,18 @@ const BlogMenu = () => {
         <Grid item md={8}>
           <SectionTitle>Lastest Blogs</SectionTitle>
           <LineBlog
-            url={"/"}
+            url={"/blogs/1"}
+            imageURL={"/static/images/blog1.jpg"}
+            title={
+              "Recent research suggests that heavy coffee drinkers may reap health benefits."
+            }
+            description={
+              "It is a paradisematic country, in which roasted parts of sentences fly into your mouth."
+            }
+            date={"october 9, 2018"}
+          />
+          <LineBlog
+            url={"/blogs/2"}
             imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
@@ -122,8 +133,8 @@ const BlogMenu = () => {
             date={"october 9, 2018"}
           />
           <LineBlog
-            url={"/"}
-            imageURL={"/static/images/blog2.jpg"}
+            url={"/blogs/1"}
+            imageURL={"/static/images/blog3.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -133,8 +144,8 @@ const BlogMenu = () => {
             date={"october 9, 2018"}
           />
           <LineBlog
-            url={"/"}
-            imageURL={"/static/images/blog2.jpg"}
+            url={"/blogs/2"}
+            imageURL={"/static/images/blog1.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
             }
@@ -144,18 +155,7 @@ const BlogMenu = () => {
             date={"october 9, 2018"}
           />
           <LineBlog
-            url={"/"}
-            imageURL={"/static/images/blog2.jpg"}
-            title={
-              "Recent research suggests that heavy coffee drinkers may reap health benefits."
-            }
-            description={
-              "It is a paradisematic country, in which roasted parts of sentences fly into your mouth."
-            }
-            date={"october 9, 2018"}
-          />
-          <LineBlog
-            url={"/"}
+            url={"/blogs/1"}
             imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."

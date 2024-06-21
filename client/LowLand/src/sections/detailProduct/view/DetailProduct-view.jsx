@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -53,35 +53,41 @@ const MaterialItem = ({ displayName, value, unit }) => {
   );
 };
 
-const DetailProductView = ({ product, list }) => {
+const DetailProductView = ({ productData, list }) => {
+  const [product, setProduct] = useState(productData);
+  useEffect(() => {
+    setProduct(productData);
+  }, [productData]);
   const router = useRouter();
 
   const id = uuidv4();
 
   const dispatch = useDispatch();
   const handleAddToCart = (
-    productID,
-    name,
-    imageURL,
+    productId,
+    productName,
+    imageUrl,
     quantity,
     price,
-    size
+    sizeName,
+    productDetailsId
   ) => {
     const newItem = {
       id: id,
-      productID: productID,
-      productName: name,
-      imageURL: imageURL,
+      productID: productId,
+      productName: productName,
+      imageURL: imageUrl,
       quantity: quantity,
       price: price,
-      size: size,
+      size: sizeName,
+      productDetailsId: productDetailsId,
     };
     dispatch(CartManagerSlice.actions.addToCart(newItem));
     toast.success("Add to cart successfully!");
   };
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(product.size[0].name);
+  const [selectedSize, setSelectedSize] = useState(product.details[0].sizeName);
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
   };
@@ -108,25 +114,28 @@ const DetailProductView = ({ product, list }) => {
 
   const calculateTotalPrice = () => {
     if (selectedSize !== null) {
-      const size = product.size.find((size) => size.name === selectedSize);
+      const size = product.details.find(
+        (size) => size.sizeName === selectedSize
+      );
       if (size) {
         const sizePrice = size.price;
-        return product.isSale
-          ? product.salePrices + sizePrice
-          : product.originalPrices + sizePrice;
+        return false ? sizePrice : sizePrice;
       }
     }
-    return product.isSale ? product.salePrices : product.originalPrices;
+    return false ? product.details[0].price : product.details[0].price;
   };
   const calculateOldPrice = () => {
     if (selectedSize !== null) {
-      const size = product.size.find((size) => size.name === selectedSize);
+      const size = product.details.find(
+        (size) => size.sizeName === selectedSize
+      );
       if (size) {
         const sizePrice = size.price;
-        return product.originalPrices + sizePrice;
+        return sizePrice;
       }
     }
-    return product.originalPrices;
+
+    return product.detailsp[0].price;
   };
   return (
     <>
@@ -141,8 +150,8 @@ const DetailProductView = ({ product, list }) => {
           <BreadcrumItem component="a" href="/products" label="Products" />
           <BreadcrumItem
             component="a"
-            href={`/products/${product.id}`}
-            label={`${product.name}`}
+            href={`/products/${product.product.productId}`}
+            label={`${product.product.productName}`}
           />
         </CustomizedBreadcrumbs>
         <Grid container sx={{ my: "100px" }}>
@@ -155,8 +164,8 @@ const DetailProductView = ({ product, list }) => {
                 },
                 width: "100%",
               }}
-              imageURL={product.imageURL}
-              isSale={product.isSale}
+              imageURL={product.images[0].imageUrl}
+              isSale={false}
               unShowOverlay={true}
             />
           </Grid>
@@ -176,7 +185,7 @@ const DetailProductView = ({ product, list }) => {
               },
             }}
           >
-            <Typography variant="h4">{product.name}</Typography>
+            <Typography variant="h4">{product.product.productName}</Typography>
 
             <Typography
               sx={{
@@ -188,10 +197,10 @@ const DetailProductView = ({ product, list }) => {
                 mt: "10px",
               }}
             >
-              {product.title}
+              {product.product.productName}
             </Typography>
 
-            {product.isSale ? (
+            {false ? (
               <Typography
                 sx={{
                   textAlign: {
@@ -249,10 +258,10 @@ const DetailProductView = ({ product, list }) => {
               </Typography>
 
               <List sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-                {product.size.map((size) => (
+                {product.details.map((size, index) => (
                   <ListItemButton
-                    key={size.id}
-                    onClick={() => handleSizeSelect(size.name)}
+                    key={index}
+                    onClick={() => handleSizeSelect(size.sizeName)}
                     sx={{
                       border: "1px solid #ccc",
                       padding: "5px 10px",
@@ -260,10 +269,10 @@ const DetailProductView = ({ product, list }) => {
                       cursor: "pointer",
                       textAlign: "center",
                       backgroundColor:
-                        size.name === selectedSize
+                        size.sizeName === selectedSize
                           ? "var(--secondary-color)"
                           : "transparent",
-                      color: size.name === selectedSize ? "white" : "dark",
+                      color: size.sizeName === selectedSize ? "white" : "dark",
                       "&:hover": {
                         backgroundColor: "var(--secondary-color)",
                         opacity: ".7",
@@ -271,7 +280,7 @@ const DetailProductView = ({ product, list }) => {
                       },
                     }}
                   >
-                    <ListItemText primary={size.name} />
+                    <ListItemText primary={size.sizeName} />
                   </ListItemButton>
                 ))}
               </List>
@@ -335,14 +344,15 @@ const DetailProductView = ({ product, list }) => {
                 }}
                 onClick={() =>
                   handleAddToCart(
-                    product.id,
-                    product.name,
-                    product.imageURL,
+                    product.product.productId,
+                    product.product.productName,
+                    product.images[0].imageUrl,
                     quantity,
-                    product.isSale
-                      ? calculateTotalPrice()
-                      : calculateOldPrice(),
-                    selectedSize
+                    false ? calculateTotalPrice() : calculateOldPrice(),
+                    selectedSize,
+                    product.details.find(
+                      (size) => size.sizeName === selectedSize
+                    ).productDetailsId
                   )
                 }
               >
@@ -367,7 +377,7 @@ const DetailProductView = ({ product, list }) => {
                 padding: "10px",
               }}
             >
-              {product.detail}
+              {product.product.description}
             </Typography>
           </Grid>
 
@@ -386,7 +396,7 @@ const DetailProductView = ({ product, list }) => {
               materials
             </Typography>
 
-            <List>
+            {/* <List>
               {Object.entries(product.materials).map(([key, value]) => (
                 <MaterialItem
                   key={key}
@@ -395,7 +405,7 @@ const DetailProductView = ({ product, list }) => {
                   unit={formatMapping[key]?.unit || ""}
                 />
               ))}
-            </List>
+            </List> */}
           </Grid>
         </Grid>
       </Container>
