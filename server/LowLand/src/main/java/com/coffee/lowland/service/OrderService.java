@@ -1,5 +1,6 @@
 package com.coffee.lowland.service;
 
+import com.coffee.lowland.DTO.MaterialDTO;
 import com.coffee.lowland.DTO.request.order.*;
 
 import com.coffee.lowland.DTO.response.order.GetOrderDetailsResponse;
@@ -10,6 +11,7 @@ import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.OrderMapper;
 import com.coffee.lowland.model.Account;
+import com.coffee.lowland.model.Material;
 import com.coffee.lowland.model.Order;
 import com.coffee.lowland.model.OrderDetails;
 import com.coffee.lowland.repository.OrderDetailsRepository;
@@ -42,6 +44,8 @@ public class OrderService {
     PayService payService;
     DateService dateService;
     AccountService accountService;
+    MaterialService _materialService;
+
 
     @Transactional
     public List<GetOrdersResponse> getOrders() {
@@ -118,6 +122,11 @@ public class OrderService {
                 foundOrder.getStatus()==3){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
+        int Status = request.getStatus();
+
+        if(Status==2){
+            UpdateQuantityMaterial(request.getOrderId());
+        }
         orderMapper.approveOrder(foundOrder, request);
         foundOrder.setUpdatedDate(LocalDateTime.now());
         foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -178,5 +187,26 @@ public class OrderService {
             );
         }
         return res;
+    }
+
+
+    //Update lại số lượng trong Material
+    private void UpdateQuantityMaterial(int OrderId){
+        List<MaterialDTO> lstMaterialId = new ArrayList<MaterialDTO>();
+        List<Object[]> lstStore = orderRepository.spGetAllMeterialIdByOrder(OrderId);
+        for(Object[] item : lstStore) {
+            lstMaterialId.add(
+                    MaterialDTO.builder()
+                            .MaterialId((Integer)item[0])
+                            .Quantity((Integer)item[0])
+                            .build());
+        }
+        if(!lstMaterialId.isEmpty()){
+            for(MaterialDTO material : lstMaterialId){
+                int MaterialId = material.getMaterialId();
+                int Quantity = -material.getQuantity();
+                _materialService.AddQuantity(MaterialId, Quantity);
+            }
+        }
     }
 }

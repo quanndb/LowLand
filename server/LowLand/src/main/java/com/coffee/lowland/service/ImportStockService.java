@@ -49,6 +49,7 @@ public class ImportStockService {
             if(modelCheck.get().getImportStockId() != data.getImportStockId())
                 throw new AppExceptions(ErrorCode.PRODUCT_EXISTED);
         }
+        data.setImportStockCode(String.valueOf(_random.generateCode()));
         save = _repo.save(data);
         return save.getImportStockId();
     }

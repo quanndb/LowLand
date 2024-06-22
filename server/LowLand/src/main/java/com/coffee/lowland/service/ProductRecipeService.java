@@ -38,6 +38,9 @@ public class ProductRecipeService {
                 Delete(lst.get(i).getProductRecipeId());
             }
         }
+        for(ProductRecipe p : data){
+            p.setProductId(ProductId);
+        }
         _repo.saveAll(data);
         return true;
     }

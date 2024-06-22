@@ -19,4 +19,7 @@ public interface OrderRepository extends CrudRepository<Order,Integer> {
 
     @Procedure
     List<Object[]> spGetAllOrders(int accountId);
+
+    @Procedure
+    List<Object[]> spGetAllMeterialIdByOrder(int orderId);
 }
