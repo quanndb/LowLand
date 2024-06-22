@@ -57,6 +57,7 @@ const MaterialItem = ({ displayName, value, unit }) => {
 
 const DetailProductView = ({ productData, list }) => {
   const [product, setProduct] = useState(productData);
+  console.log(product);
   useEffect(() => {
     setProduct(productData);
   }, [productData]);

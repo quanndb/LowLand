@@ -11,9 +11,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class ProductDetailResponse {
-    int productDetailsId;
     int price;
     String sizeName;
     int productSizeId;
-    int productDetailId;
+    int productDetailsId;
 }

@@ -1,6 +1,7 @@
 package com.coffee.lowland.service;
 
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
+import com.coffee.lowland.DTO.request.account.ChangeAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
 import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.exception.AppExceptions;
@@ -17,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -25,6 +28,11 @@ public class AccountService {
     PasswordEncoder passwordEncoder;
     AccountRepository accountRepository;
     AccountMapper accountMapper;
+
+    public List<UserResponse> getAll(){
+        List<Account> res= accountRepository.findAll();
+        return accountMapper.toListUserResponse(res);
+    }
 
     public String registerUser(AccountRegisterRequest account){
         accountRepository
@@ -40,15 +48,24 @@ public class AccountService {
         return "Register successfully!";
     }
 
-    public String createAccount(Account request){
+    public UserResponse createAccount(Account request){
         accountRepository
                 .findAccountByEmail(request.getEmail())
                 .ifPresent(account -> {
                     throw new AppExceptions(ErrorCode.ACCOUNT_EXISTED);
                 });
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        accountRepository.save(request);
-        return "Create account successfully!";
+        Account res = accountRepository.save(request);
+        return accountMapper.toUserResponse(res);
+    }
+
+    public UserResponse changeAccount(ChangeAccountRequest request){
+        Account foundAccount = accountRepository.findById(request.getAccountId())
+                .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
+        accountMapper.changeAccount(foundAccount,request);
+        accountRepository.save(foundAccount);
+
+        return accountMapper.toUserResponse(foundAccount);
     }
 
     public UserResponse updateAccount(UpdateAccountRequest request){
@@ -59,6 +76,13 @@ public class AccountService {
         accountRepository.save(foundAccount);
 
         return accountMapper.toUserResponse(foundAccount);
+    }
+
+    public boolean delteAccount(int accountId){
+        accountRepository.findById(accountId)
+                .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
+        accountRepository.deleteById(accountId);
+        return true;
     }
 
     public Account findAccountByEmail(String username){

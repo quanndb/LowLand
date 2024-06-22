@@ -17,6 +17,7 @@ import {
   Typography,
   Divider,
   CircularProgress,
+  Grid,
 } from "@mui/material";
 import orderAPI from "src/services/API/orderAPI";
 import { toast } from "react-toastify";
@@ -196,27 +197,31 @@ const ModalContent = ({
     <>
       <DialogTitle>Order #{updatedOrder.orderCode}</DialogTitle>
       <DialogContent>
-        <Box sx={{ display: "flex" }}>
-          <TextField
-            margin="dense"
-            name="customerName"
-            label="Customer Name"
-            fullWidth
-            value={updatedOrder.customerName}
-            disabled={updatedOrder.status !== 0}
-            onChange={handleChange}
-            sx={{ mr: 2 }}
-          />
-          <TextField
-            margin="dense"
-            name="phoneNumber"
-            label="Phone Number"
-            fullWidth
-            value={updatedOrder.phoneNumber}
-            disabled={updatedOrder.status !== 0}
-            onChange={handleChange}
-          />
-        </Box>
+        <Grid container spacing={2}>
+          <Grid item sx={{ width: "100%" }} md={6}>
+            <TextField
+              margin="dense"
+              name="customerName"
+              label="Customer Name"
+              fullWidth
+              value={updatedOrder.customerName}
+              disabled={updatedOrder.status !== 0}
+              onChange={handleChange}
+              sx={{ mr: 2 }}
+            />
+          </Grid>
+          <Grid item sx={{ width: "100%" }} md={6}>
+            <TextField
+              margin="dense"
+              name="phoneNumber"
+              label="Phone Number"
+              fullWidth
+              value={updatedOrder.phoneNumber}
+              disabled={updatedOrder.status !== 0}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
         <TextField
           margin="dense"
           name="address"
@@ -235,42 +240,48 @@ const ModalContent = ({
           disabled={updatedOrder.status !== 0}
           onChange={handleChange}
         />
-        <Box sx={{ display: "flex" }}>
+        <Grid container spacing={2}>
           {/* createdDate, createdBy, status in 1 row */}
-          <TextField
-            margin="dense"
-            name="createdDate"
-            label="Created Date"
-            fullWidth
-            value={updatedOrder.createdDate}
-            onChange={handleChange}
-            disabled
-            sx={{ mr: 2 }}
-          />
-          <TextField
-            margin="dense"
-            name="createdBy"
-            label="Created By"
-            fullWidth
-            value={updatedOrder.createdBy}
-            onChange={handleChange}
-            disabled
-            sx={{ mr: 2 }}
-          />
-          <Box>
-            <Typography variant="caption">Status</Typography>
-            <Typography
-              sx={{
-                padding: "8px 40px",
-                color: "white",
-                fontWeight: "600",
-                backgroundColor: `${orderStatus[updatedOrder.status].color}`,
-              }}
-            >
-              {orderStatus[updatedOrder.status].name}
-            </Typography>
-          </Box>
-        </Box>
+          <Grid item sx={{ width: "100%" }} md={4}>
+            <TextField
+              margin="dense"
+              name="createdDate"
+              label="Created Date"
+              fullWidth
+              value={updatedOrder.createdDate}
+              onChange={handleChange}
+              disabled
+              sx={{ mr: 2 }}
+            />
+          </Grid>
+          <Grid item sx={{ width: "100%" }} md={4}>
+            <TextField
+              margin="dense"
+              name="createdBy"
+              label="Created By"
+              fullWidth
+              value={updatedOrder.createdBy}
+              onChange={handleChange}
+              disabled
+              sx={{ mr: 2 }}
+            />
+          </Grid>
+          <Grid item sx={{ width: "100%" }} md={4}>
+            <Box>
+              <Typography variant="caption">Status</Typography>
+              <Typography
+                sx={{
+                  padding: "8px 40px",
+                  color: "white",
+                  fontWeight: "600",
+                  backgroundColor: `${orderStatus[updatedOrder.status].color}`,
+                }}
+              >
+                {orderStatus[updatedOrder.status].name}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
         {/* updatedDate, updatedBy, message */}
 
         <TextField

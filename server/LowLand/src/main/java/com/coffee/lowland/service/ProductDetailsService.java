@@ -40,7 +40,7 @@ public class ProductDetailsService {
                             .price(((BigDecimal) item[0]).intValue())
                             .sizeName((String)item[1])
                             .productSizeId((Integer)item[2])
-                            .productDetailId((Integer)item[3])
+                            .productDetailsId((Integer)item[3])
                             .build()
             );
         }

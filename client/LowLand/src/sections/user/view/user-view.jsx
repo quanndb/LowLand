@@ -365,7 +365,7 @@ const UserView = ({ user, orders }) => {
                   page={page}
                   onChange={handlePageChange}
                   color="primary"
-                  sx={{ mt: 2, transform: "translateY(-60px)" }}
+                  sx={{ mt: 2 }}
                 />
               </Box>
             </Grid>

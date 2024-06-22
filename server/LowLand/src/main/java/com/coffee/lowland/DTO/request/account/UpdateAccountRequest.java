@@ -13,5 +13,5 @@ public class UpdateAccountRequest {
     String gender;
     String phoneNumber;
     String address;
-    String imageUrl;
+    String imageURL;
 }
