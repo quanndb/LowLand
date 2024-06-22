@@ -9,6 +9,7 @@ import productAPI from "src/services/API/productAPI";
 import { toast } from "react-toastify";
 const DetailProductPage = () => {
   const product = useLoaderData();
+  console.log(product);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {

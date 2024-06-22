@@ -31,6 +31,8 @@ import {
   CustomizedBreadcrumbs,
 } from "src/components/CustomBreadcum";
 import { formatPrice } from "src/utils/format-number";
+import { CustomSwiper } from "src/components/CustomSwiper";
+import { SwiperSlide } from "swiper/react";
 
 const formatMapping = {
   ice: { displayName: "ice", unit: "" },
@@ -156,7 +158,7 @@ const DetailProductView = ({ productData, list }) => {
         </CustomizedBreadcrumbs>
         <Grid container sx={{ my: "100px" }}>
           <Grid item md={6} xs={12}>
-            <ProductImage
+            {/* <ProductImage
               sx={{
                 height: {
                   xs: "360px",
@@ -167,7 +169,25 @@ const DetailProductView = ({ productData, list }) => {
               imageURL={product.images[0].imageUrl}
               isSale={false}
               unShowOverlay={true}
-            />
+            /> */}
+            <CustomSwiper isProductSwipper={true}>
+              {product.images.map((image) => (
+                <SwiperSlide key={image.productImageId}>
+                  <ProductImage
+                    sx={{
+                      height: {
+                        xs: "360px",
+                        md: "460px",
+                      },
+                      width: "100%",
+                    }}
+                    imageURL={image.imageUrl}
+                    isSale={false}
+                    unShowOverlay={true}
+                  />
+                </SwiperSlide>
+              ))}
+            </CustomSwiper>
           </Grid>
 
           <Grid

@@ -14,6 +14,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import Image from "src/components/Image";
+import { useRouter } from "src/routes/hooks";
 
 const SwiperBtn = () => {
   const swiper = useSwiper();
@@ -44,6 +45,7 @@ const SwiperBtn = () => {
 
 const Productswiper = () => {
   const isMobile = useResponsive("down", 900);
+  const router = useRouter();
 
   return (
     <>
@@ -68,6 +70,7 @@ const Productswiper = () => {
             container
             sx={{ width: "100%", padding: "40px" }}
             columns={{ md: 2, sm: 1 }}
+            onClick={() => router.push("/blogs/1")}
           >
             <Grid item md={1} width={"100%"} height={"300px"}>
               <Image
@@ -117,13 +120,13 @@ const Productswiper = () => {
             container
             sx={{ width: "100%", padding: "40px" }}
             columns={{ md: 2, sm: 1 }}
+            onClick={() => router.push("/blogs/1")}
           >
             <Grid item md={1} width={"100%"} height={"300px"}>
               <Image
                 imageURL={"/static/images/ourproduct2.jpg"}
                 sx={{ width: "100%", height: "310px" }}
                 overlayContent={"READ THE FULL STORY"}
-
               />
             </Grid>
             <Grid

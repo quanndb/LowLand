@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import Productswiper from "./productswiper";
 import AllProducts from "./allProducts";
 
@@ -14,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 
 const ProductsMain = ({ products }) => {
   const [active, setActive] = useState(0);
@@ -107,12 +109,17 @@ const ProductsMain = ({ products }) => {
           </Select>
         </FormControl>
 
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={search}
-          onChange={handleSearchChange}
-        />
+        <Box sx={{ display: "flex" }}>
+          <TextField
+            label="Search your favorite coffee..."
+            variant="outlined"
+            value={search}
+            onChange={handleSearchChange}
+          />
+          <Button startIcon={<SearchIcon />} variant="contained">
+            Search
+          </Button>
+        </Box>
       </Container>
 
       {/* search + select option */}
