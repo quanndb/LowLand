@@ -23,19 +23,24 @@ import java.util.Optional;
 @Slf4j
 public class ImportStockDetailsService {
     ImportStockDetailsRepository _repo;
+    MaterialService _materialService;
 
-    public Optional<List<ImportStockDetails>> GetAll(int ProductId){
-        Optional<List<ImportStockDetails>> lst = _repo.findAllByImportStockId(ProductId);
+    public List<ImportStockDetails> GetAll(int ImportStockID){
+        List<ImportStockDetails> lst = _repo.findAllByImportStockId(ImportStockID);
         return lst;
     }
 
-    public boolean Create(List<ImportStockDetails> data){
-        int ImportStockId = data.get(0).getImportStockId();
-        Optional<List<ImportStockDetails>> lst = GetAll(ImportStockId);
-        if(lst.isPresent()){
-            for( int i =0; i < lst.get().size(); i++){
-                Delete(lst.get().get(i).getImportStockId());
+    public boolean Create(List<ImportStockDetails> data, int ImportStockID){
+        List<ImportStockDetails> lst = GetAll(ImportStockID);
+        if(!lst.isEmpty()){
+            for( int i =0; i < lst.size(); i++){
+                Delete(lst.get(i).getDetailsId());
             }
+        }
+        for(ImportStockDetails details : data){
+            details.setImportStockId(ImportStockID);
+            // Tăng số lượng material
+            _materialService.AddQuantity(details.getQuantity(),details.getMaterialId());
         }
         _repo.saveAll(data);
         return true;

@@ -41,7 +41,14 @@ public class MaterialService {
         List<Material> lst = _repo.findAll();
         return lst;
     }
-
+    public boolean AddQuantity(int Quantiy, int MaterialId){
+        Material modelCheck = _repo.findById(MaterialId)
+                .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_MATERIAL_NOT_FOUND));
+        int totalQuantity = modelCheck.getQuantity() + Quantiy;
+        modelCheck.setQuantity(totalQuantity);
+        _repo.save(modelCheck);
+        return true;
+    }
     /*@Transactional
     public int GetTotalPage(String keyWords){
         log.error(keyWords);
