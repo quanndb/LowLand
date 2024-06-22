@@ -58,14 +58,15 @@ public class PayService {
         }
 
         amount+= (float) (amount*0.1);
+        CreatePayRequest req = CreatePayRequest.builder()
+                .amount((int) amount)
+                .orderCode(foundOrder.getOrderCode())
+                .items(items)
+                .build();
 
         String payment_link = (String) Objects.requireNonNull(webClient.post()
                 .uri("/create-payment-link")
-                .bodyValue(CreatePayRequest.builder()
-                        .amount((int) amount)
-                        .orderCode(foundOrder.getOrderCode())
-                        .items(items)
-                        .build())
+                .bodyValue(req)
                 .retrieve()
                 .bodyToMono(APIResponse.class).block()).getResult();
         foundOrder.setPaymentLink(payment_link);

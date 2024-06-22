@@ -119,7 +119,7 @@ const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
   };
 
   const caculateTax = () => {
-    return caculateSubtotal() * 0.05;
+    return caculateSubtotal() * 0.1;
   };
 
   const handleOrder = () => {
@@ -185,7 +185,7 @@ const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
             justifyContent: "space-between",
           }}
         >
-          <Typography sx={{ fontSize: "20px", mr: 3 }}>Tax (5%)</Typography>
+          <Typography sx={{ fontSize: "20px", mr: 3 }}>Tax (10%)</Typography>
           <Typography textAlign={"right"}>
             {formatPrice(caculateTax())}
             <sup>₫</sup>

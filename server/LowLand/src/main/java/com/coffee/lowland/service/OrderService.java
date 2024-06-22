@@ -113,12 +113,11 @@ public class OrderService {
         return orderRepository.save(foundOrder);
     }
 
-    public String manageOrder(ApproveOrderRequest request){
+    @Transactional
+    public Order manageOrder(ApproveOrderRequest request){
         Order foundOrder = orderRepository.findById(request.getOrderId())
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
-        if(request.getStatus()==0 ||
-                request.getStatus()==1 ||
-                foundOrder.getStatus()==2 ||
+        if(request.getStatus()==1 ||
                 foundOrder.getStatus()==3){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
@@ -130,8 +129,8 @@ public class OrderService {
         orderMapper.approveOrder(foundOrder, request);
         foundOrder.setUpdatedDate(LocalDateTime.now());
         foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-        orderRepository.save(foundOrder);
-        return "Update order successfully!";
+
+        return orderRepository.save(foundOrder);
     }
 
     public String payResult(Object request) {
@@ -205,7 +204,7 @@ public class OrderService {
             for(MaterialDTO material : lstMaterialId){
                 int MaterialId = material.getMaterialId();
                 int Quantity = -material.getQuantity();
-                _materialService.AddQuantity(MaterialId, Quantity);
+                _materialService.AddQuantity(Quantity,MaterialId);
             }
         }
     }
