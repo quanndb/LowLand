@@ -25,7 +25,7 @@ public class ProductImageService {
     ProductImageRepository _repo;
     ImageMapper _mapper;
 
-    public void CreateImage(String imageBase64, int ProductId) throws IOException {
+    public void CreateProductImage(String imageBase64, int ProductId) throws IOException {
         try {
             File file =  _service.convertToMultipartFile(imageBase64);
             Object response =  _service.upload(file);
@@ -55,4 +55,15 @@ public class ProductImageService {
         return true;
     }
 
+    public String CreateImageUrl(String imageBase64) throws IOException {
+        try {
+            File file =  _service.convertToMultipartFile(imageBase64);
+            Object response =  _service.upload(file);
+            String url = _mapper.getUrl(response);
+            String public_id = _mapper.getPublicId(response);
+            return url;
+        } catch (IllegalArgumentException e) {
+            throw new ClassCastException("Cannot cast LinkedHashMap to PayResponse: " + e.getMessage());
+        }
+    }
 }

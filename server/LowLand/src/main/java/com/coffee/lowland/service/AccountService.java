@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -28,6 +29,7 @@ public class AccountService {
     PasswordEncoder passwordEncoder;
     AccountRepository accountRepository;
     AccountMapper accountMapper;
+    ProductImageService _imageService;
 
     public List<UserResponse> getAll(){
         List<Account> res= accountRepository.findAll();
@@ -68,10 +70,14 @@ public class AccountService {
         return accountMapper.toUserResponse(foundAccount);
     }
 
-    public UserResponse updateAccount(UpdateAccountRequest request){
+    public UserResponse updateAccount(UpdateAccountRequest request) throws IOException {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         Account foundAccount = accountRepository.findAccountByEmail(currentUser)
                 .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
+
+        String imageUrl = _imageService.CreateImageUrl(request.getImageURL());
+        request.setImageURL(imageUrl);
+        
         accountMapper.updateAccount(foundAccount,request);
         accountRepository.save(foundAccount);
 

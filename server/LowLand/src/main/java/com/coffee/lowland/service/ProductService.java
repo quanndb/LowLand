@@ -49,7 +49,7 @@ public class ProductService {
 
         List<String> images = data.getListImageBase64();
         for(String image : images){
-            _imageService.CreateImage(image, ProductId);
+            _imageService.CreateProductImage(image, ProductId);
         }
         _detailService.Create(lst);
         return true;
