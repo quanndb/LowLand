@@ -34,7 +34,7 @@ public class SecurityConfig {
             "images/**", "auth/**","pay/**",
             "Product/**", "orders/**","ProductType/**",
             "ProductSize/**", "accounts/**","ProductImage/**",
-            "Material/**","ProductDetail/**","ImportStock/**"
+            "Material/**","ProductDetail/**","ImportStock/**", "Chart/**"
     };
     @Bean
     public PasswordEncoder passwordEncoder (){

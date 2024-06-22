@@ -32,7 +32,7 @@ public class ProductImageController {
 
     @PostMapping("/Create")
     public APIResponse<Boolean> CreateOrUpdate(@RequestBody ProductImageRequest data) throws IOException {
-        _service.CreateImage(data.getImageBase64(),data.getProductId());
+        _service.CreateProductImage(data.getImageBase64(),data.getProductId());
         return APIResponse.<Boolean>builder()
                 .code(2000)
                 .message("Change success!")
