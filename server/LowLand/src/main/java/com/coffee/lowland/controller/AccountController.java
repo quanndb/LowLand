@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
@@ -60,7 +62,7 @@ public class AccountController {
     }
 
     @PostMapping("/my-account")
-    public APIResponse<?> updateAccount(@RequestBody UpdateAccountRequest request){
+    public APIResponse<?> updateAccount(@RequestBody UpdateAccountRequest request) throws IOException {
         return APIResponse.builder()
                 .code(2000)
                 .result(accountService.updateAccount(request))
