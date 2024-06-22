@@ -28,7 +28,7 @@ public class ProductSizeService {
     ProductSizeRepository _repo;
     ProductTypeMapper _map;
 
-    public boolean CreateOrUpdate(ProductSizeDto data){
+    public ProductSize CreateOrUpdate(ProductSizeDto data){
         Optional<ProductSize> modelCheck = _repo.findBySizeName(data.getSizeName());
         if(modelCheck.isPresent()){
             if(modelCheck.get().getProductSizeId() != data.getProductSizeId())
@@ -41,7 +41,7 @@ public class ProductSizeService {
             res.get().setUpdatedBy(userName);
             res.get().setUpdatedDate(now);
             _map.MapProductSize(res.get(),data);
-            _repo.save(res.get());
+            return _repo.save(res.get());
         }
         else {
             if(data.getProductSizeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
@@ -49,13 +49,12 @@ public class ProductSizeService {
             newModel.setCreatedBy(userName);
             newModel.setCreatedDate(now);
             _map.MapProductSize(newModel,data);
-            _repo.save(newModel);
+            return _repo.save(newModel);
         }
-        return true;
     }
 
     @Transactional
-    public List<ProductSize> GetAll(String keyWords, int pageNumber){
+    public List<ProductSize> GetAll(String keyWords){
         List<ProductSize> lst = _repo.spGetAllProductSize(keyWords,1);
         return lst;
     }

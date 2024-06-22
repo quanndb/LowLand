@@ -25,9 +25,8 @@ public class ProductSizeController {
     ProductSizeService _service;
 
     @GetMapping("/GetAll")
-    public APIResponse<Object> GetAll(@RequestParam String keyWords, @RequestParam int pageNumber){
-        List<ProductSize> data = new ArrayList<>();
-        data = _service.GetAll(keyWords, 1);
+    public APIResponse<Object> GetAll(@RequestParam String keyWords){
+        List<ProductSize> data = _service.GetAll(keyWords);
         return APIResponse.<Object>builder()
                 .code(2000)
                 .result(data)
@@ -42,8 +41,8 @@ public class ProductSizeController {
                 .build();
     }
     @PostMapping("/CreateOrUpdate")
-    public APIResponse<Boolean> CreateOrUpdate(@RequestBody ProductSizeDto data) {
-        return APIResponse.<Boolean>builder()
+    public APIResponse<?> CreateOrUpdate(@RequestBody ProductSizeDto data) {
+        return APIResponse.builder()
                 .code(2000)
                 .message("Change success!")
                 .result(_service.CreateOrUpdate(data)).build();
