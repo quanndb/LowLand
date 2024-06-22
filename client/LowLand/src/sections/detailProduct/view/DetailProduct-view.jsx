@@ -35,13 +35,9 @@ import { CustomSwiper } from "src/components/CustomSwiper";
 import { SwiperSlide } from "swiper/react";
 
 const formatMapping = {
-  ice: { displayName: "ice", unit: "" },
-  milk_type: { displayName: "milk type", unit: "" },
-  flavor_syrup: { displayName: "flavor syrup", unit: "" },
-  whipped_cream: { displayName: "whipped cream", unit: "" },
-  sugar: { displayName: "sugar", unit: "gam" },
-  cafe: { displayName: "cafe", unit: "gam" },
-  milk: { displayName: "milk", unit: "gam" },
+  1: { displayName: "coffee", unit: "gam" },
+  2: { displayName: "milk", unit: "ml" },
+  3: { displayName: "sugar", unit: "gam" },
 };
 
 const MaterialItem = ({ displayName, value, unit }) => {
@@ -417,16 +413,16 @@ const DetailProductView = ({ productData, list }) => {
               materials
             </Typography>
 
-            {/* <List>
-              {Object.entries(product.materials).map(([key, value]) => (
+            <List>
+              {product.listRecipe.map((item) => (
                 <MaterialItem
-                  key={key}
-                  displayName={formatMapping[key]?.displayName || key}
-                  value={value}
-                  unit={formatMapping[key]?.unit || ""}
+                  key={item.productRecipeId}
+                  displayName={formatMapping[item.materialId].displayName}
+                  value={item.quantity}
+                  unit={formatMapping[item.materialId].unit}
                 />
               ))}
-            </List> */}
+            </List>
           </Grid>
         </Grid>
       </Container>
