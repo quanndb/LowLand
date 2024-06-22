@@ -14,4 +14,6 @@ public class ProductDetailResponse {
     int productDetailsId;
     int price;
     String sizeName;
+    int productSizeId;
+    int productDetailId;
 }

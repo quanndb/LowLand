@@ -1,6 +1,7 @@
 package com.coffee.lowland.DTO.request.product;
 
 import com.coffee.lowland.model.ProductDetails;
+import com.coffee.lowland.model.ProductRecipe;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDataDto extends ProductDto {
+    List<ProductRecipe> listRecipe;
     List<ProductDetails> listDetail;
     List<String> listImageBase64;
 }

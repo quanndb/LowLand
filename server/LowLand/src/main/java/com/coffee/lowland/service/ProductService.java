@@ -9,10 +9,7 @@ import com.coffee.lowland.DTO.response.product.ProductRespone;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.ProductTypeMapper;
-import com.coffee.lowland.model.Product;
-import com.coffee.lowland.model.ProductDetails;
-import com.coffee.lowland.model.ProductImage;
-import com.coffee.lowland.model.ProductType;
+import com.coffee.lowland.model.*;
 import com.coffee.lowland.repository.ProductImageRepository;
 import com.coffee.lowland.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -37,6 +34,7 @@ public class ProductService {
     ProductTypeMapper _map;
     ProductDetailsService _detailService;
     ProductImageService _imageService;
+    ProductRecipeService _recipeService;
 
     public boolean CreateOrUpdateProduct(ProductDataDto data) throws IOException {
         ProductDto model = _map.MapProductDto(data);
@@ -45,6 +43,10 @@ public class ProductService {
         for(ProductDetails detail : lst){
             detail.setProductId(ProductId);
         }
+
+        List<ProductRecipe> listRecipe = data.getListRecipe();
+        _recipeService.Create(listRecipe, ProductId);
+
         List<String> images = data.getListImageBase64();
         for(String image : images){
             _imageService.CreateImage(image, ProductId);

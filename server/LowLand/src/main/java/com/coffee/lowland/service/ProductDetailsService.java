@@ -37,9 +37,10 @@ public class ProductDetailsService {
         for(Object[] item : lst){
             data.add(
                     ProductDetailResponse.builder()
-                            .productDetailsId((Integer) item[0])
-                            .price(((BigDecimal) item[1]).intValue())
-                            .sizeName((String)item[2])
+                            .price(((BigDecimal) item[0]).intValue())
+                            .sizeName((String)item[1])
+                            .productSizeId((Integer)item[2])
+                            .productDetailId((Integer)item[3])
                             .build()
             );
         }
