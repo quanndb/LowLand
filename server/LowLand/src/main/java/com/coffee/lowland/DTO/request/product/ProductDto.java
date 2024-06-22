@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDto {
     int productId;
-    String code;
     String productName;
     boolean isActive;
     String description;

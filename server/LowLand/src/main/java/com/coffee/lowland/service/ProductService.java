@@ -25,6 +25,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -35,6 +37,7 @@ public class ProductService {
     ProductDetailsService _detailService;
     ProductImageService _imageService;
     ProductRecipeService _recipeService;
+    RandomCodeService _randomCode;
 
     public boolean CreateOrUpdateProduct(ProductDataDto data) throws IOException {
         ProductDto model = _map.MapProductDto(data);
@@ -57,8 +60,9 @@ public class ProductService {
 
 
     public int CreateOrUpdate(ProductDto data){
-        Product save = new Product();
-        Optional<Product> modelCheck = _repo.findByCode(data.getCode());
+        Product save;
+        String code = String.valueOf(_randomCode.generateCode());
+        Optional<Product> modelCheck = _repo.findByCode(code);
         if(modelCheck.isPresent()){
             if(modelCheck.get().getProductId() != data.getProductId())
                 throw new AppExceptions(ErrorCode.PRODUCT_EXISTED);
@@ -75,6 +79,7 @@ public class ProductService {
         else {
             if(data.getProductId()>0) throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);
             Product newModel = new Product();
+            newModel.setCode(code);
             newModel.setCreatedBy(userName);
             newModel.setCreatedDate(now);
             _map.MapProduct(newModel,data);

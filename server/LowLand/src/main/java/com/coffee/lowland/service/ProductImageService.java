@@ -37,7 +37,6 @@ public class ProductImageService {
             newImg.setCloudImageId(public_id);
             newImg.setImageUrl(url);
             _repo.save(newImg);
-
         } catch (IllegalArgumentException e) {
             throw new ClassCastException("Cannot cast LinkedHashMap to PayResponse: " + e.getMessage());
         }

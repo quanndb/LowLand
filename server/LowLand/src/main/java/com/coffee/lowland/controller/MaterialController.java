@@ -29,7 +29,7 @@ public class MaterialController {
                 .build();
     }
     @GetMapping("/GetById")
-    public APIResponse<Object> GetAll(@RequestParam int Id){
+    public APIResponse<Object> GetByAll(@RequestParam int Id){
         Optional<Material> data = _service.GetById(Id);
         return APIResponse.<Object>builder()
                 .code(2000)
