@@ -31,6 +31,14 @@ public class ProductImageService {
             Object response =  _service.upload(file);
             String url = _mapper.getUrl(response);
             String public_id = _mapper.getPublicId(response);
+
+            //Xóa hết các ảnh trong productImage có id = ProductID
+            List<ProductImage> lst = _repo.findAllByProductId(ProductId);
+            if(!lst.isEmpty()) {
+                for(ProductImage p : lst) {
+                    DeleteImage(p.getProductImageId());
+                }
+            }
             //Luu anh
             ProductImage newImg = new ProductImage();
             newImg.setProductId(ProductId);
