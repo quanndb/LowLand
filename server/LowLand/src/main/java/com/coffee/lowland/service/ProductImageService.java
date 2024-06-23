@@ -27,18 +27,13 @@ public class ProductImageService {
 
     public void CreateProductImage(String imageBase64, int ProductId) throws IOException {
         try {
+            //Xóa hết các ảnh trong productImage có id = ProductID
+
             File file =  _service.convertToMultipartFile(imageBase64);
             Object response =  _service.upload(file);
             String url = _mapper.getUrl(response);
             String public_id = _mapper.getPublicId(response);
 
-            //Xóa hết các ảnh trong productImage có id = ProductID
-            List<ProductImage> lst = _repo.findAllByProductId(ProductId);
-            if(!lst.isEmpty()) {
-                for(ProductImage p : lst) {
-                    DeleteImage(p.getProductImageId());
-                }
-            }
             //Luu anh
             ProductImage newImg = new ProductImage();
             newImg.setProductId(ProductId);

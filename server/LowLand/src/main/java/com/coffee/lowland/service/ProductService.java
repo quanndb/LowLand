@@ -36,6 +36,7 @@ public class ProductService {
     ProductTypeMapper _map;
     ProductDetailsService _detailService;
     ProductImageService _imageService;
+    ProductImageRepository _PIRepo;
     ProductRecipeService _recipeService;
     RandomCodeService _randomCode;
 
@@ -51,6 +52,12 @@ public class ProductService {
         _recipeService.Create(listRecipe, ProductId);
 
         List<String> images = data.getListImageBase64();
+        List<ProductImage> listImage = _PIRepo.findAllByProductId(ProductId);
+        if(!lst.isEmpty()) {
+            for(ProductImage p : listImage) {
+                _imageService.DeleteImage(p.getProductImageId());
+            }
+        }
         for(String image : images){
             _imageService.CreateProductImage(image, ProductId);
         }

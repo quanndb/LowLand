@@ -37,8 +37,8 @@ public class MaterialController {
                 .build();
     }
     @PostMapping("/CreateOrUpdate")
-    public APIResponse<Boolean> CreateOrUpdate(@RequestBody Material data) {
-        return APIResponse.<Boolean>builder()
+    public APIResponse<?> CreateOrUpdate(@RequestBody Material data) {
+        return APIResponse.builder()
                 .code(2000)
                 .message("Change success!")
                 .result(_service.CreateOrUpdate(data)).build();

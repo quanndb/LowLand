@@ -26,14 +26,14 @@ import java.util.Optional;
 public class MaterialService {
     MaterialRepository _repo;
 
-    public boolean CreateOrUpdate(Material data){
+    public Object CreateOrUpdate(Material data){
         Optional<Material> modelCheck = _repo.findByMaterialName(data.getMaterialName());
         if(modelCheck.isPresent()){
             if(modelCheck.get().getMaterialId() != data.getMaterialId())
                 throw new AppExceptions(ErrorCode.PRODUCT_MATERIAL_EXISTED);
         }
-        _repo.save(data);
-        return true;
+
+        return _repo.save(data);
     }
 
     @Transactional
