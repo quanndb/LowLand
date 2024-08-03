@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ProductImageController {
     ProductImageService _service;
     @GetMapping("/GetById")
-    public APIResponse<Object> GetById(@RequestParam int ProductId) throws IOException {
+    public APIResponse<Object> GetById(@RequestParam String ProductId) throws IOException {
         List<ProductImage> data = _service.getProductImages(ProductId);
         return APIResponse.<Object>builder()
                 .code(2000)
@@ -40,7 +40,7 @@ public class ProductImageController {
     }
 
     @GetMapping("/Delete")
-    public APIResponse<Boolean> Delete(@RequestParam int Id) throws IOException {
+    public APIResponse<Boolean> Delete(@RequestParam String Id) throws IOException {
         return APIResponse.<Boolean>builder()
                 .code(2000)
                 .result(_service.DeleteImage(Id))

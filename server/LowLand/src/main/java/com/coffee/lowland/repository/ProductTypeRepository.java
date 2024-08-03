@@ -6,14 +6,13 @@ import com.coffee.lowland.model.ProductType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductTypeRepository extends JpaRepository<ProductType, Integer> {
-    //ProductType findbyCode(String code);
-    Optional<ProductType> findByCode(String code);
-
+@Repository
+public interface ProductTypeRepository extends JpaRepository<ProductType, String> {
     @Procedure
     List<ProductType> spGetAllProductType(String keyWord, int pageNumber);
     @Procedure(name = "spGetProductTypes")

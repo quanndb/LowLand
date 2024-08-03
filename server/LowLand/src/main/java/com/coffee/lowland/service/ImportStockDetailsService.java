@@ -23,14 +23,13 @@ import java.util.Optional;
 @Slf4j
 public class ImportStockDetailsService {
     ImportStockDetailsRepository _repo;
-    MaterialService _materialService;
 
-    public List<ImportStockDetails> GetAll(int ImportStockID){
+    public List<ImportStockDetails> GetAll(String ImportStockID){
         List<ImportStockDetails> lst = _repo.findAllByImportStockId(ImportStockID);
         return lst;
     }
 
-    public boolean Create(List<ImportStockDetails> data, int ImportStockID){
+    public boolean Create(List<ImportStockDetails> data, String ImportStockID){
         List<ImportStockDetails> lst = GetAll(ImportStockID);
         if(!lst.isEmpty()){
             for( int i =0; i < lst.size(); i++){
@@ -40,12 +39,11 @@ public class ImportStockDetailsService {
         for(ImportStockDetails details : data){
             details.setImportStockId(ImportStockID);
             // Tăng số lượng material
-            _materialService.AddQuantity(details.getQuantity(),details.getMaterialId());
         }
         _repo.saveAll(data);
         return true;
     }
-    public boolean Delete(int id){
+    public boolean Delete(String id){
         ImportStockDetails prD = _repo.findById(id)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         _repo.deleteById(id);

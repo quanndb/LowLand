@@ -33,7 +33,7 @@ public class ProductDetailsController {
     ProductRecipeService _recipeService;
 
     @GetMapping("/GetAllByProductId")
-    public APIResponse<Object> GetAll(@RequestParam int ProductId) throws IOException {
+    public APIResponse<Object> GetAll(@RequestParam String ProductId) throws IOException {
         ProductDetailsDTO data = new ProductDetailsDTO();
         Optional<Product> product = _productService.GetByProductId(ProductId);
         List<ProductDetailResponse> details = _service.GetAll(ProductId);

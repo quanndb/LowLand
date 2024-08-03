@@ -1,11 +1,9 @@
 package com.coffee.lowland.service;
 
-import com.coffee.lowland.DTO.CreateImageDTO;
 import com.coffee.lowland.DTO.request.product.ProductDataDto;
 import com.coffee.lowland.DTO.request.product.ProductDto;
-import com.coffee.lowland.DTO.request.productType.ProductTypeDto;
-import com.coffee.lowland.DTO.response.order.GetOrdersResponse;
-import com.coffee.lowland.DTO.response.product.ProductRespone;
+import com.coffee.lowland.DTO.response.PageServiceResponse;
+import com.coffee.lowland.DTO.response.product.ProductResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.ProductTypeMapper;
@@ -16,33 +14,33 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
+
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class ProductService {
     ProductRepository _repo;
-    ProductImageRepository _imgRepo;
     ProductTypeMapper _map;
     ProductDetailsService _detailService;
     ProductImageService _imageService;
     ProductImageRepository _PIRepo;
     ProductRecipeService _recipeService;
-    RandomCodeService _randomCode;
+    PageService<ProductResponse> productPageService;
 
-    public boolean CreateOrUpdateProduct(ProductDataDto data) throws IOException {
+    public boolean CreateOrUpdateProduct(MultipartFile[] images, String recipe, String details) throws IOException {
         ProductDto model = _map.MapProductDto(data);
-        int ProductId = CreateOrUpdate(model);
+        String ProductId = CreateOrUpdate(model);
         List<ProductDetails> lst =  data.getListDetail();
         for(ProductDetails detail : lst){
             detail.setProductId(ProductId);
@@ -66,10 +64,9 @@ public class ProductService {
     }
 
 
-    public int CreateOrUpdate(ProductDto data){
+    public String CreateOrUpdate(ProductDto data){
         Product save;
-        String code = String.valueOf(_randomCode.generateCode());
-        Optional<Product> modelCheck = _repo.findByCode(code);
+        Optional<Product> modelCheck = _repo.findById(data.getProductId());
         if(modelCheck.isPresent()){
             if(modelCheck.get().getProductId() != data.getProductId())
                 throw new AppExceptions(ErrorCode.PRODUCT_EXISTED);
@@ -78,17 +75,11 @@ public class ProductService {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime now = LocalDateTime.now();
         if(res.isPresent()){
-            res.get().setUpdatedBy(userName);
-            res.get().setUpdatedDate(now);
             _map.MapProduct(res.get(),data);
             save = _repo.save(res.get());
         }
         else {
-            if(data.getProductId()>0) throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);
             Product newModel = new Product();
-            newModel.setCode(code);
-            newModel.setCreatedBy(userName);
-            newModel.setCreatedDate(now);
             _map.MapProduct(newModel,data);
             save = _repo.save(newModel);
         }
@@ -96,68 +87,24 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductRespone> GetAll(int ProductID, int inputRow){
-        List<ProductRespone> result = new ArrayList<>();
-        List<Object[]> orders = _repo.spGetAllProductForView(ProductID, inputRow);
-        for(Object[] item : orders){
-            result.add(
-                    ProductRespone.builder()
-                            .productTypeName((String) item[0])
-                            .price(((BigDecimal) item[1]).intValue())
-                            .sizeName((String)item[2])
-                            .imageName((String)item[3])
-                            .imageUrl(item[4].toString())
-                            .productId((Integer) item[5])
-                            .code((String)item[6])
-                            .productName((String)item[7])
-                            .description((String) item[8])
-                            .isActive((boolean)item[9])
-                            .build()
-            );
-        }
-        return result;
+    public PageServiceResponse<ProductResponse> getProductPage
+            (int page, int size, String query,
+             String productId, Boolean isActive, String productTypeId){
+        return productPageService.pageResponse(
+                "spGetProductsByPage",ProductResponse.class
+                ,page,size,query,productId,isActive,productTypeId);
     }
 
-    @Transactional
-    public List<ProductRespone> GetByID(int ProductID, int inputRow){
-        List<ProductRespone> result = new ArrayList<>();
-        List<Object[]> orders = _repo.spGetAllProductForView(ProductID, inputRow);
-        for(Object[] item : orders){
-            result.add(
-                    ProductRespone.builder()
-                            .productTypeName((String) item[0])
-                            .price(((BigDecimal) item[1]).intValue())
-                            .sizeName((String)item[2])
-                            .imageName((String)item[3])
-                            .imageUrl(item[4].toString())
-                            .productId((Integer) item[5])
-                            .code((String)item[6])
-                            .productName((String)item[7])
-                            .description((String) item[8])
-                            .isActive((boolean)item[9])
-                            .build()
-            );
-        }
-        return result;
-    }
-
-
-
-
-    public boolean Delete(int id){
+    public void deleteProduct(String id){
         Product res = _repo.findById(id).orElseThrow( () -> new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND));
         _repo.deleteById(id);
-        return true;
     }
 
-    public Optional<Product> GetByProductId(int id){
-        Optional<Product> res = _repo.findByProductId(id);
+    public Optional<Product> GetByProductId(String id){
+        Optional<Product> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND);
         }
         return res;
     }
-
-
-
 }

@@ -17,14 +17,10 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductImage {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productImageId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String productImageId;
     String imageUrl;
     String cloudImageId;
     String imageName;
-    int productId;
-    LocalDateTime createdDate;
-    String createdBy;
-    LocalDateTime updatedDate;
-    String updatedBy;
+    String productId;
 }

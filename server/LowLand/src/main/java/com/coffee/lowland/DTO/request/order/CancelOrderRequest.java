@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CancelOrderRequest {
-    int orderId;
+    String orderId;
     String note;
 }

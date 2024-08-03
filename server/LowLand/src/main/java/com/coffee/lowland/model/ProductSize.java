@@ -19,12 +19,8 @@ import java.time.ZonedDateTime;
 public class ProductSize {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productSizeId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String productSizeId;
     String sizeName;
     String description;
-    LocalDateTime createdDate;
-    String createdBy;
-    LocalDateTime updatedDate;
-    String updatedBy;
 }

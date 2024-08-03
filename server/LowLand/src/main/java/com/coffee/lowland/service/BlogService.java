@@ -22,14 +22,14 @@ public class BlogService {
         return blogRepository.save(foundBlog);
     }
 
-    public void deleteBlog(int blogID){
+    public void deleteBlog(String blogID){
         Blog foundBLog = blogRepository.findById(blogID).orElseThrow(()->
                 new AppExceptions(ErrorCode.BLOG_NOT_EXISTED)
         );
         blogRepository.deleteById(blogID);
     }
 
-    public boolean blogExists(int blogId){
+    public boolean blogExists(String blogId){
         return blogRepository.existsById(blogId);
     }
 }

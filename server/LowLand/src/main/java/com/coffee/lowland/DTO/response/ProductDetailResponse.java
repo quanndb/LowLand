@@ -13,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 public class ProductDetailResponse {
     int price;
     String sizeName;
-    int productSizeId;
-    int productDetailsId;
+    String productSizeId;
+    String productDetailsId;
 }

@@ -15,10 +15,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImportStockDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int detailsId;
-    int importStockId;
-    int materialId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String detailsId;
+    String importStockId;
+    String materialId;
     int quantity;
     int price;
 }

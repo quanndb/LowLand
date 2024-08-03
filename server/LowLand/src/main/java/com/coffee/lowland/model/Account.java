@@ -2,9 +2,7 @@ package com.coffee.lowland.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,11 +16,14 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int accountId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String accountId;
     String email;
     String password;
     String fullName;
@@ -32,4 +33,5 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     Role role;
     String imageURL;
+    String cloudId;
 }

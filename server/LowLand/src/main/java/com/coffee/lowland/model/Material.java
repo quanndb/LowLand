@@ -15,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Material {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int materialId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String materialId;
     String materialName;
     int quantity;
     int minQuantity;

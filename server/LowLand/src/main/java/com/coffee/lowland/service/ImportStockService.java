@@ -36,26 +36,25 @@ public class ImportStockService {
 
     public boolean CreateOrUpdateImportStock(ImportStockDTO data) throws IOException {
         ImportStock model = data.getData();
-        int ImportStockID = CreateOrUpdate(model);
+        String ImportStockID = CreateOrUpdate(model);
         _detailsService.Create(data.getListDetails(), ImportStockID);
         return true;
     }
 
 
-    public int CreateOrUpdate(ImportStock data){
+    public String CreateOrUpdate(ImportStock data){
         ImportStock save = new ImportStock();
-        Optional<ImportStock> modelCheck = _repo.findByImportStockCode(data.getImportStockCode());
+        Optional<ImportStock> modelCheck = _repo.findById(data.getImportStockId());
         if(modelCheck.isPresent()){
             if(modelCheck.get().getImportStockId() != data.getImportStockId())
                 throw new AppExceptions(ErrorCode.PRODUCT_EXISTED);
         }
-        data.setImportStockCode(String.valueOf(_random.generateCode()));
         save = _repo.save(data);
         return save.getImportStockId();
     }
 
 
-    public boolean Delete(int id){
+    public boolean Delete(String id){
         ImportStock res = _repo.findById(id).orElseThrow( () -> new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND));
         _repo.deleteById(id);
         List<ImportStockDetails> lst = _detailsService.GetAll(id);
@@ -65,10 +64,9 @@ public class ImportStockService {
         return true;
     }
 
-    public ImportStock GetById(int id){
-        ImportStock res = _repo.findById(id)
+    public ImportStock GetById(String id){
+        return _repo.findById(id)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND));
-        return res;
     }
 
 }

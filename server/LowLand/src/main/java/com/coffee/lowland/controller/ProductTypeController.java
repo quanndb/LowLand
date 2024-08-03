@@ -34,7 +34,7 @@ public class ProductTypeController {
     }
 
     @GetMapping("/GetById")
-    public APIResponse<Object> GetAll(@RequestParam int Id){
+    public APIResponse<Object> GetAll(@RequestParam String Id){
         Optional<ProductType> data = _service.GetById(Id);
 
         return APIResponse.<Object>builder()
@@ -53,7 +53,7 @@ public class ProductTypeController {
 
 
     @GetMapping("/Delete")
-    public APIResponse<Boolean> Delete(@RequestParam int id){
+    public APIResponse<Boolean> Delete(@RequestParam String id){
         return APIResponse.<Boolean>builder()
                 .code(2000)
                 .result(_service.Delete(id))

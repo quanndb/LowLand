@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 public class OrderDetailsResponse {
     int quantity;
     float totalMoney;
-    int orderId;
+    String orderId;
     int productDetailsId;
 }

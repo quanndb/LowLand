@@ -17,5 +17,4 @@ public interface ProductTypeMapper {
     void MapProductType(@MappingTarget ProductType res, ProductTypeDto req);
     void MapProductSize(@MappingTarget ProductSize res, ProductSizeDto req);
     void MapProduct(@MappingTarget Product res, ProductDto req);
-    void MapMaterial(@MappingTarget Material res, ProductDto req);
 }

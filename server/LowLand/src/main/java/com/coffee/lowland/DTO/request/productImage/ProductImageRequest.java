@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductImageRequest {
-    int productId;
+    String productId;
     String imageBase64;
 }

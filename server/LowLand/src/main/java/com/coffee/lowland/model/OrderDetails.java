@@ -14,12 +14,12 @@ import lombok.experimental.FieldDefaults;
 public class OrderDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int orderDetailsId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String orderDetailsId;
     @Min(value = 1, message = "QUANTITY_AT_LEAST")
     int quantity;
     float totalMoney;
-    int orderId;
+    String orderId;
     @NotNull(message = "PRODUCT_DETAIL_NOT_EMPTY")
-    int productDetailsId;
+    String productDetailsId;
 }

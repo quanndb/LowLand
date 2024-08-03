@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDataDto extends ProductDto {
-    List<ProductRecipe> listRecipe;
-    List<ProductDetails> listDetail;
-    List<String> listImageBase64;
+    List<ProductRecipe> listRecipes;
+    List<ProductDetails> listDetails;
 }

@@ -22,10 +22,10 @@ import java.util.UUID;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int orderId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String orderId;
     int orderCode;
-    int accountId;
+    String accountId;
     String customerName;
     String phoneNumber;
     String address;

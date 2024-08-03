@@ -15,9 +15,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductRecipe {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productRecipeId;
-    int productId;
-    int materialId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String productRecipeId;
+    String productId;
+    String materialName;
+    String unitName;
     int quantity;
 }

@@ -17,9 +17,8 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImportStock {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int importStockId;
-    String importStockCode;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String importStockId;
     String supplierName;
     String description;
     LocalDateTime import_date;

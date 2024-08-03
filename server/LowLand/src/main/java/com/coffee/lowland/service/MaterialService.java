@@ -41,7 +41,7 @@ public class MaterialService {
         List<Material> lst = _repo.findAll();
         return lst;
     }
-    public boolean AddQuantity(int Quantiy, int MaterialId){
+    public boolean AddQuantity(int Quantiy, String MaterialId){
         Material modelCheck = _repo.findById(MaterialId)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_MATERIAL_NOT_FOUND));
         int totalQuantity = modelCheck.getQuantity() + Quantiy;
@@ -55,7 +55,7 @@ public class MaterialService {
         return _repo.spGetProductTypes(keyWords);
     }*/
 
-    public boolean Delete(int id){
+    public boolean Delete(String id){
         Optional<Material> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_MATERIAL_EXISTED);
@@ -64,7 +64,7 @@ public class MaterialService {
         return true;
     }
 
-    public Optional<Material> GetById(int id){
+    public Optional<Material> GetById(String id){
         Optional<Material> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_MATERIAL_EXISTED);

@@ -16,7 +16,7 @@ public class PayController {
     PayService payService;
 
     @PostMapping("/create-payment-link")
-    public APIResponse<String> createPayment(@RequestParam int orderId){
+    public APIResponse<String> createPayment(@RequestParam String orderId){
         return APIResponse.<String>builder()
                 .code(2000)
                 .result(payService.createPaymentLink(orderId))

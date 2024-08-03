@@ -33,7 +33,7 @@ public class ImportStockController {
     }
 
     @GetMapping("/GetById")
-    public APIResponse<Object> GetById(@RequestParam int Id){
+    public APIResponse<Object> GetById(@RequestParam String Id){
         ImportStockDTO data = new ImportStockDTO();
         data.setData(_service.GetById(Id));
         data.setListDetails(_detailsService.GetAll(Id));
@@ -52,7 +52,7 @@ public class ImportStockController {
     }
 
     @GetMapping("/Delete")
-    public APIResponse<Boolean> Delete(@RequestParam int Id){
+    public APIResponse<Boolean> Delete(@RequestParam String Id){
         return APIResponse.<Boolean>builder()
                 .code(2000)
                 .result(_service.Delete(Id))

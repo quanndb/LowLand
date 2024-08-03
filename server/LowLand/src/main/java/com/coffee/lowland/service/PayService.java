@@ -40,7 +40,7 @@ public class PayService {
     @Value("${PAY_SERVER}")
     String PAY_SERVER;
 
-    public String createPaymentLink(int orderId) {
+    public String createPaymentLink(String orderId) {
         WebClient webClient = webClientBuilder.baseUrl(PAY_SERVER).build();
         Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));

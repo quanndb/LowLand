@@ -25,31 +25,31 @@ public class ProductImageService {
     ProductImageRepository _repo;
     ImageMapper _mapper;
 
-    public void CreateProductImage(String imageBase64, int ProductId) throws IOException {
+    public void CreateProductImage(String imageBase64, String ProductId) throws IOException {
         try {
             //Xóa hết các ảnh trong productImage có id = ProductID
 
-            File file =  _service.convertToMultipartFile(imageBase64);
-            Object response =  _service.upload(file);
-            String url = _mapper.getUrl(response);
-            String public_id = _mapper.getPublicId(response);
+//            File file =  _service.convertToMultipartFile(imageBase64);
+//            Object response =  _service.upload(file);
+//            String url = _mapper.getUrl(response);
+//            String public_id = _mapper.getPublicId(response);
 
             //Luu anh
             ProductImage newImg = new ProductImage();
             newImg.setProductId(ProductId);
-            newImg.setCloudImageId(public_id);
-            newImg.setImageUrl(url);
+//            newImg.setCloudImageId(public_id);
+//            newImg.setImageUrl(url);
             _repo.save(newImg);
         } catch (IllegalArgumentException e) {
             throw new ClassCastException("Cannot cast LinkedHashMap to PayResponse: " + e.getMessage());
         }
     }
 
-    public List<ProductImage> getProductImages(int ProductId) throws IOException {
+    public List<ProductImage> getProductImages(String ProductId) throws IOException {
         return _repo.findAllByProductId(ProductId);
     }
 
-    public boolean DeleteImage(int id) throws IOException {
+    public boolean DeleteImage(String id) throws IOException {
         ProductImage prImage = _repo.findById(id)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_IMAGE_NOT_FOUND));
         _service.delete(prImage.getCloudImageId());
@@ -59,11 +59,12 @@ public class ProductImageService {
 
     public String CreateImageUrl(String imageBase64) throws IOException {
         try {
-            File file =  _service.convertToMultipartFile(imageBase64);
-            Object response =  _service.upload(file);
-            String url = _mapper.getUrl(response);
-            String public_id = _mapper.getPublicId(response);
-            return url;
+//            File file =  _service.convertToMultipartFile(imageBase64);
+//            Object response =  _service.upload(file);
+//            String url = _mapper.getUrl(response);
+//            String public_id = _mapper.getPublicId(response);
+//            return url;
+            return null;
         } catch (IllegalArgumentException e) {
             throw new ClassCastException("Cannot cast LinkedHashMap to PayResponse: " + e.getMessage());
         }

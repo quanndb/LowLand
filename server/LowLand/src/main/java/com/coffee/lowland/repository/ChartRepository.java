@@ -3,11 +3,13 @@ package com.coffee.lowland.repository;
 import com.coffee.lowland.model.Material;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ChartRepository extends JpaRepository<Material, Integer> {
+@Repository
+public interface ChartRepository extends JpaRepository<Material, String> {
     @Procedure
     List<Object[]> spGetToltalMoneyDayinMonth(int monthInput, int yearInput);
     @Procedure

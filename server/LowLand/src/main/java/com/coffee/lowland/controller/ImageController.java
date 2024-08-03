@@ -28,8 +28,9 @@ public class ImageController {
         if (ImageIO.read(multipartFile) == null) {
             return new ResponseEntity<>("Image non valid!", HttpStatus.BAD_REQUEST);
         }
-        Map result = cloudinaryService.upload(multipartFile);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+//        Map result = cloudinaryService.upload(multipartFile);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+        return null;
     }
 
     @PostMapping("/delete")

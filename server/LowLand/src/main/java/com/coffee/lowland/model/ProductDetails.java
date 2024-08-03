@@ -18,13 +18,9 @@ import java.time.LocalDateTime;
 public class ProductDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productDetailsId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String productDetailsId;
     float price;
-    int productId;
-    int productSizeId;
-    LocalDateTime createdDate;
-    String createdBy;
-    LocalDateTime updatedDate;
-    String updatedBy;
+    String productId;
+    String productSizeId;
 }

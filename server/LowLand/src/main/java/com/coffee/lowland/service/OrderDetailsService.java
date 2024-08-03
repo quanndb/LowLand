@@ -20,13 +20,12 @@ import java.util.List;
 public class OrderDetailsService {
     OrderDetailsRepository orderDetailsRepository;
     @Transactional
-    public List<Object[]> getOrderDetails(int id){
+    public List<Object[]> getOrderDetails(String id){
         return orderDetailsRepository.spGetOrderDetails(id);
     }
 
-
     @Transactional
-    public List<GetOrderDetailsResponse> getOrderDetailsByOrderId(int id){
+    public List<GetOrderDetailsResponse> getOrderDetailsByOrderId(String id){
         List<Object[]> request = orderDetailsRepository.spGetOrderDetailsByOrderId(id);
         List<GetOrderDetailsResponse> responses = new ArrayList<>();
         for(Object[] item : request){

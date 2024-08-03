@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductSizeRepository extends JpaRepository<ProductSize, Integer> {
-    @Override
-    Optional<ProductSize> findById(Integer integer);
+public interface ProductSizeRepository extends JpaRepository<ProductSize, String> {
 
     Optional<ProductSize> findBySizeName(String code);
 

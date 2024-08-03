@@ -14,4 +14,5 @@ public class UpdateAccountRequest {
     String phoneNumber;
     String address;
     String imageURL;
+    String cloudId;
 }

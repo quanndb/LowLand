@@ -41,15 +41,15 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public APIResponse<Object> getOrderByOrderId(@PathVariable int orderId){
+    public APIResponse<Object> getOrderByOrderId(@PathVariable String orderId){
         return APIResponse.builder()
                 .code(2000)
                 .result(orderService.getOrder(orderId))
                 .build();
     }
     @PostMapping("/new-order")
-    public APIResponse<Integer> createOrder(@RequestBody @Valid CreateOrderRequest request){
-        return APIResponse.<Integer>builder()
+    public APIResponse<String> createOrder(@RequestBody @Valid CreateOrderRequest request){
+        return APIResponse.<String>builder()
                 .code(2000)
                 .message("Create order successfully!")
                 .result(orderService.createOrder(request))

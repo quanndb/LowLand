@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApproveOrderRequest {
-    int orderId;
+    String orderId;
     String customerName;
     String phoneNumber;
     String address;

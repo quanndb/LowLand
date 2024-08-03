@@ -20,7 +20,7 @@ public class ChartController {
     public APIResponse<Object> GetToltalMoneyDayinMonth(@RequestParam int monthInput,@RequestParam int yearInput){
         return APIResponse.<Object>builder()
                 .code(2000)
-                .result(_service.GetToltalMoneyDayinMonth(monthInput, yearInput))
+                .result(_service.GetTotalMoneyDayanMonth(monthInput, yearInput))
                 .build();
     }
 

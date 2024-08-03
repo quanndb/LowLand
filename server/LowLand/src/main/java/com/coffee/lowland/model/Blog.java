@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -17,10 +18,9 @@ import java.time.ZonedDateTime;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Blog {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int blogId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String blogId;
     String title;
     String content;
     String imageUrl;

@@ -9,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductTypeDto {
-    int productTypeId;
-    String code;
+    String productTypeId;
     String typeName;
     String description;
 }

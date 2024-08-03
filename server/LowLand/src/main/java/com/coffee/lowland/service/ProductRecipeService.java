@@ -26,12 +26,12 @@ public class ProductRecipeService {
     ProductTypeMapper _map;
 
     @Transactional
-    public List<ProductRecipe> GetAllByProductId(int ProductId){
+    public List<ProductRecipe> GetAllByProductId(String ProductId){
        List<ProductRecipe> lst = _repo.findAllByProductId(ProductId);
         return lst;
     }
 
-    public boolean Create(List<ProductRecipe> data, int ProductId){
+    public boolean Create(List<ProductRecipe> data, String ProductId){
         List<ProductRecipe> lst = _repo.findAllByProductId(ProductId);
         if(!lst.isEmpty()){
             for( int i =0; i < lst.size(); i++){
@@ -44,7 +44,7 @@ public class ProductRecipeService {
         _repo.saveAll(data);
         return true;
     }
-    public boolean Delete(int id){
+    public boolean Delete(String id){
         ProductRecipe prD = _repo.findById(id)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         _repo.deleteById(id);

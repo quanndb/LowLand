@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductDetailsRepository extends JpaRepository<ProductDetails, Integer> {
-    Optional<List<ProductDetails>> findByProductId(int productId);
-    void deleteAllByProductId(int ProductId);
+public interface ProductDetailsRepository extends JpaRepository<ProductDetails, String> {
+    Optional<List<ProductDetails>> findByProductId(String productId);
     @Procedure
-    List<Object[]> spGetAllProductDetailByProductId(int ProductId);
+    List<Object[]> spGetAllProductDetailByProductId(String ProductId);
 }

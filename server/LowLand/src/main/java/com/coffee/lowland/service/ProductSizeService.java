@@ -38,16 +38,12 @@ public class ProductSizeService {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime now = LocalDateTime.now();
         if(res.isPresent()){
-            res.get().setUpdatedBy(userName);
-            res.get().setUpdatedDate(now);
             _map.MapProductSize(res.get(),data);
             return _repo.save(res.get());
         }
         else {
-            if(data.getProductSizeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
+            if(data.getProductSizeId() != null) throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
             ProductSize newModel = new ProductSize();
-            newModel.setCreatedBy(userName);
-            newModel.setCreatedDate(now);
             _map.MapProductSize(newModel,data);
             return _repo.save(newModel);
         }
@@ -65,7 +61,7 @@ public class ProductSizeService {
         return _repo.spGetProductTypes(keyWords);
     }*/
 
-    public boolean Delete(int id){
+    public boolean Delete(String id){
         Optional<ProductSize> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);
@@ -74,7 +70,7 @@ public class ProductSizeService {
         return true;
     }
 
-    public Optional<ProductSize> GetById(int id){
+    public Optional<ProductSize> GetById(String id){
         Optional<ProductSize> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_Size_NOT_FOUND);

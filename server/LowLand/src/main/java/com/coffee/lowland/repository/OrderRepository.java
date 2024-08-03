@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderRepository extends CrudRepository<Order,Integer> {
+public interface OrderRepository extends CrudRepository<Order,String> {
 
     Optional<Order> findByOrderCode(int orderCode);
 
     @Procedure
-    List<Object[]> spGetAllOrders(int accountId);
+    List<Object[]> spGetAllOrders(String accountId);
 
     @Procedure
-    List<Object[]> spGetAllMeterialIdByOrder(int orderId);
+    List<Object[]> spGetAllMeterialIdByOrder(String orderId);
 }

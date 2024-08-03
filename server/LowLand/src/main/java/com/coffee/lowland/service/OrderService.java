@@ -49,7 +49,7 @@ public class OrderService {
 
     @Transactional
     public List<GetOrdersResponse> getOrders() {
-        List<Object[]> orders = orderRepository.spGetAllOrders(0);
+        List<Object[]> orders = orderRepository.spGetAllOrders("");
         return getOrdersMapper(orders);
     }
 
@@ -61,9 +61,9 @@ public class OrderService {
         return getOrdersMapper(orders);
     }
 
-    public int createOrder(CreateOrderRequest request){
+    public String createOrder(CreateOrderRequest request){
         Order newOrder = orderMapper.toOrder(request);
-        int accountId = accountService.findAccountByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getAccountId();
+        String accountId = accountService.findAccountByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getAccountId();
         newOrder.setAccountId(accountId);
         newOrder.setOrderCode(randomCodeService.generateCode());
         newOrder.setCreatedDate(LocalDateTime.now());
@@ -154,7 +154,7 @@ public class OrderService {
         return "Payment success";
     }
 
-    public GetOrderResponse getOrder(int orderId) {
+    public GetOrderResponse getOrder(String orderId) {
          Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         List<GetOrderDetailsResponse> items = orderDetailsService.getOrderDetailsByOrderId(foundOrder.getOrderId());
@@ -168,7 +168,7 @@ public class OrderService {
         for(Object[] item : request){
             res.add(
                     GetOrdersResponse.builder()
-                            .orderId((Integer)item[0])
+                            .orderId((String)item[0])
                             .orderCode((Integer)item[1])
                             .customerName((String)item[2])
                             .phoneNumber((String)item[3])
@@ -190,19 +190,19 @@ public class OrderService {
 
 
     //Update lại số lượng trong Material
-    private void UpdateQuantityMaterial(int OrderId){
+    private void UpdateQuantityMaterial(String OrderId){
         List<MaterialDTO> lstMaterialId = new ArrayList<MaterialDTO>();
         List<Object[]> lstStore = orderRepository.spGetAllMeterialIdByOrder(OrderId);
         for(Object[] item : lstStore) {
             lstMaterialId.add(
                     MaterialDTO.builder()
-                            .MaterialId((Integer)item[0])
+                            .MaterialId((String)item[0])
                             .Quantity((Integer)item[0])
                             .build());
         }
         if(!lstMaterialId.isEmpty()){
             for(MaterialDTO material : lstMaterialId){
-                int MaterialId = material.getMaterialId();
+                String MaterialId = material.getMaterialId();
                 int Quantity = -material.getQuantity();
                 _materialService.AddQuantity(Quantity,MaterialId);
             }

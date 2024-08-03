@@ -13,13 +13,8 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productTypeId;
-    String code;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String productTypeId;
     String typeName;
     String description;
-    LocalDateTime createdDate;
-    String createdBy;
-    LocalDateTime updatedDate;
-    String updatedBy;
 }

@@ -31,7 +31,7 @@ public class ProductTypeService {
     ProductTypeMapper _map;
 
     public boolean CreateOrUpdate(ProductTypeDto data){
-        Optional<ProductType> modelCheck = _repo.findByCode(data.getCode());
+        Optional<ProductType> modelCheck = _repo.findById(data.getProductTypeId());
         if(modelCheck.isPresent()){
             if(modelCheck.get().getProductTypeId() != data.getProductTypeId())
                 throw new AppExceptions(ErrorCode.PRODUCT_TYPE_EXISTED);
@@ -40,16 +40,12 @@ public class ProductTypeService {
             String userName = SecurityContextHolder.getContext().getAuthentication().getName();
             LocalDateTime now = LocalDateTime.now();
             if(res.isPresent()){
-                res.get().setUpdatedBy(userName);
-                res.get().setUpdatedDate(now);
                 _map.MapProductType(res.get(),data);
                 _repo.save(res.get());
             }
             else {
-                if(data.getProductTypeId()>0) throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);
+                if(data.getProductTypeId() != null) throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);
                 ProductType newModel = new ProductType();
-                newModel.setCreatedBy(userName);
-                newModel.setCreatedDate(now);
                 _map.MapProductType(newModel,data);
                 _repo.save(newModel);
             }
@@ -68,7 +64,7 @@ public class ProductTypeService {
         return _repo.spGetProductTypes(keyWords);
     }
 
-    public boolean Delete(int id){
+    public boolean Delete(String id){
         Optional<ProductType> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);
@@ -76,7 +72,7 @@ public class ProductTypeService {
         _repo.deleteById(id);
         return true;
     }
-    public Optional<ProductType> GetById(int id){
+    public Optional<ProductType> GetById(String id){
         Optional<ProductType> res = _repo.findById(id);
         if(res.isEmpty()){
             throw new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND);

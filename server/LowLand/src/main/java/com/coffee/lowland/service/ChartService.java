@@ -2,7 +2,6 @@ package com.coffee.lowland.service;
 
 import com.coffee.lowland.DTO.chart.chartTopBestSale;
 import com.coffee.lowland.DTO.chart.chartTotalMoney;
-import com.coffee.lowland.DTO.response.product.ProductRespone;
 import com.coffee.lowland.repository.ChartRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -20,7 +19,7 @@ public class ChartService {
     ChartRepository _repo;
 
     @Transactional
-    public List<chartTotalMoney> GetToltalMoneyDayinMonth(int monthInput, int yearInput){
+    public List<chartTotalMoney> GetTotalMoneyDayanMonth(int monthInput, int yearInput){
         List<chartTotalMoney> result = new ArrayList<>();
         List<Object[]> orders = _repo.spGetToltalMoneyDayinMonth(monthInput, yearInput);
         for(Object[] item : orders){
