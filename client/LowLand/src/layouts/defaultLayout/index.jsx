@@ -6,14 +6,14 @@ import LowLandLogo from "src/components/navigation/logo";
 const Header = lazy(() => import("./header"));
 const Footer = lazy(() => import("./footer"));
 
-const LoginHeader = () => {
+const SideHeader = ({ title }) => {
   return (
     <Container
       maxWidth={"100%"}
       sx={{
         backgroundColor: "var(--primary-color)",
         position: "fixed",
-        zIndex: 1,
+        zIndex: 1000,
         boxShadow:
           "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px",
       }}
@@ -35,14 +35,14 @@ const LoginHeader = () => {
             fontSize: "30px",
           }}
         >
-          LowLand Login
+          LowLand {title}
         </Typography>
       </Container>
     </Container>
   );
 };
 
-const DefaultLayout = ({ children, notShowHeader }) => {
+const DefaultLayout = ({ children, notShowHeader, title }) => {
   return (
     <Suspense fallback={<Loading />}>
       <Container
@@ -55,7 +55,7 @@ const DefaultLayout = ({ children, notShowHeader }) => {
           justifyContent: "space-between",
         }}
       >
-        {!notShowHeader ? <Header /> : <LoginHeader />}
+        {!notShowHeader ? <Header /> : <SideHeader title={title} />}
         <Box
           sx={{
             paddingTop: "100px",

@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useRouter } from "src/routes/hooks";
 
 const SubcribeForm = () => {
   return (
@@ -59,6 +60,7 @@ const SubcribeForm = () => {
 };
 
 const ContactFooter = () => {
+  const router = useRouter();
   return (
     <Container
       sx={{
@@ -110,11 +112,13 @@ const ContactFooter = () => {
           }}
         >
           <Typography sx={{ fontWeight: "bold" }}>MENU</Typography>
-          <Button>Home</Button>
-          <Button>Our Products</Button>
-          <Button>Blog</Button>
-          <Button>About</Button>
-          <Button>Contact</Button>
+          <Button onClick={() => router.replace("/")}>Home</Button>
+          <Button onClick={() => router.replace("/products")}>
+            Our Products
+          </Button>
+          <Button onClick={() => router.replace("/blogs")}>Blog</Button>
+          <Button onClick={() => router.replace("/about")}>About</Button>
+          <Button onClick={() => router.replace("/contact")}>Contact</Button>
         </Grid>
         <Grid
           item

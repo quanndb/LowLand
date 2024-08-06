@@ -147,7 +147,7 @@ const BLogContent = memo(({ data }) => {
       >
         <div>
           <IconButton onClick={() => setIsLiked(!isLiked)} sx={{ mr: "20px" }}>
-            <Badge badgeContent={10} color="primary">
+            <Badge badgeContent={isLiked ? 11 : 10} color="primary">
               {isLiked ? (
                 <FavoriteIcon color="error" />
               ) : (
@@ -156,7 +156,7 @@ const BLogContent = memo(({ data }) => {
             </Badge>
           </IconButton>
           <IconButton onClick={handeOpenBlogComment}>
-            <Badge badgeContent={10} color="primary">
+            <Badge badgeContent={8} color="primary">
               <ChatBubbleOutlineIcon />
             </Badge>
           </IconButton>

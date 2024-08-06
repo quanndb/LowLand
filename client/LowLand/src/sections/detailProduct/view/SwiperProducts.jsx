@@ -1,22 +1,23 @@
 import { Container } from "@mui/material";
 import { CustomSwiper } from "src/components/CustomSwiper";
 import ProductItem from "src/components/ProductItem";
+import { formatPrice } from "src/utils/format-number";
 import { SwiperSlide } from "swiper/react";
 
-export const SwiperProducts = ({list}) => {
+export const SwiperProducts = ({ list }) => {
   return (
     <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
       <CustomSwiper sx={{ mb: "20px" }}>
         {list.map((item) => {
           return (
-            <SwiperSlide key={item.id}>
+            <SwiperSlide key={item.productId}>
               <ProductItem
-                imageURL={item.imageURL}
-                isSale={item.isSale}
-                name={item.name}
-                salePrices={item.salePrices}
-                originalPrices={item.originalPrices}
-                id={item.id}
+                imageURL={item.imageUrl}
+                isSale={false}
+                name={item.productName}
+                salePrices={formatPrice(item.price)}
+                originalPrices={formatPrice(item.price)}
+                id={item.productId}
               />
             </SwiperSlide>
           );

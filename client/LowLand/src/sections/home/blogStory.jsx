@@ -21,7 +21,7 @@ const HomeBlog = () => {
       >
         <Grid item lg={4} md={6} sm={12}>
           <BlogItem
-            url={"/blogs/123"}
+            url={"/blogs/1"}
             imageURL={"/static/images/blog1.jpg"}
             title={
               "Health Check: why do I get a headache when I haven’t had my coffee?"
@@ -34,6 +34,7 @@ const HomeBlog = () => {
         </Grid>
         <Grid item lg={4} md={6} sm={12}>
           <BlogItem
+            url={"/blogs/2"}
             imageURL={"/static/images/blog2.jpg"}
             title={
               "Health Check: why do I get a headache when I haven’t had my coffee?"
@@ -54,6 +55,7 @@ const HomeBlog = () => {
               "It is a paradisematic country, in which roasted parts of sentences fly into your mouth."
             }
             date={"october 9, 2018"}
+            url={"/blogs/1"}
           />
         </Grid>
       </Grid>

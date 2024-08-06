@@ -1,5 +1,9 @@
 package com.coffee.lowland.config;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,15 +29,19 @@ import javax.crypto.spec.SecretKeySpec;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    @NonFinal
     @Value("${SECRET_KEY}")
     String SECRET_KEY;
-
-
     String[] PUBLIC_ENDPOINTS = {
-            "auth/**"
+            "**", "auth/**"
     };
+
+    JWTDecoder jwtDecoder;
+
     @Bean
     public PasswordEncoder passwordEncoder (){
         return new BCryptPasswordEncoder();
@@ -68,7 +76,7 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                        .decoder(jwtDecoder())
+                        .decoder(jwtDecoder)
                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JWTAuthenticationEntryPoint()));
         http.csrf(AbstractHttpConfigurer::disable);

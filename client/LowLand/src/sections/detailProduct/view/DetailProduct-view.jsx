@@ -1,3 +1,8 @@
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+
 import { StarBorder } from "@mui/icons-material";
 import {
   List,
@@ -9,25 +14,30 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  IconButton,
 } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import HomeIcon from "@mui/icons-material/Home";
+
 import Image from "src/components/Image";
 import ProductImage from "src/components/ProductImage";
 import SectionTitle from "src/components/SectionTitle";
-import CartManagerSlice from "src/redux/slices/CartManager";
+import CartManagerSlice from "src/redux/slices/CartManagerSlice";
 import { useRouter } from "src/routes/hooks";
 import { SwiperProducts } from "./SwiperProducts";
+import {
+  BreadcrumItem,
+  CustomizedBreadcrumbs,
+} from "src/components/CustomBreadcum";
+import { formatPrice } from "src/utils/format-number";
+import { CustomSwiper } from "src/components/CustomSwiper";
+import { SwiperSlide } from "swiper/react";
 
 const formatMapping = {
-  ice: { displayName: "ice", unit: "" },
-  milk_type: { displayName: "milk type", unit: "" },
-  flavor_syrup: { displayName: "flavor syrup", unit: "" },
-  whipped_cream: { displayName: "whipped cream", unit: "" },
-  sugar: { displayName: "sugar", unit: "gam" },
-  cafe: { displayName: "cafe", unit: "gam" },
-  milk: { displayName: "milk", unit: "gam" },
+  1: { displayName: "coffee", unit: "gam" },
+  2: { displayName: "milk", unit: "ml" },
+  3: { displayName: "sugar", unit: "gam" },
 };
 
 const MaterialItem = ({ displayName, value, unit }) => {
@@ -41,35 +51,111 @@ const MaterialItem = ({ displayName, value, unit }) => {
   );
 };
 
-const DetailProductView = ({ product, list }) => {
+const DetailProductView = ({ productData, list }) => {
+  const [product, setProduct] = useState(productData);
+  console.log(product);
+  useEffect(() => {
+    setProduct(productData);
+  }, [productData]);
   const router = useRouter();
 
+  const id = uuidv4();
+
   const dispatch = useDispatch();
-  const handleAddToCart = (id, name, imageURL, quantity, price) => {
+  const handleAddToCart = (
+    productId,
+    productName,
+    imageUrl,
+    quantity,
+    price,
+    sizeName,
+    productDetailsId
+  ) => {
     const newItem = {
-      productID: id,
-      productName: name,
-      imageURL: imageURL,
+      id: id,
+      productID: productId,
+      productName: productName,
+      imageURL: imageUrl,
       quantity: quantity,
       price: price,
+      size: sizeName,
+      productDetailsId: productDetailsId,
     };
     dispatch(CartManagerSlice.actions.addToCart(newItem));
     toast.success("Add to cart successfully!");
   };
 
   const [quantity, setQuantity] = useState(1);
-  const handleChangQuantity = (e) => {
-    if (e.target.value > 0 && e.target.value < 10000) {
-      setQuantity(Number(e.target.value));
+  const [selectedSize, setSelectedSize] = useState(product.details[0].sizeName);
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+  };
+
+  const handleChangQuantity = (value) => {
+    let regex = /^-?\d+$/;
+    if (value === "") {
+      setQuantity(1);
+    }
+    if (!regex.test(value)) {
+      return;
+    }
+    if (value > 0 && value < 10000) {
+      setQuantity(Number(value));
     }
   };
 
+  const handleIncreaseQuantity = () => {
+    handleChangQuantity(quantity + 1);
+  };
+  const handleDecreaseQuantity = () => {
+    handleChangQuantity(quantity - 1);
+  };
+
+  const calculateTotalPrice = () => {
+    if (selectedSize !== null) {
+      const size = product.details.find(
+        (size) => size.sizeName === selectedSize
+      );
+      if (size) {
+        const sizePrice = size.price;
+        return false ? sizePrice : sizePrice;
+      }
+    }
+    return false ? product.details[0].price : product.details[0].price;
+  };
+  const calculateOldPrice = () => {
+    if (selectedSize !== null) {
+      const size = product.details.find(
+        (size) => size.sizeName === selectedSize
+      );
+      if (size) {
+        const sizePrice = size.price;
+        return sizePrice;
+      }
+    }
+
+    return product.detailsp[0].price;
+  };
   return (
     <>
       <Container maxWidth={"lg"}>
+        <CustomizedBreadcrumbs sx={{ mt: "40px" }}>
+          <BreadcrumItem
+            component="a"
+            href="/"
+            label="Home"
+            icon={<HomeIcon fontSize="small" />}
+          />
+          <BreadcrumItem component="a" href="/products" label="Products" />
+          <BreadcrumItem
+            component="a"
+            href={`/products/${product.product.productId}`}
+            label={`${product.product.productName}`}
+          />
+        </CustomizedBreadcrumbs>
         <Grid container sx={{ my: "100px" }}>
           <Grid item md={6} xs={12}>
-            <ProductImage
+            {/* <ProductImage
               sx={{
                 height: {
                   xs: "360px",
@@ -77,10 +163,28 @@ const DetailProductView = ({ product, list }) => {
                 },
                 width: "100%",
               }}
-              imageURL={product.imageURL}
-              isSale={product.isSale}
+              imageURL={product.images[0].imageUrl}
+              isSale={false}
               unShowOverlay={true}
-            />
+            /> */}
+            <CustomSwiper isProductSwipper={true}>
+              {product.images.map((image) => (
+                <SwiperSlide key={image.productImageId}>
+                  <ProductImage
+                    sx={{
+                      height: {
+                        xs: "360px",
+                        md: "460px",
+                      },
+                      width: "100%",
+                    }}
+                    imageURL={image.imageUrl}
+                    isSale={false}
+                    unShowOverlay={true}
+                  />
+                </SwiperSlide>
+              ))}
+            </CustomSwiper>
           </Grid>
 
           <Grid
@@ -98,7 +202,7 @@ const DetailProductView = ({ product, list }) => {
               },
             }}
           >
-            <Typography variant="h4">{product.name}</Typography>
+            <Typography variant="h4">{product.product.productName}</Typography>
 
             <Typography
               sx={{
@@ -110,10 +214,10 @@ const DetailProductView = ({ product, list }) => {
                 mt: "10px",
               }}
             >
-              {product.title}
+              {product.product.productName}
             </Typography>
 
-            {product.isSale ? (
+            {false ? (
               <Typography
                 sx={{
                   textAlign: {
@@ -125,7 +229,7 @@ const DetailProductView = ({ product, list }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {product.salePrices}
+                  {formatPrice(calculateTotalPrice())}
                   <sup>đ</sup>
                 </span>
                 <span
@@ -136,7 +240,7 @@ const DetailProductView = ({ product, list }) => {
                     marginLeft: "10px",
                   }}
                 >
-                  {product.originalPrices}
+                  {formatPrice(calculateOldPrice())}
                   <sup>đ</sup>
                 </span>
               </Typography>
@@ -152,32 +256,77 @@ const DetailProductView = ({ product, list }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {product.originalPrices}
+                  {formatPrice(calculateTotalPrice())}
                   <sup>đ</sup>
                 </span>
               </Typography>
             )}
 
+            <Box>
+              <Typography
+                sx={{
+                  opacity: "0.7",
+                  fontSize: "14px",
+                  mb: "10px",
+                  marginRight: "10px",
+                }}
+              >
+                Size
+              </Typography>
+
+              <List sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+                {product.details.map((size, index) => (
+                  <ListItemButton
+                    key={index}
+                    onClick={() => handleSizeSelect(size.sizeName)}
+                    sx={{
+                      border: "1px solid #ccc",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      textAlign: "center",
+                      backgroundColor:
+                        size.sizeName === selectedSize
+                          ? "var(--secondary-color)"
+                          : "transparent",
+                      color: size.sizeName === selectedSize ? "white" : "dark",
+                      "&:hover": {
+                        backgroundColor: "var(--secondary-color)",
+                        opacity: ".7",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <ListItemText primary={size.sizeName} />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Box>
+
             <Typography sx={{ opacity: "0.5", fontSize: "12px", mb: "10px" }}>
               QUANTITY
             </Typography>
-
-            <Grid container>
-              <Grid
-                item
-                md={3}
-                xs={12}
-                sx={{
-                  mb: {
-                    md: "0px",
-                    xs: "10px",
-                  },
-                }}
-              >
+            {/*  */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", position: "relative", mr: "20px" }}>
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    zIndex: 1,
+                    left: 0,
+                    transform: "translateY(10%)",
+                  }}
+                  onClick={handleDecreaseQuantity}
+                >
+                  <RemoveCircleIcon color="secondary" />
+                </IconButton>
                 <input
-                  type="number"
                   value={quantity}
-                  onChange={handleChangQuantity}
+                  onChange={(e) => handleChangQuantity(e.target.value)}
+                  onKeyDown={(e) => {
+                    e.key === "ArrowUp" ? handleIncreaseQuantity() : "";
+                    e.key === "ArrowDown" ? handleDecreaseQuantity() : "";
+                  }}
                   style={{
                     fontSize: "23px",
                     height: "100%",
@@ -186,36 +335,48 @@ const DetailProductView = ({ product, list }) => {
                     textAlign: "center",
                   }}
                 />
-              </Grid>
-
-              <Grid item md={6} xs={12}>
-                <Button
-                  variant="contained"
+                <IconButton
                   sx={{
-                    height: "100%",
-                    ml: {
-                      xs: "0px",
-                      md: "10px",
-                    },
-                    padding: "8px",
-                    width: "100%",
+                    position: "absolute",
+                    zIndex: 1,
+                    right: 0,
+                    transform: "translateY(10%)",
                   }}
-                  onClick={() =>
-                    handleAddToCart(
-                      product.id,
-                      product.name,
-                      product.imageURL,
-                      quantity,
-                      product.isSale
-                        ? product.salePrices
-                        : product.originalPrices
-                    )
-                  }
+                  onClick={handleIncreaseQuantity}
                 >
-                  ADD TO CART
-                </Button>
-              </Grid>
-            </Grid>
+                  <AddCircleIcon color="secondary" />
+                </IconButton>
+              </Box>
+
+              <Button
+                variant="contained"
+                sx={{
+                  height: "100%",
+                  ml: {
+                    xs: "0px",
+                    md: "10px",
+                  },
+                  padding: "8px",
+                  width: "100%",
+                }}
+                onClick={() =>
+                  handleAddToCart(
+                    product.product.productId,
+                    product.product.productName,
+                    product.images[0].imageUrl,
+                    quantity,
+                    false ? calculateTotalPrice() : calculateOldPrice(),
+                    selectedSize,
+                    product.details.find(
+                      (size) => size.sizeName === selectedSize
+                    ).productDetailsId
+                  )
+                }
+              >
+                ADD TO CART
+              </Button>
+            </Box>
+            {/*  */}
           </Grid>
         </Grid>
 
@@ -233,7 +394,7 @@ const DetailProductView = ({ product, list }) => {
                 padding: "10px",
               }}
             >
-              {product.detail}
+              {product.product.description}
             </Typography>
           </Grid>
 
@@ -253,12 +414,12 @@ const DetailProductView = ({ product, list }) => {
             </Typography>
 
             <List>
-              {Object.entries(product.materials).map(([key, value]) => (
+              {product.listRecipe.map((item) => (
                 <MaterialItem
-                  key={key}
-                  displayName={formatMapping[key]?.displayName || key}
-                  value={value}
-                  unit={formatMapping[key]?.unit || ""}
+                  key={item.productRecipeId}
+                  displayName={formatMapping[item.materialId].displayName}
+                  value={item.quantity}
+                  unit={formatMapping[item.materialId].unit}
                 />
               ))}
             </List>
@@ -337,7 +498,7 @@ const DetailProductView = ({ product, list }) => {
       <SectionTitle>YOU MIGHT ALSO LIKE THESE</SectionTitle>
 
       <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
-        <SwiperProducts maxWidth={"lg"} list={list}/>
+        <SwiperProducts maxWidth={"lg"} list={list} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Button
             variant="contained"

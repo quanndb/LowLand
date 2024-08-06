@@ -6,8 +6,10 @@ import { Pagination } from "swiper/modules";
 
 import BlogItem from "src/components/BlogItem";
 import { Box, Button } from "@mui/material";
+import { useRouter } from "src/routes/hooks";
 
 const FutherReading = () => {
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -32,6 +34,7 @@ const FutherReading = () => {
       >
         <SwiperSlide>
           <BlogItem
+            url={"/blogs/2"}
             imageURL={"/static/images/blog1.jpg"}
             title={"How long does a cup of coffee keep you awake?"}
             description={
@@ -42,28 +45,34 @@ const FutherReading = () => {
         </SwiperSlide>
         <SwiperSlide>
           <BlogItem
-            imageURL={"/static/images/blog1.jpg"}
-            title={"How long does a cup of coffee keep you awake?"}
+            url={"/blogs/2"}
+            imageURL={"/static/images/blog2.jpg"}
+            title={"How to make a nice coffee?"}
             description={
               "It is a paradisematic country, in which roasted parts. Vel qui et ad voluptatem."
             }
-            date={"November 12, 2018"}
+            date={"November 12, 2024"}
           />
         </SwiperSlide>
         <SwiperSlide>
           <BlogItem
+            url={"/blogs/2"}
             imageURL={"/static/images/blog1.jpg"}
             title={"How long does a cup of coffee keep you awake?"}
             description={
               "It is a paradisematic country, in which roasted parts. Vel qui et ad voluptatem."
             }
-            date={"November 12, 2018"}
+            date={"November 18, 2023"}
           />
         </SwiperSlide>
       </Swiper>
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" sx={{ p: "10px 20px" }}>
+        <Button
+          variant="contained"
+          sx={{ p: "10px 20px" }}
+          onClick={() => router.replace("/blogs")}
+        >
           VIEW ALL ARTICLES
         </Button>
       </Box>

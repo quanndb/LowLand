@@ -19,9 +19,16 @@ import { emphasize, styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
 import { useRouter } from "src/routes/hooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import CreateIcon from "@mui/icons-material/Create";
+import SideLayout from "src/layouts/sideLayout";
+import UpdateModal from "./updateModal";
+import accountAPI from "src/services/API/accountAPI";
+import { useDispatch } from "react-redux";
+import UserManagerSlice from "src/redux/slices/UserManagerSlice";
+import { toast } from "react-toastify";
+import orderAPI from "src/services/API/orderAPI";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -42,12 +49,12 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     },
   };
 });
+
 const CustomizedBreadcrumbs = ({ sx, title }) => {
   const router = useRouter();
   function handleClick(event, href) {
     event.preventDefault();
     router.replace(href);
-    console.log(event);
   }
   return (
     <Box role="presentation" sx={{ ...sx }}>
@@ -80,55 +87,107 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const UserView = ({ user, orders }) => {
-  // Khởi tạo state cho trạng thái và phân trang
+  const [orderList, setOrderList] = useState(orders);
+  useEffect(() => {
+    if (orders !== null && orders !== undefined) {
+      setOrderList(orders);
+    }
+  }, [orders]);
+  const dispatch = useDispatch();
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
-
-  // Hàm xử lý khi trang thay đổi
   const handlePageChange = (event, value) => {
     setPage(value);
   };
-
-  // Hàm xử lý khi trạng thái thay đổi
+  const statusMap = {
+    0: "Waiting",
+    1: "Paid",
+    2: "Delivered",
+    3: "Canceled",
+  };
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
     setPage(1);
   };
+  let filteredOrders = orderList
+    ? status !== ""
+      ? orderList.filter((order) => order.status === parseInt(status))
+      : orderList
+    : [];
 
-  // Lọc dữ liệu theo trạng thái đã chọn
-  const filteredOrders = status
-    ? orders.filter((order) => order.status === status)
-    : orders;
-
-  // Tính toán dữ liệu cần hiển thị trên trang
-  const paginatedOrders = filteredOrders.slice(
+  let paginatedOrders = filteredOrders.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
+  let ordersWithId = paginatedOrders.map((order, index) => ({
+    ...order,
+    id: index + 1 + (page - 1) * itemsPerPage,
+    status: statusMap[order.status],
+    totalMoney: `${order.totalMoney.toLocaleString()} VNĐ`,
+  }));
 
   const [file, setFile] = useState(null);
-  const [fullName, setFullName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [phone, setPhone] = useState(null);
-  const [address, setAddress] = useState(null);
+  const [fullName, setFullName] = useState(user.fullName || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [phone, setPhone] = useState(user.phoneNumber || "");
+  const [address, setAddress] = useState(user.address || "");
 
-  // const inputRef = useRef();
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
+  const handleClickRow = (params) => {
+    setSelectedOrder(params.row.orderId);
+    // console.log(params.row);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
   const handleChangeAvatar = (e) => {
     const input = e.target.files[0];
-
     input.preview = URL.createObjectURL(input);
-    console.log(input.preview);
     setFile(input);
   };
 
-  const handleUpdate = (e) => {
-    console.log(fullName);
-    console.log(email);
-    console.log(phone);
-    console.log(address);
+  const handleUpdateOrder = (updatedOrder) => {
+    orderAPI
+      .updateOrder(updatedOrder)
+      .then((res) => {
+        toast.success("Update order successfully");
+        setOrderList((prevOrderList) => {
+          if (!Array.isArray(prevOrderList)) {
+            return [];
+          }
+          return prevOrderList.map((item) =>
+            item.orderId === res.orderId ? { ...item, ...res } : item
+          );
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message || "Error updating order");
+      });
   };
+
+  const handleUpdate = () => {
+    accountAPI
+      .update({
+        fullName: fullName,
+        phoneNumber: phone,
+        address: address,
+        // imageURL: file ? file.preview : user.imageURL,
+      })
+      .then((res) => {
+        dispatch(UserManagerSlice.actions.updateUser(res));
+        toast.success("Update successfully");
+      })
+      .catch((error) => {
+        toast.error(error);
+      })
+      .finally(() => {});
+  };
+
   useEffect(() => {
     return () => {
       file && URL.revokeObjectURL(file.preview);
@@ -136,166 +195,192 @@ const UserView = ({ user, orders }) => {
   }, [file]);
 
   return (
-    <Container
-      disableGutters
-      maxWidth={"100%"}
-      sx={{ backgroundColor: "var(--background-color)", height: "100vh" }}
-    >
-      <Box sx={{ p: "40px" }}>
-        <CustomizedBreadcrumbs sx={{ mb: "40px" }} />
-      </Box>
+    <SideLayout title={"User profile"}>
+      <Container disableGutters maxWidth={"100%"} sx={{ my: "50px" }}>
+        <Box sx={{ pb: "40px" }}>
+          <CustomizedBreadcrumbs />
+        </Box>
 
-      <Paper
-        sx={{ padding: "25px", width: "90%", margin: "auto", py: "100px" }}
-      >
-        <Grid container spacing={{ md: 3 }}>
-          <Grid
-            item
-            md={3}
-            xs={12}
-            sx={{
-              textAlign: "center",
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box
+        <Paper sx={{ padding: "25px", width: "100%", py: "100px" }}>
+          <Grid container spacing={{ md: 3 }}>
+            <Grid
+              item
+              md={3}
+              xs={12}
               sx={{
-                position: "relative",
-                width: "fit-content",
-                margin: "0 auto",
+                textAlign: "center",
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <Avatar
-                alt="avatar"
-                src={file ? file.preview : user.avatar ? user.avatar : ""}
-                sx={{ width: 180, height: 180, margin: "auto", mb: 3 }}
-              />
-              <IconButton
-                component={"label"}
+              <Box
                 sx={{
-                  position: "absolute",
-                  borderRadius: "50%",
-                  bottom: "10px",
-                  right: "15px",
-                  backgroundColor: "var(--secondary-color)",
-                  "&:hover": {
-                    backgroundColor: "var(--secondary-color)",
-                    opacity: ".8",
-                  },
+                  position: "relative",
+                  width: "fit-content",
+                  margin: "0 auto",
                 }}
               >
-                <CreateIcon sx={{ color: "white" }} />
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={(e) => handleChangeAvatar(e)}
+                <Avatar
+                  alt="avatar"
+                  src={file ? file.preview : user.imageURL ? user.imageURL : ""}
+                  sx={{ width: 180, height: 180, margin: "auto", mb: 3 }}
                 />
-              </IconButton>
-            </Box>
-
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              value={fullName ? fullName : user.fullname ? user.fullname : ""}
-              label="Full Name"
-              onChange={(e) => setFullName(e.target.value)}
-            ></TextField>
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              value={email ? email : user.email ? user.email : ""}
-              label="Email"
-              onChange={(e) => setEmail(e.target.value)}
-            ></TextField>
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              label="Phone Number"
-              value={phone ? phone : user.phone ? user.phone : ""}
-              onChange={(e) => setPhone(e.target.value)}
-            ></TextField>
-            <TextField
-              sx={{ m: 2, width: "100%" }}
-              label="Address"
-              value={address ? address : user.address ? user.address : ""}
-              onChange={(e) => setAddress(e.target.value)}
-            ></TextField>
-            <Button
-              sx={{ width: "50%", my: 3 }}
-              variant="contained"
-              onClick={handleUpdate}
-              disabled={!(fullName || email || address || phone)}
-            >
-              Cập nhật
-            </Button>
-          </Grid>
-          <Grid item md={9} xs={12}>
-            <FormControl sx={{ mb: 2, width: "100px" }}>
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={status}
-                onChange={handleStatusChange}
-                label="Status"
+                <IconButton
+                  component={"label"}
+                  sx={{
+                    position: "absolute",
+                    borderRadius: "50%",
+                    bottom: "10px",
+                    right: "15px",
+                    backgroundColor: "var(--secondary-color)",
+                    "&:hover": {
+                      backgroundColor: "var(--secondary-color)",
+                      opacity: ".8",
+                    },
+                  }}
+                >
+                  <CreateIcon sx={{ color: "white" }} />
+                  <VisuallyHiddenInput
+                    type="file"
+                    onChange={(e) => handleChangeAvatar(e)}
+                  />
+                </IconButton>
+              </Box>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                value={email}
+                label="Email"
+                disabled
+              ></TextField>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                value={fullName}
+                label="Full Name"
+                onChange={(e) => setFullName(e.target.value)}
+              ></TextField>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                label="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              ></TextField>
+              <TextField
+                sx={{ m: 2, width: "100%" }}
+                label="Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              ></TextField>
+              <Button
+                sx={{ width: "50%", my: 3 }}
+                variant="contained"
+                onClick={handleUpdate}
+                disabled={!(fullName || email || address || phone || file)}
               >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="Waiting">Waiting</MenuItem>
-                <MenuItem value="Delivered">Delivered</MenuItem>
-                <MenuItem value="Canceled">Canceled</MenuItem>
-                <MenuItem value="Transfering">Transfering</MenuItem>
-              </Select>
-
-                
-                <TextField>
-                  
-                </TextField>
-
-            </FormControl>
-            <Box sx={{ height: 632, width: "100%" }}>
-              <DataGrid
-                rows={paginatedOrders}
-                columns={[
-                  { field: "id", headerName: "Order ID", width: 90 },
-                  {
-                    field: "imageURL",
-                    headerName: "Items",
-                    width: 90,
-                    renderCell: (params) => (
-                      <Avatar sx={{ mt: 1 }} alt="avatar" src={params.value} />
-                    ),
-                  },
-                  {
-                    field: "customerName",
-                    headerName: "Customer Name",
-                    width: 150,
-                  },
-                  // { field: "phone", headerName: "Phone", width: 150 },
-                  { field: "orderDate", headerName: "Order Date", width: 150 },
-                  { field: "status", headerName: "Status", width: 110 },
-                  // { field: "address", headerName: "Address", width: 200 },
-                  {
-                    field: "total",
-                    headerName: "Total",
-                    width: 120,
-                    type: "number",
-                  },
-                ]}
-                components={{}}
-                disableColumnMenu
-                hideFooterPagination
-                autoPageSize
-                disableSelectionOnClick
-                hideFooter
-                // disableVirtualization
-              />
-            </Box>
-            <Pagination
-              count={Math.ceil(orders.length / itemsPerPage)}
-              page={page}
-              onChange={handlePageChange}
-              sx={{ mt: 4, display: "flex", justifyContent: "center" }}
-            />
+                Cập nhật
+              </Button>
+            </Grid>
+            <Grid item md={9} xs={12}>
+              <FormControl sx={{ mb: 2, width: "100px" }}>
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={status}
+                  onChange={handleStatusChange}
+                  label="Status"
+                >
+                  <MenuItem value="">All</MenuItem>
+                  <MenuItem value="0">Waiting</MenuItem>
+                  <MenuItem value="1">Paid</MenuItem>
+                  <MenuItem value="2">Delivered</MenuItem>
+                  <MenuItem value="3">Canceled</MenuItem>
+                </Select>
+              </FormControl>
+              <Box sx={{ height: 667, width: "100%" }}>
+                <DataGrid
+                  rows={ordersWithId}
+                  columns={[
+                    { field: "id", headerName: "STT", width: 10 },
+                    { field: "orderCode", headerName: "Order code", width: 90 },
+                    {
+                      field: "imageUrl",
+                      headerName: "Items",
+                      width: 90,
+                      renderCell: (params) => {
+                        return (
+                          <Avatar
+                            sx={{ mt: 1 }}
+                            alt="avatar"
+                            src={params.value}
+                          />
+                        );
+                      },
+                    },
+                    {
+                      field: "productName",
+                      headerName: "Product Name",
+                      width: 150,
+                    },
+                    {
+                      field: "quantity",
+                      headerName: "Quantity",
+                      width: 85,
+                    },
+                    {
+                      field: "customerName",
+                      headerName: "Customer Name",
+                      width: 150,
+                    },
+                    {
+                      field: "phoneNumber",
+                      headerName: "phone Number",
+                      width: 150,
+                    },
+                    {
+                      field: "address",
+                      headerName: "Address ",
+                      width: 150,
+                    },
+                    {
+                      field: "createdDate",
+                      headerName: "Created Date ",
+                      width: 170,
+                    },
+                    { field: "status", headerName: "Status", width: 90 },
+                    {
+                      field: "totalMoney",
+                      headerName: "Total",
+                      width: 120,
+                      type: "number",
+                    },
+                  ]}
+                  onRowClick={handleClickRow}
+                  disableTooltip
+                  pageSizeOptions={[0]}
+                  disableRowSelectionOnClick
+                />
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Pagination
+                  count={Math.ceil(filteredOrders.length / itemsPerPage)}
+                  page={page}
+                  onChange={handlePageChange}
+                  color="primary"
+                  sx={{ mt: 2 }}
+                />
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+
+      <UpdateModal
+        open={openModal}
+        handleClose={handleCloseModal}
+        order={selectedOrder}
+        updateOrder={handleUpdateOrder}
+      />
+    </SideLayout>
   );
 };
+
 export default UserView;

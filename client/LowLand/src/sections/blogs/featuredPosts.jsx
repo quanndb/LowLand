@@ -10,7 +10,7 @@ const FeaturedPosts = () => {
       <Grid container spacing={4} justifyContent={"center"}>
         <Grid item md={6}>
           <BlogItem
-            url={"/"}
+            url={"/blogs/1"}
             imageURL={"/static/images/blog1.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."
@@ -23,7 +23,7 @@ const FeaturedPosts = () => {
         </Grid>
         <Grid item md={6}>
           <BlogItem
-            url={"/"}
+            url={"/blogs/2"}
             imageURL={"/static/images/blog2.jpg"}
             title={
               "Recent research suggests that heavy coffee drinkers may reap health benefits."

@@ -25,4 +25,10 @@
       background-color: var(--secondary-color);
     }
   }
+  .swiper-button-next {
+    color: var(--primary-color) !important;
+  }
+  .swiper-button-prev {
+    color: var(--primary-color) !important;
+  }
 }

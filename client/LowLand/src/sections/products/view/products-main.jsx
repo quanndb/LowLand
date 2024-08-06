@@ -1,20 +1,66 @@
+import { useState } from "react";
+
 import Productswiper from "./productswiper";
 import AllProducts from "./allProducts";
 
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Pagination,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
-const ProductsMain = ({ categories }) => {
+const ProductsMain = ({ products }) => {
   const [active, setActive] = useState(0);
+  const [menu, setMenu] = useState("All products");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const handleClickCategory = (id) => {
     if (active !== id) {
       setActive(id);
     }
   };
+  const [search, setSearch] = useState("");
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+  const handleChange = (event) => {
+    setMenu(event.target.value);
+  };
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+  const filterProducts = () => {
+    return products.filter((product) => {
+      const matchesMenu =
+        menu === "All products" || product.productTypeName === menu;
+      const matchesSearch =
+        product.productName.toLowerCase().includes(search.toLowerCase()) ||
+        product.price.toString().includes(search);
+
+      return matchesMenu && matchesSearch;
+    });
+  };
+
+  const paginatedProducts = () => {
+    const filteredProducts = filterProducts();
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredProducts.slice(startIndex, endIndex);
+  };
 
   return (
-    <Container>
+    <Container maxWidth={"lg"}>
       <Box
         sx={{
           display: "flex",
@@ -37,50 +83,63 @@ const ProductsMain = ({ categories }) => {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </Typography>
       </Box>
-      <Container sx={{ justifyContent: "center" }} display={"flex"}>
-        <Grid
-          width={"100%"}
-          container
-          justifyContent={"center"}
-          columns={{ md: 5, sm: 1 }}
-        >
-          {categories.map((item) => {
-            return (
-              <Grid
-                item
-                sm={1}
-                sx={{ width: "100%", padding: "4px" }}
-                key={item.id}
-              >
-                <Button
-                  className="btnColor"
-                  sx={{
-                    width: "100%",
-                    backgroundColor:
-                      active === item.id ? "var(--secondary-color)" : "none",
-                    color:
-                      active === item.id ? "white" : "var(--secondary-color)",
-                    "&:hover": {
-                      backgroundColor:
-                        active === item.id ? "var(--secondary-color)" : "none",
-                      color:
-                        active === item.id ? "white" : "var(--secondary-color)",
-                      opacity: ".7",
-                    },
-                  }}
-                  variant="outlined"
-                  onClick={() => handleClickCategory(item.id)}
-                >
-                  {item.name}
-                </Button>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
       <Productswiper />
 
-      <AllProducts />
+      <Container
+        sx={{
+          display: "flex",
+          mb: " 30px",
+          justifyContent: "space-between",
+        }}
+      >
+        <FormControl sx={{ width: "200px" }}>
+          <InputLabel id="demo-simple-select-label">Menu</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={menu}
+            label="Menu"
+            onChange={handleChange}
+          >
+            <MenuItem value={"All products"}>All products</MenuItem>
+            <MenuItem value={"Black coffee"}>Black coffee</MenuItem>
+            <MenuItem value={"Brown coffee"}>Brown coffee</MenuItem>
+            <MenuItem value={"Smell coffee"}>Smell coffee</MenuItem>
+            <MenuItem value={"Weasel coffee"}>Weasel coffee</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Box sx={{ display: "flex" }}>
+          <TextField
+            label="Search your favorite coffee..."
+            variant="outlined"
+            value={search}
+            onChange={handleSearchChange}
+          />
+          <Button startIcon={<SearchIcon />} variant="contained">
+            Search
+          </Button>
+        </Box>
+      </Container>
+
+      {/* search + select option */}
+      <AllProducts products={paginatedProducts()} />
+
+      {/* Pagination Controls */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "30px",
+          mb: "30px",
+        }}
+      >
+        <Pagination
+          count={Math.ceil(filterProducts().length / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+        />
+      </Box>
     </Container>
   );
 };
