@@ -1,11 +1,10 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.account.ChangeAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import com.coffee.lowland.model.Account;
-import com.coffee.lowland.service.AccountService;
+import com.coffee.lowland.service.Account.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

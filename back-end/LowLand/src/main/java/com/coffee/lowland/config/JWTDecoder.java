@@ -1,8 +1,6 @@
 package com.coffee.lowland.config;
 
-import com.coffee.lowland.exception.AppExceptions;
-import com.coffee.lowland.exception.ErrorCode;
-import com.coffee.lowland.service.TokenService;
+import com.coffee.lowland.service.Account.TokenService;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

@@ -1,16 +1,11 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.request.product.ProductDataDto;
 import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.DTO.response.PageServiceResponse;
-import com.coffee.lowland.model.Product;
-import com.coffee.lowland.service.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.coffee.lowland.service.Product.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -26,45 +21,23 @@ public class ProductController {
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false, defaultValue = "") String query,
-            @RequestParam(required = false, defaultValue = "") String productId,
             @RequestParam(required = false, defaultValue = "") Boolean isActive,
-            @RequestParam(required = false, defaultValue = "") String productTypeId){
+            @RequestParam(required = false, defaultValue = "") String productTypeId,
+            @RequestParam(required = false, defaultValue = "product_id") String sortedBy,
+            @RequestParam(required = false, defaultValue = "DESC") String sortDirection){
         return APIResponse.builder()
                 .code(2000)
                 .result(_service.getProductPage(page,size,query,
-                        productId,isActive,productTypeId))
+                        isActive,productTypeId, sortedBy,sortDirection))
                 .build();
     }
 
-    @PostMapping("/new-product")
-    public APIResponse<Boolean> CreateOrUpdate(
-            @RequestParam(required = false) MultipartFile[] images,
-            @RequestParam(required = false) String recipes,
-            @RequestParam(required = false) String details) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return APIResponse.<Boolean>builder()
-                .code(2000)
-                .message("Change success!")
-                .result(_service
-                        .CreateOrUpdateProduct(images, recipes, details))
-                .build();
-    }
-
-    @PostMapping("/{productId}")
-    public APIResponse<Boolean> updateProduct(@RequestBody ProductDataDto data) throws IOException {
-        return APIResponse.<Boolean>builder()
-                .code(2000)
-                .message("Change success!")
-                .result(_service.CreateOrUpdateProduct(data))
-                .build();
-    }
-
-    @DeleteMapping("/{productId}")
-    public APIResponse<?> Delete(@PathVariable String productId){
-        _service.deleteProduct(productId);
+    @GetMapping("/{product_id}")
+    public APIResponse<?> getProductDetails(@PathVariable String product_id) throws IOException {
         return APIResponse.builder()
                 .code(2000)
-                .message("Deleted success!")
+                .result(_service.getProductDetails(product_id))
                 .build();
     }
+
 }

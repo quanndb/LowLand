@@ -2,7 +2,7 @@ package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.service.PayService;
+import com.coffee.lowland.service.Pay.PayService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

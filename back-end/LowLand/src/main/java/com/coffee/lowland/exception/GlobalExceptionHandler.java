@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
         APIResponse<?> apiResponse = APIResponse.builder()
                 .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
                 .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
+                .result(exception.getMessage())
                 .build();
         log.error(exception.toString());
         return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).body(apiResponse);

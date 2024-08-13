@@ -1,18 +1,15 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.ImportStockDTO;
-import com.coffee.lowland.DTO.request.product.ProductDataDto;
 import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.model.Product;
-import com.coffee.lowland.service.ImportStockDetailsService;
-import com.coffee.lowland.service.ImportStockService;
+import com.coffee.lowland.service.Product.ImportStockDetailsService;
+import com.coffee.lowland.service.Product.ImportStockService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/ImportStock")

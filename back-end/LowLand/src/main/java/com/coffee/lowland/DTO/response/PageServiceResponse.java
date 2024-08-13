@@ -14,7 +14,11 @@ public class PageServiceResponse<T> {
     Integer totalRecords;
     Integer totalPages;
     Integer page;
+    Boolean isFirst;
+    Boolean isLast;
     Integer size;
     String query;
+    String sortedBy;
+    String sortDirection;
     List<?> response;
 }

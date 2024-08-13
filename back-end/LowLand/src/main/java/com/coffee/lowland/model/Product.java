@@ -23,6 +23,6 @@ public class Product {
     String productName;
     boolean isActive;
     String description;
-    int productTypeId;
+    String productTypeId;
 }
 

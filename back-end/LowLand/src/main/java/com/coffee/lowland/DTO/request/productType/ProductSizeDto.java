@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductSizeDto {
-    String productSizeId;
     String sizeName;
     String description;
 }

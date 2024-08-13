@@ -1,5 +1,6 @@
 package com.coffee.lowland.DTO;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MaterialDTO {
-    String MaterialId;
-    int Quantity;
+    String materialName;
+    String unitName;
+    Double minQuantity;
+    Double quantity;
 }

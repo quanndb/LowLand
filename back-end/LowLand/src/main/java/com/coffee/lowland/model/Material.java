@@ -4,21 +4,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Material {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String materialId;
     String materialName;
-    int quantity;
-    int minQuantity;
-    String unit;
+    Double quantity;
+    Double minQuantity;
+    String unitName;
 }

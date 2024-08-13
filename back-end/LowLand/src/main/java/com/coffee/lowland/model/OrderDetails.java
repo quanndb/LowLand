@@ -18,7 +18,7 @@ public class OrderDetails {
     String orderDetailsId;
     @Min(value = 1, message = "QUANTITY_AT_LEAST")
     int quantity;
-    float totalMoney;
+    Double totalMoney;
     String orderId;
     @NotNull(message = "PRODUCT_DETAIL_NOT_EMPTY")
     String productDetailsId;

@@ -18,7 +18,6 @@ public class ProductRecipe {
     @GeneratedValue(strategy = GenerationType.UUID)
     String productRecipeId;
     String productId;
-    String materialName;
-    String unitName;
-    int quantity;
+    String materialId;
+    Double quantity;
 }

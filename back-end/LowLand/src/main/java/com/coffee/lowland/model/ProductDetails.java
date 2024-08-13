@@ -16,11 +16,10 @@ import java.time.LocalDateTime;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String productDetailsId;
-    float price;
+    Double price;
     String productId;
     String productSizeId;
 }

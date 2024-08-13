@@ -4,11 +4,9 @@ package com.coffee.lowland.controller;
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.auth.AuthenticationRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.DTO.response.auth.AuthenticationResponse;
 
-import com.coffee.lowland.DTO.response.auth.UserResponse;
-import com.coffee.lowland.service.AccountService;
-import com.coffee.lowland.service.AuthenticationService;
+import com.coffee.lowland.service.Account.AccountService;
+import com.coffee.lowland.service.Account.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

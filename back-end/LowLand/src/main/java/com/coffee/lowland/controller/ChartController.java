@@ -1,7 +1,7 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.service.ChartService;
+import com.coffee.lowland.service.Utilities.ChartService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
