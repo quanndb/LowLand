@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 
 import Image from "./Image";
 
-const ProductImage = ({ sx, imageURL, isSale, unShowOverlay }) => {
+const ProductImage = ({ sx, imageURL, isActive, unShowOverlay }) => {
   return (
     <Box
       sx={{
@@ -15,7 +15,7 @@ const ProductImage = ({ sx, imageURL, isSale, unShowOverlay }) => {
         sx={{ ...sx }}
         unShowOverlay={unShowOverlay ? unShowOverlay : null}
       />
-      {isSale ? (
+      {isActive ? (
         <Button
           sx={{
             position: "absolute",

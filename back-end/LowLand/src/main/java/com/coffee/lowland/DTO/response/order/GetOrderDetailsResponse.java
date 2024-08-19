@@ -1,19 +1,23 @@
 package com.coffee.lowland.DTO.response.order;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@Entity
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class GetOrderDetailsResponse {
+    @Id
+    String orderDetailsId;
     int quantity;
-    float price;
-    float totalMoney;
+    Double price;
+    Double totalMoney;
     String productName;
     String imageUrl;
     String sizeName;

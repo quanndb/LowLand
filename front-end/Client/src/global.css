@@ -14,6 +14,24 @@
 
   --background-color: #d5d5d534;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a27d72;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9b6b5c;
+}
+
 .css-lfwcke-MuiTabs-flexContainer {
   align-items: center;
 }

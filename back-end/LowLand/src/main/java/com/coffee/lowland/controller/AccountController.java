@@ -1,11 +1,14 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.request.account.ChangeAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
+import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
+import com.coffee.lowland.DTO.request.order.UpdateOrderRequest;
 import com.coffee.lowland.DTO.response.APIResponse;
 import com.coffee.lowland.model.Account;
 import com.coffee.lowland.service.Account.AccountService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.coffee.lowland.service.Order.OrderService;
+import com.coffee.lowland.service.Utilities.JSONMapper;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,57 +20,115 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
 
     AccountService accountService;
+    OrderService orderService;
 
-    @GetMapping("")
-    public APIResponse<?> getAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                 @RequestParam(required = false, defaultValue = "10") int size,
-                                 @RequestParam(required = false, defaultValue = "") String query){
+    @GetMapping
+    public APIResponse<?> getAccounts(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "") String sortedBy,
+            @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
+            @RequestParam(required = false, defaultValue = "") String query,
+            @RequestParam(required = false, defaultValue = "") String role) {
         return APIResponse.builder()
                 .code(2000)
-                .result(accountService.getAll(page,size,query))
+                .result(accountService.getAccounts(page, size, sortedBy, sortDirection, query, role))
                 .build();
     }
-    @PostMapping("/user-info")
-    public APIResponse<?> changeAccountInfo(@RequestBody ChangeAccountRequest request){
+
+    @GetMapping("/{accountId}")
+    public APIResponse<?> getAccountById(@PathVariable String accountId) {
         return APIResponse.builder()
                 .code(2000)
-                .result(accountService.changeAccountInfo(request))
+                .result(accountService.getAccountById(accountId))
+                .build();
+    }
+
+    @PostMapping
+    public APIResponse<?> createAccount(@RequestBody Account account) {
+        return APIResponse.builder()
+                .code(2000)
+                .result(accountService.createAccount(account))
                 .build();
     }
 
     @DeleteMapping("/{accountId}")
-    public APIResponse<?> delete(@PathVariable String accountId){
+    public APIResponse<?> deleteAccount(@PathVariable String accountId) {
         return APIResponse.builder()
                 .code(2000)
                 .result(accountService.deleteAccount(accountId))
                 .build();
     }
 
-    @PostMapping("/new-account")
-    public APIResponse<?> createAccount(@RequestBody Account request){
+    @PostMapping("/{accountId}")
+        public APIResponse<?> updateAccount(
+            @RequestParam(value = "userInfo", required = false) String userInfo,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @PathVariable String accountId) throws IOException {
+
+        UpdateAccountRequest updateRequest = new JSONMapper<>(UpdateAccountRequest.class)
+                .JSONToObject(userInfo);
+
         return APIResponse.builder()
                 .code(2000)
-                .result(accountService.createAccount(request))
+                .result(accountService.updateAccount(accountId, updateRequest, image))
                 .build();
     }
 
-    @PostMapping("/profile")
-    public APIResponse<?> updateAccount(@RequestParam(required = false, value = "userInfo")
-                                            String userInfo,
-                                        @RequestParam(required = false, value = "image")
-                                            MultipartFile image )
-            throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-
+    @GetMapping("/{accountId}/orders")
+    public APIResponse<?> getOrders(@PathVariable String accountId,
+                                    @RequestParam(required = false, defaultValue = "1") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size,
+                                    @RequestParam(required = false, defaultValue = "") String query,
+                                    @RequestParam(required = false, defaultValue = "") String sortedBy,
+                                    @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
+                                    @RequestParam(required = false, defaultValue = "") Integer status) {
         return APIResponse.builder()
                 .code(2000)
-                .result(accountService
-                        .updateAccount(objectMapper
-                                .readValue(userInfo, UpdateAccountRequest.class),image))
+                .result(orderService.getOrders(page, size, query, sortedBy, sortDirection, status, accountId))
+                .build();
+    }
+
+    @GetMapping("/{accountId}/orders/{orderId}")
+    public APIResponse<Object> getOrderDetails(@PathVariable String accountId, @PathVariable String orderId) {
+        return APIResponse.builder()
+                .code(2000)
+                .result(orderService.getOrderDetails(accountId, orderId))
+                .build();
+    }
+
+    @PostMapping("/{accountId}/orders")
+    public APIResponse<String> createOrder(
+            @PathVariable String accountId,
+            @RequestBody @Valid CreateOrderRequest request) {
+        return APIResponse.<String>builder()
+                .code(2000)
+                .message("Order created successfully!")
+                .result(orderService.createOrder(accountId, request))
+                .build();
+    }
+
+    @PutMapping("/{accountId}/orders/{orderId}")
+    public APIResponse<?> updateOrder(@PathVariable String accountId,
+                                      @PathVariable String orderId,
+                                      @RequestBody @Valid UpdateOrderRequest request) {
+        return APIResponse.builder()
+                .code(2000)
+                .result(orderService.updateOrder(accountId, orderId, request))
+                .build();
+    }
+
+    @PutMapping("/{accountId}/{orderId}/cancel")
+    public APIResponse<String> cancelOrder(@PathVariable String accountId,
+                                           @PathVariable String orderId,
+                                           @RequestBody(required = false) String note) {
+        return APIResponse.<String>builder()
+                .code(2000)
+                .result(orderService.cancelOrder(accountId, orderId, note))
                 .build();
     }
 }

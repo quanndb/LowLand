@@ -2,10 +2,9 @@ package com.coffee.lowland.DTO.response.order;
 
 import com.coffee.lowland.model.Order;
 import com.coffee.lowland.model.OrderDetails;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -14,21 +13,27 @@ import java.util.List;
 
 @Getter
 @Setter
+@Entity
+@RequiredArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class GetOrdersResponse {
+    @Id
     String orderId;
-    int orderCode;
+    Integer orderCode;
     String customerName;
     String phoneNumber;
     String address;
     LocalDateTime createdDate;
     String createdBy;
+    String productId;
     String productName;
     String sizeName;
-    int quantity;
-    float price;
-    float totalMoney;
+    Integer quantity;
+    Double price;
+    Double totalMoney;
+    String imageName;
     String imageUrl;
     int status;
 }

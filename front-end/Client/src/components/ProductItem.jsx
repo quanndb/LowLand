@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import ProductImage from "./ProductImage";
 
 import { useRouter } from "src/routes/hooks";
+import { formatPrice } from "src/utils/format-number";
 
 const ProductItem = ({
   sx,
@@ -10,7 +11,7 @@ const ProductItem = ({
   name,
   originalPrices,
   salePrices,
-  isSale,
+  isActive,
   id,
 }) => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const ProductItem = ({
       onClick={() => router.push(`/products/${id}`)}
     >
       <ProductImage
-        isSale={isSale}
+        isActive={isActive}
         imageURL={imageURL}
         sx={{ width: "100%", height: "400px", position: "relative" }}
       />
@@ -35,35 +36,34 @@ const ProductItem = ({
         {name}
       </Typography>
 
-      {isSale ? (
-        <Typography
-          sx={{ textAlign: "center", marginTop: "30px", marginBottom: "30px" }}
-        >
-          <span style={{ color: "#a25f4b", fontSize: "18px" }}>
-            {salePrices}
-            <sup>đ</sup>
-          </span>
+      <Typography
+        sx={{
+          textAlign: {
+            md: "left",
+            xs: "center",
+          },
+          marginTop: "30px",
+          marginBottom: "30px",
+        }}
+      >
+        <span style={{ color: "#a25f4b", fontSize: "25px" }}>
+          {formatPrice(originalPrices || 0)}
+          <sup>đ</sup>
+        </span>
+        {isActive && (
           <span
             style={{
               textDecoration: "line-through",
               color: "gray",
               fontSize: "13px",
+              marginLeft: "10px",
             }}
           >
-            {originalPrices}
+            {formatPrice(salePrices || 0)}
             <sup>đ</sup>
           </span>
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ textAlign: "center", marginTop: "30px", marginBottom: "30px" }}
-        >
-          <span style={{ color: "#a25f4b", fontSize: "18px" }}>
-            {originalPrices}
-            <sup>đ</sup>
-          </span>
-        </Typography>
-      )}
+        )}
+      </Typography>
     </Box>
   );
 };

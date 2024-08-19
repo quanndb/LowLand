@@ -59,18 +59,22 @@ const DefaultLayout = ({ children, notShowHeader, title }) => {
           justifyContent: "space-between",
         }}
       >
-        {!notShowHeader ? <Header /> : <SideHeader title={title} />}
         <Box
           sx={{
-            paddingTop: "100px",
             display: "flex",
-            justifyContent: "center",
             flexDirection: "column",
+            justifyContent: "space-between",
+            backgroundColor: "var(--background-color)",
+            height: "100%",
+            minHeight: "100vh",
           }}
         >
-          {children}
+          {!notShowHeader ? <Header /> : <SideHeader title={title} />}
+          <Container sx={{ mt: "80px" }} disableGutters>
+            {children}
+          </Container>
+          <Footer />
         </Box>
-        <Footer />
       </Container>
     </Suspense>
   );

@@ -1,8 +1,8 @@
 import axios from "src/services";
 
 const accountAPI = {
-  update: (params) => {
-    const url = "/accounts/profile";
+  update: (accountId, params) => {
+    const url = "/accounts/" + accountId;
     return axios.post(url, params, {
       headers: {
         "Content-Type": "multipart/form-data",

@@ -1,5 +1,6 @@
 package com.coffee.lowland.DTO.request.order;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CancelPaymentRequest {
+    @NotNull(message = "ORDER_FIELD_NOT_BE_BLANK")
     int orderCode;
     String reason;
 }

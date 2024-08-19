@@ -17,7 +17,7 @@ export const SwiperProducts = ({ list }) => {
                 <SwiperSlide key={item.productId}>
                   <ProductItem
                     imageURL={item.imageUrl}
-                    isSale={false}
+                    isActive={item.isActive}
                     name={item.productName}
                     salePrices={formatPrice(item.price)}
                     originalPrices={formatPrice(item.price)}

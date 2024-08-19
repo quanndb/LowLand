@@ -86,7 +86,9 @@ public class TokenService {
         var verified = signedJWT.verify(verifier);
 
         try{
-            if (!(verified && expiryTime.after(new Date()))) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
+            if (!(verified && expiryTime.after(new Date()))) {
+                throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
+            }
 
             boolean isLogout = tokenRepository.findById(signedJWT.getJWTClaimsSet().getJWTID())
                     .orElseThrow(() -> new AppExceptions(ErrorCode.UNAUTHENTICATED)).isLogout();

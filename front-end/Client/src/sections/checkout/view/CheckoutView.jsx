@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import {
@@ -13,255 +13,47 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
-  Grid,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 
 import { cart } from "src/redux/selectors/CartSelector";
-import { user } from "src/redux/selectors/UserSelector";
-import CartManagerSlice from "src/redux/slices/CartManagerSlice";
 
 import SideLayout from "src/layouts/sideLayout";
-import Image from "src/components/Image";
 import { useRouter } from "src/routes/hooks";
-import { formatPrice } from "src/utils/format-number";
-import orderAPI from "src/services/API/orderAPI";
 import payAPI from "src/services/API/payAPI";
-
-const ProductTable = ({ products }) => {
-  return (
-    <TableContainer component={Paper} sx={{ maxHeight: "645px" }}>
-      <Table
-        sx={{ minWidth: 700, position: "relative" }}
-        aria-label="spanning table"
-      >
-        <TableHead
-          sx={{ backgroundColor: "#f1f1f1", position: "sticky", top: 0 }}
-        >
-          <TableRow>
-            <TableCell align="center" colSpan={4}>
-              Products
-            </TableCell>
-            <TableCell align="center" colSpan={2}>
-              Details
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="center">Image</TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Size</TableCell>
-            <TableCell align="left">Price</TableCell>
-            <TableCell align="left">Quantity</TableCell>
-            <TableCell align="left">Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell sx={{ display: "flex", justifyContent: "center" }}>
-                <Image
-                  imageURL={product.imageURL}
-                  sx={{ height: 100, width: 100 }}
-                  unShowOverlay={true}
-                />
-              </TableCell>
-              <TableCell align="left">{product.productName}</TableCell>
-              <TableCell align="left">{product.size}</TableCell>
-              <TableCell align="left">{formatPrice(product.price)}</TableCell>
-              <TableCell align="left">{product.quantity}</TableCell>
-              <TableCell align="left">
-                {formatPrice(product.price * product.quantity)}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-};
-
-const SubmitOrder = ({ data, setOpen, userData, setOrderId }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
-  const [order, setOrder] = useState({
-    customerName: userData.customerName,
-    phoneNumber: userData.phoneNumber,
-    address: userData.address,
-    items: data.map((product) => ({
-      productDetailsId: product.productDetailsId,
-      quantity: product.quantity,
-    })),
-    message: "",
-  });
-
-  useEffect(() => {
-    setOrder((order) => ({
-      ...order,
-      customerName: userData.customerName,
-      phoneNumber: userData.phoneNumber,
-      address: userData.address,
-    }));
-  }, [userData]);
-
-  const caculateSubtotal = () => {
-    const result = data.reduce((total, product) => {
-      return total + product.price * product.quantity;
-    }, 0);
-    return result;
-  };
-
-  const caculateTax = () => {
-    return caculateSubtotal() * 0.1;
-  };
-
-  const handleOrder = () => {
-    setIsLoading(true);
-    orderAPI
-      .createOrder(order)
-      .then((res) => {
-        setOrderId(res);
-        toast.success("Create your order successfully");
-        dispatch(CartManagerSlice.actions.clearCart());
-        setOpen(true);
-      })
-      .catch((err) => {
-        toast.error(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  return (
-    <>
-      <Grid
-        container
-        sx={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Grid item sm={6}>
-          <Box sx={{ display: "flex", alignItems: "end" }}>
-            <Typography sx={{ fontWeight: "600", fontSize: "20px", mr: 3 }}>
-              Message:
-            </Typography>
-            <TextField
-              label="Message for us"
-              variant="standard"
-              value={order.message}
-              onChange={(e) => setOrder({ ...order, message: e.target.value })}
-            />
-          </Box>
-          <Typography sx={{ mt: 2, fontSize: "14px" }}>
-            Clicking "Order" means you agree to our{" "}
-            <Typography component={"a"} color={"secondary"} href="#">
-              Terms & Conditions.
-            </Typography>
-          </Typography>
-        </Grid>
-        <Grid item sm={4} xs={12} sx={{ mt: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <Typography sx={{ fontSize: "20px", mr: 3 }}>Subtotal</Typography>
-            <Typography textAlign={"right"}>
-              {formatPrice(caculateSubtotal())}
-              <sup>₫</sup>
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              mt: 1,
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography sx={{ fontSize: "20px", mr: 3 }}>Tax (10%)</Typography>
-            <Typography textAlign={"right"}>
-              {formatPrice(caculateTax())}
-              <sup>₫</sup>
-            </Typography>
-          </Box>
-          <Divider sx={{ my: 1, borderBottomWidth: "2px" }} />
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              mt: 1,
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography sx={{ fontSize: "20px", mr: 3 }}>Total</Typography>
-            <Typography
-              textAlign={"right"}
-              color={"secondary"}
-              sx={{ fontWeight: "600", fontSize: "20px" }}
-            >
-              {formatPrice(caculateSubtotal() + caculateTax())}
-              <sup>₫</sup>
-            </Typography>
-          </Box>
-          <Button
-            color="secondary"
-            variant="contained"
-            sx={{ my: 2, width: "100%" }}
-            onClick={handleOrder}
-          >
-            Order
-          </Button>
-        </Grid>
-      </Grid>
-      <Dialog open={isLoading}>
-        <Box sx={{ p: 3 }}>
-          <CircularProgress />
-        </Box>
-      </Dialog>
-    </>
-  );
-};
+import ProductTable from "../ProductTable";
+import { user } from "src/redux/selectors/UserSelector";
+import OrderForm from "../OrderForm";
+import { useMutation } from "@tanstack/react-query";
 
 const OrderPayment = ({ open, orderId }) => {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleClose = () => {
     router.replace("/user");
   };
 
+  const { mutate: createPaymentLink, isPending } = useMutation({
+    mutationKey: ["pay", { orderId: orderId }],
+    mutationFn: (oid) => payAPI.createPaymentLink(oid),
+  });
+
   const handlePay = () => {
-    setLoading(true);
-    payAPI
-      .createPaymentLink(orderId)
-      .then((res) => {
+    createPaymentLink(orderId, {
+      onSuccess: (res) => {
         window.open(res, "_blank");
-      })
-      .catch((err) => {
-        toast.error(err);
-      })
-      .finally(() => {
         router.replace("/user");
-        setLoading(false);
-      });
+      },
+    });
   };
 
   return (
     <Dialog open={open}>
-      {loading ? (
+      {isPending ? (
         <Box sx={{ p: 3 }}>
           <CircularProgress />
         </Box>
@@ -295,6 +87,8 @@ const CheckoutView = () => {
   const [phoneNumber, setPhoneNumber] = useState(data.phoneNumber);
   const [address, setAddress] = useState(data.address);
 
+  const [attempt, setAttempt] = useState(false);
+
   const [open, setOpen] = useState(false);
 
   const [orderId, setOrderId] = useState(0);
@@ -321,10 +115,11 @@ const CheckoutView = () => {
                 mt: 1,
                 display: "flex",
                 flexWrap: "wrap",
-                alignItems: "center",
+                alignItems: "start",
+                width: "100%",
               }}
             >
-              <Box sx={{ mr: 3 }}>
+              <Box sx={{ mr: 3, width: { xs: "100%", lg: "250px" } }}>
                 <Typography sx={{ fontWeight: "600", mr: 3 }}>
                   Customer name:{" "}
                 </Typography>
@@ -332,9 +127,16 @@ const CheckoutView = () => {
                   color={"secondary"}
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
+                  error={attempt && !customerName}
+                  helperText={
+                    attempt && !customerName
+                      ? "Please enter receiver's name"
+                      : ""
+                  }
+                  sx={{ width: "100%" }}
                 ></TextField>
               </Box>
-              <Box sx={{ mr: 3 }}>
+              <Box sx={{ mr: 3, width: { xs: "100%", lg: "200px" } }}>
                 <Typography sx={{ fontWeight: "600", mr: 3 }}>
                   Phone numer:{" "}
                 </Typography>
@@ -342,16 +144,26 @@ const CheckoutView = () => {
                   color={"secondary"}
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
+                  error={attempt && !phoneNumber}
+                  helperText={
+                    attempt && !phoneNumber
+                      ? "Please enter receiver's phone number"
+                      : ""
+                  }
+                  sx={{ width: "100%" }}
                 ></TextField>
               </Box>
-              <Box>
-                <Typography sx={{ fontWeight: "600", mr: 3 }}>
-                  Address:{" "}
-                </Typography>
+              <Box sx={{ mr: 3, width: { xs: "100%", lg: "350px" } }}>
+                <Typography sx={{ fontWeight: "600" }}>Address: </Typography>
                 <TextField
                   color={"secondary"}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
+                  error={attempt && !address}
+                  helperText={
+                    attempt && !address ? "Please enter receiver's address" : ""
+                  }
+                  sx={{ width: "100%" }}
                 ></TextField>
               </Box>
             </Box>
@@ -371,7 +183,8 @@ const CheckoutView = () => {
         </Paper>
 
         <Paper sx={{ p: 3, mt: 3 }}>
-          <SubmitOrder
+          <OrderForm
+            setAttempt={setAttempt}
             data={products}
             setOpen={setOpen}
             userData={{

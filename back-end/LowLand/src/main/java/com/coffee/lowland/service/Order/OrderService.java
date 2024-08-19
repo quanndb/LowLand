@@ -1,8 +1,9 @@
 package com.coffee.lowland.service.Order;
 
-import com.coffee.lowland.DTO.MaterialDTO;
 import com.coffee.lowland.DTO.request.order.*;
 
+import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.PageServiceResponse;
 import com.coffee.lowland.DTO.response.order.GetOrderDetailsResponse;
 import com.coffee.lowland.DTO.response.order.GetOrderResponse;
 import com.coffee.lowland.DTO.response.order.GetOrdersResponse;
@@ -10,34 +11,28 @@ import com.coffee.lowland.DTO.response.order.PayResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.OrderMapper;
-import com.coffee.lowland.model.Account;
 import com.coffee.lowland.model.Order;
-import com.coffee.lowland.model.OrderDetails;
 import com.coffee.lowland.JPA.repository.OrderDetailsRepository;
 import com.coffee.lowland.JPA.repository.OrderRepository;
 import com.coffee.lowland.JPA.repository.ProductDetailsRepository;
-import com.coffee.lowland.service.Account.AccountService;
 import com.coffee.lowland.service.Pay.PayService;
-import com.coffee.lowland.service.Product.MaterialService;
-import com.coffee.lowland.service.Utilities.DateService;
+import com.coffee.lowland.service.Utilities.PageService;
 import com.coffee.lowland.service.Utilities.RandomCodeService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.StoredProcedureQuery;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-@Slf4j
 public class OrderService {
     OrderRepository orderRepository;
     OrderDetailsRepository orderDetailsRepository;
@@ -46,52 +41,57 @@ public class OrderService {
     RandomCodeService randomCodeService;
     OrderDetailsService orderDetailsService;
     PayService payService;
-    DateService dateService;
-    AccountService accountService;
-    MaterialService _materialService;
-
+    PageService<GetOrdersResponse> pageService;
 
     @Transactional
-    public List<GetOrdersResponse> getOrders() {
-        List<Object[]> orders = orderRepository.spGetAllOrders("");
-        return getOrdersMapper(orders);
+    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
+            "or @securityService.isOwner(authentication, #userId)")
+    public PageServiceResponse<GetOrdersResponse> getOrders(Integer page, Integer size, String query,
+                                                            String sortedBy, String sortDirection,
+                                                            Integer status, String userId) {
+        StoredProcedureQuery store = pageService
+                .prepareStatement("spGetOrdersByPage", GetOrdersResponse.class,
+                        page, size, query, sortedBy, sortDirection);
+        pageService.addField(store, "status", Integer.class, status);
+        pageService.addField(store, "account_id", String.class, userId);
+        return pageService.pageResponse(store);
     }
 
-    @Transactional
-    public List<GetOrdersResponse> getMyOrders() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Account foundAccount = accountService.findAccountByEmail(username);
-        List<Object[]> orders = orderRepository.spGetAllOrders(foundAccount.getAccountId());
-        return getOrdersMapper(orders);
-    }
-
-    public String createOrder(CreateOrderRequest request){
+    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
+            "or @securityService.isOwner(authentication, #accountId)")
+    @SuppressWarnings("unused")
+    public String createOrder(String accountId, CreateOrderRequest request){
         Order newOrder = orderMapper.toOrder(request);
-        String accountId = accountService.findAccountByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getAccountId();
+        String createdUser = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
         newOrder.setAccountId(accountId);
         newOrder.setOrderCode(randomCodeService.generateCode());
         newOrder.setCreatedDate(LocalDateTime.now());
-        newOrder.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-        newOrder = orderRepository.save(newOrder);
-        List<OrderDetails> listOrderDetails = request.getItems();
-        for(OrderDetails item : listOrderDetails){
-            item.setOrderId(newOrder.getOrderId());
-            Double PDPrice = productDetailsRepository.findById(item.getProductDetailsId())
-                            .orElseThrow(()->new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND))
-            .getPrice();
-            item.setTotalMoney(PDPrice*item.getQuantity());
+        newOrder.setCreatedBy(createdUser);
+        Order savedOrder = orderRepository.save(newOrder);
+
+        // Process order details
+        request.getItems().forEach(item -> {
+            item.setOrderId(savedOrder.getOrderId());
+            Double price = productDetailsRepository.findById(item.getProductDetailsId())
+                    .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND))
+                    .getPrice();
+            item.setTotalMoney(price * item.getQuantity());
             orderDetailsRepository.save(item);
-        }
+        });
         return newOrder.getOrderId();
     }
 
-    public String cancelOrder(CancelOrderRequest request){
-        Order foundOrder = orderRepository.findById(request.getOrderId())
+    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
+            "or @securityService.isOwner(authentication, #userId)")
+    @SuppressWarnings("unused")
+    public String cancelOrder(String userId, String orderId, String request){
+        Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         if(foundOrder.getStatus()!=0){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
-        orderMapper.cancelOrder(foundOrder,request);
+        foundOrder.setNote(request);
         foundOrder.setStatus(3);
         orderRepository.save(foundOrder);
         if(foundOrder.getPaymentLink()!=null){
@@ -99,13 +99,16 @@ public class OrderService {
                     CancelPaymentRequest.builder()
                             .reason(foundOrder.getNote())
                             .orderCode(foundOrder.getOrderCode())
-                            .build()).block();
+                            .build());
         }
         return "Your order has been cancelled successfully!";
     }
 
-    public Order updateOrder(UpdateOrderRequest request){
-        Order foundOrder = orderRepository.findById(request.getOrderId())
+    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
+            "or @securityService.isOwner(authentication, #userId)")
+    @SuppressWarnings("unused")
+    public Order updateOrder(String userId, String orderId, UpdateOrderRequest request){
+        Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         if(foundOrder.getStatus()!=0){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
@@ -118,14 +121,15 @@ public class OrderService {
     }
 
     @Transactional
-    public Order manageOrder(ApproveOrderRequest request){
-        Order foundOrder = orderRepository.findById(request.getOrderId())
+    @PreAuthorize("hasRole('ADMIN')")
+    public Order approveOrder(String orderId, ApproveOrderRequest request){
+        Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         if(request.getStatus()==1 ||
                 foundOrder.getStatus()==3){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
-        int Status = request.getStatus();
+//        int Status = request.getStatus();
 //
 //        if(Status==2){
 //            UpdateQuantityMaterial(request.getOrderId());
@@ -138,19 +142,9 @@ public class OrderService {
     }
 
     public String payResult(Object request) {
-        Object result = Objects.requireNonNull(payService.verifyPayment(request).block()).getResult();
-        PayResponse res;
-        if (result instanceof LinkedHashMap) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                res = mapper.convertValue(result, PayResponse.class);
-            } catch (IllegalArgumentException e) {
-                throw new ClassCastException("Cannot cast LinkedHashMap to PayResponse: " + e.getMessage());
-            }
-        } else {
-            throw new ClassCastException("Cannot cast result of type " + result.getClass().getName() + " to PayResponse");
-        }
-        Optional<Order> foundOrder = orderRepository.findByOrderCode(res.getOrderCode());
+        APIResponse<PayResponse> res= payService.verifyPayment(request);
+
+        Optional<Order> foundOrder = orderRepository.findByOrderCode(res.getResult().getOrderCode());
 
         Order order = foundOrder.orElseThrow(() -> new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         order.setStatus(1);
@@ -158,7 +152,11 @@ public class OrderService {
         return "Payment success";
     }
 
-    public GetOrderResponse getOrder(String orderId) {
+
+    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
+            "or @securityService.isOwner(authentication, #userId)")
+    @SuppressWarnings("unused")
+    public GetOrderResponse getOrderDetails(String userId, String orderId) {
          Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         List<GetOrderDetailsResponse> items = orderDetailsService.getOrderDetailsByOrderId(foundOrder.getOrderId());
@@ -167,30 +165,6 @@ public class OrderService {
         return res;
     }
 
-    public List<GetOrdersResponse> getOrdersMapper(List<Object[]> request){
-        List<GetOrdersResponse> res = new ArrayList<>();
-        for(Object[] item : request){
-            res.add(
-                    GetOrdersResponse.builder()
-                            .orderId((String)item[0])
-                            .orderCode((Integer)item[1])
-                            .customerName((String)item[2])
-                            .phoneNumber((String)item[3])
-                            .address((String)item[4])
-                            .createdDate(dateService.toLocalDateTime(item[5].toString()))
-                            .createdBy((String)item[6])
-                            .productName((String)item[7])
-                            .sizeName((String)item[8])
-                            .quantity((Integer)item[9])
-                            .price(((BigDecimal)item[10]).floatValue())
-                            .totalMoney(((BigDecimal)item[11]).floatValue())
-                            .imageUrl((String)item[12])
-                            .status((int)item[13])
-                            .build()
-            );
-        }
-        return res;
-    }
 
 
     //Update lại số lượng trong Material

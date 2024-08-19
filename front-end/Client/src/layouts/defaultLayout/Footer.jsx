@@ -78,6 +78,7 @@ const ContactFooter = () => {
             callBack={() => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
+            ariaLabel={"logo"}
           >
             <Image
               unShowOverlay={true}

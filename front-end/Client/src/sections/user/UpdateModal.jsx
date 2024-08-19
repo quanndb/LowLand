@@ -23,15 +23,15 @@ import {
   Grid,
 } from "@mui/material";
 
-import LoadingManagerSlice from "src/redux/slices/LoadingManagerSlice";
-import { loading } from "src/redux/selectors/LoadingSelector";
-
 import Image from "src/components/Image";
 import { useRouter } from "src/routes/hooks";
 import { formatPrice } from "src/utils/format-number";
 
 import payAPI from "src/services/API/payAPI";
 import orderAPI from "src/services/API/orderAPI";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { is } from "date-fns/locale";
+import LoadingComp from "src/components/LoadingComp";
 
 const ProductTable = ({ products }) => {
   return (
@@ -85,58 +85,14 @@ const ProductTable = ({ products }) => {
   );
 };
 
-const ModalContent = ({
-  open,
-  handleClose,
-  order,
-  updateOrder,
-  setIsLoading,
-}) => {
-  const dispatch = useDispatch();
+const ModalContent = ({ handleClose, order, userId, refetch }) => {
   const [updatedOrder, setUpdatedOrder] = useState({
-    orderId: "",
-    orderCode: "",
-    customerName: "",
-    phoneNumber: "",
-    address: "",
-    createdDate: "",
-    createdBy: "",
-    status: 0,
-    updatedDate: "",
-    updatedBy: "",
-    paymentLink: "",
-    note: "",
-    message: "",
-    items: [],
+    customerName: order?.customerName,
+    phoneNumber: order?.phoneNumber,
+    address: order?.address,
+    message: order?.message,
+    paymentLink: order?.paymentLink,
   });
-  const router = useRouter();
-  useEffect(() => {
-    if (open) {
-      dispatch(LoadingManagerSlice.actions.setLoading(true));
-      orderAPI
-        .getOrderDetails(order)
-        .then((res) => {
-          setUpdatedOrder({
-            orderId: res.orderId ? res.orderId : "",
-            orderCode: res.orderCode ? res.orderCode : "",
-            customerName: res.customerName ? res.customerName : "",
-            phoneNumber: res.phoneNumber ? res.phoneNumber : "",
-            address: res.address ? res.address : "",
-            createdDate: res.createdDate ? res.createdDate : "",
-            createdBy: res.createdBy ? res.createdBy : "",
-            status: res.status,
-            updatedDate: res.updatedDate ? res.updatedDate : "",
-            updatedBy: res.updatedBy ? res.updatedBy : "",
-            paymentLink: res.paymentLink ? res.paymentLink : "",
-            note: res.note ? res.note : "",
-            message: res.message ? res.message : "",
-            items: res.items ? res.items : [],
-          });
-        })
-        .catch((error) => toast.error(error))
-        .finally(() => dispatch(LoadingManagerSlice.actions.setLoading(false)));
-    }
-  }, [order]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -145,13 +101,24 @@ const ModalContent = ({
       [name]: value,
     }));
   };
+
   const handleSubmit = () => {
     handleUpdate();
     handleClose();
   };
 
+  const { mutate: updateOrder, isPending: isPendingUpdate } = useMutation({
+    mutationKey: ["order", { orderId: order.orderId }],
+    mutationFn: (oid) => orderAPI.updateOrder(userId, oid, updatedOrder),
+  });
+
   const handleUpdate = () => {
-    updateOrder(updatedOrder);
+    updateOrder(order.orderId, {
+      onSuccess: (res) => {
+        toast.success("Update order successfully!");
+        refetch();
+      },
+    });
   };
 
   const orderStatus = {
@@ -175,36 +142,37 @@ const ModalContent = ({
 
   const caculateTotal = () => {
     let total = 0;
-    updatedOrder.items.forEach((item) => {
+    order.items.forEach((item) => {
       total += item.price * item.quantity;
     });
     return total;
   };
 
+  const { mutate: createPaymentLink, isPending: isPendingPayment } =
+    useMutation({
+      mutationKey: ["payment", { orderId: order.orderId }],
+      mutationFn: (oid) => payAPI.createPaymentLink(oid),
+    });
+
   const handlePay = () => {
-    if (updatedOrder.status === 0) {
-      if (updatedOrder.paymentLink) {
-        window.open(updatedOrder.paymentLink, "_blank");
-      } else {
-        setIsLoading(true);
-        payAPI
-          .createPaymentLink(order)
-          .then((res) => {
-            window.open(res, "_blank");
-            setUpdatedOrder((prevOrder) => ({
-              ...prevOrder,
-              paymentLink: res,
-            }));
-            setIsLoading(false);
-          })
-          .catch((error) => toast.error(error));
-      }
+    if (updatedOrder?.paymentLink) {
+      window.open(updatedOrder.paymentLink, "_blank");
+    } else {
+      createPaymentLink(order.orderId, {
+        onSuccess: (res) => {
+          window.open(res, "_blank");
+          setUpdatedOrder((prevOrder) => ({
+            ...prevOrder,
+            paymentLink: res,
+          }));
+        },
+      });
     }
   };
 
   return (
-    <>
-      <DialogTitle>Order #{updatedOrder.orderCode}</DialogTitle>
+    <LoadingComp isLoading={isPendingPayment || isPendingUpdate}>
+      <DialogTitle>Order #{order.orderCode}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item sx={{ width: "100%" }} md={6}>
@@ -214,7 +182,7 @@ const ModalContent = ({
               label="Customer Name"
               fullWidth
               value={updatedOrder.customerName}
-              disabled={updatedOrder.status !== 0}
+              disabled={order.status !== 0}
               onChange={handleChange}
               sx={{ mr: 2 }}
             />
@@ -226,7 +194,7 @@ const ModalContent = ({
               label="Phone Number"
               fullWidth
               value={updatedOrder.phoneNumber}
-              disabled={updatedOrder.status !== 0}
+              disabled={order.status !== 0}
               onChange={handleChange}
             />
           </Grid>
@@ -237,7 +205,7 @@ const ModalContent = ({
           label="Address"
           fullWidth
           value={updatedOrder.address}
-          disabled={updatedOrder.status !== 0}
+          disabled={order.status !== 0}
           onChange={handleChange}
         />
         <TextField
@@ -246,7 +214,7 @@ const ModalContent = ({
           label="Message"
           fullWidth
           value={updatedOrder.message}
-          disabled={updatedOrder.status !== 0}
+          disabled={order.status !== 0}
           onChange={handleChange}
         />
         <Grid container spacing={2}>
@@ -257,7 +225,7 @@ const ModalContent = ({
               name="createdDate"
               label="Created Date"
               fullWidth
-              value={updatedOrder.createdDate}
+              value={order.createdDate}
               onChange={handleChange}
               disabled
               sx={{ mr: 2 }}
@@ -269,7 +237,7 @@ const ModalContent = ({
               name="createdBy"
               label="Created By"
               fullWidth
-              value={updatedOrder.createdBy}
+              value={order.createdBy}
               onChange={handleChange}
               disabled
               sx={{ mr: 2 }}
@@ -283,10 +251,10 @@ const ModalContent = ({
                   padding: "8px 40px",
                   color: "white",
                   fontWeight: "600",
-                  backgroundColor: `${orderStatus[updatedOrder.status].color}`,
+                  backgroundColor: `${orderStatus[order.status].color}`,
                 }}
               >
-                {orderStatus[updatedOrder.status].name}
+                {orderStatus[order.status].name}
               </Typography>
             </Box>
           </Grid>
@@ -298,11 +266,11 @@ const ModalContent = ({
           name="note"
           label="Note"
           fullWidth
-          value={updatedOrder.note}
+          value={order.note}
           disabled
           onChange={handleChange}
         />
-        <ProductTable products={updatedOrder.items} />
+        <ProductTable products={order.items} />
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Box sx={{ mt: 2, px: 2 }}>
             <Typography variant="h6" textAlign={"right"} fontWeight={500}>
@@ -334,7 +302,7 @@ const ModalContent = ({
               sx={{ mt: 2, width: "100%" }}
               variant="contained"
               onClick={handlePay}
-              disabled={updatedOrder.status !== 0}
+              disabled={order.status !== 0}
               color="success"
             >
               Pay now
@@ -351,33 +319,42 @@ const ModalContent = ({
           onClick={handleSubmit}
           variant="contained"
           color="error"
-          disabled={updatedOrder.status !== 0}
+          disabled={order.status !== 0}
         >
           Update
         </Button>
       </DialogActions>
-    </>
+    </LoadingComp>
   );
 };
 
-const UpdateModal = ({ open, handleClose, order, orderList, updateOrder }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const loadingState = useSelector(loading);
+const UpdateModal = ({ open, handleClose, userId, orderId, refetch }) => {
+  const {
+    data: orderDetails,
+    isFetching: isFetchingOrder,
+    isError,
+  } = useQuery({
+    queryKey: ["order", orderId],
+    queryFn: () => orderAPI.getOrderDetails(userId, orderId),
+    enabled: open,
+    refetchOnWindowFocus: false,
+  });
+
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xl">
-      {isLoading ? (
+    <Dialog open={open && !isError} onClose={handleClose} maxWidth="xl">
+      {isFetchingOrder ? (
         <Box sx={{ p: 3 }}>
           <CircularProgress />
         </Box>
       ) : (
-        <ModalContent
-          open={open}
-          order={order}
-          handleClose={handleClose}
-          setIsLoading={setIsLoading}
-          orderList={orderList}
-          updateOrder={updateOrder}
-        />
+        !isError && (
+          <ModalContent
+            order={orderDetails}
+            handleClose={handleClose}
+            userId={userId}
+            refetch={refetch}
+          />
+        )
       )}
     </Dialog>
   );

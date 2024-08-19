@@ -1,24 +1,7 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 
 import LineBlog from "src/components/LineBlog";
-
-const SectionTitle = ({ children }) => {
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        borderBottom: "1px solid var(--secondary-color)",
-        marginBottom: "50px",
-      }}
-    >
-      <Typography
-        sx={{ padding: "20px 0px", fontWeight: "600", fontSize: "20px" }}
-      >
-        {children}
-      </Typography>
-    </Box>
-  );
-};
+import SectionTitleB from "src/components/SectionTitleB";
 
 const Category = ({ children, imgURL }) => {
   return (
@@ -60,7 +43,7 @@ const Category = ({ children, imgURL }) => {
 const BlogCategories = () => {
   return (
     <Box>
-      <SectionTitle>Categories</SectionTitle>
+      <SectionTitleB>Categories</SectionTitleB>
       <Category>Barista</Category>
       <Category>Coffee</Category>
       <Category>Lifestyle</Category>
@@ -73,7 +56,7 @@ const BlogCategories = () => {
 const Authors = () => {
   return (
     <Box>
-      <SectionTitle>Authors</SectionTitle>
+      <SectionTitleB>Authors</SectionTitleB>
       <Category imgURL={"/static/images/logo.jpg"}>Vu Minh Quan</Category>
       <Category imgURL={"/static/images/logo.jpg"}>Nguyen Anh Quan</Category>
       <Category imgURL={"/static/images/logo.jpg"}>Le Minh Khoi</Category>
@@ -110,7 +93,7 @@ const BlogMenu = () => {
     <Container sx={{ marginBottom: "80px" }}>
       <Grid container spacing={6}>
         <Grid item md={8}>
-          <SectionTitle>Lastest Blogs</SectionTitle>
+          <SectionTitleB>Lastest Blogs</SectionTitleB>
           <LineBlog
             url={"/blogs/1"}
             imageURL={"/static/images/blog1.jpg"}
@@ -168,7 +151,7 @@ const BlogMenu = () => {
           />
         </Grid>
         <Grid item md={4}>
-          <SectionTitle>About Us</SectionTitle>
+          <SectionTitleB>About Us</SectionTitleB>
 
           <DetailStore />
           <BlogCategories />

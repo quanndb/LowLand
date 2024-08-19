@@ -23,8 +23,8 @@ const ListProducts = ({ products }) => {
                   <Grid item md={4} sm={6} xs={12} key={item.productId}>
                     <ProductItem
                       id={item.productId}
-                      imageURL={item.imageUrl}
-                      isSale={false}
+                      imageURL={item?.imageUrl}
+                      isActive={item.isActive}
                       name={item.productName}
                       salePrices={formatPrice(item.price)}
                       originalPrices={formatPrice(item.price)}

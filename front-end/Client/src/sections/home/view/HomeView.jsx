@@ -56,7 +56,7 @@ const HomeView = () => {
             sx={{ mt: "50px", width: "50%" }}
             variant={"contained"}
           >
-            See more
+            See more products
           </ButtonLink>
         </Container>
       )}

@@ -4,6 +4,7 @@ import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
 import com.coffee.lowland.DTO.request.order.CreatePayRequest;
 import com.coffee.lowland.DTO.request.order.PayOrderItem;
 import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.order.PayResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.model.Order;
@@ -12,17 +13,12 @@ import com.coffee.lowland.service.Order.OrderDetailsService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,66 +26,40 @@ import java.util.Objects;
 @Slf4j
 public class PayService {
 
-    WebClient.Builder webClientBuilder;
     OrderDetailsService orderDetailsService;
     OrderRepository orderRepository;
+    PayRepo payRepo;
 
-    @NonFinal
-    @Value("${PAY_SERVER}")
-    String PAY_SERVER;
 
     public String createPaymentLink(String orderId) {
-        WebClient webClient = webClientBuilder.baseUrl(PAY_SERVER).build();
         Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
-        List<Object[]> response = orderDetailsService.getOrderDetails(orderId);
-
-        float amount = 0;
-        List<PayOrderItem> items = new ArrayList<>();
-        for (Object[] result : response) {
-            PayOrderItem item = new PayOrderItem();
-            item.setQuantity((Integer) result[0]);
-            item.setPrice(((BigDecimal) result[1]).intValue());
-            item.setName((String) result[3]);
+        if(foundOrder.getStatus() != 0) throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
+        List<PayOrderItem> response = orderDetailsService.getOrderDetailsForPay(orderId);
+        double amount = 0d;
+        for (PayOrderItem item : response) {
             amount += (item.getPrice()*item.getQuantity());
-            items.add(item);
         }
 
-        amount+= (float) (amount*0.1);
+        amount += amount * 0.1;
         CreatePayRequest req = CreatePayRequest.builder()
                 .amount((int) amount)
                 .orderCode(foundOrder.getOrderCode())
-                .items(items)
+                .items(response)
                 .build();
 
-        String payment_link = (String) Objects.requireNonNull(webClient.post()
-                .uri("/create-payment-link")
-                .bodyValue(req)
-                .retrieve()
-                .bodyToMono(APIResponse.class).block()).getResult();
+        String payment_link = (String) payRepo.createPaymentLink(req).getResult();
         foundOrder.setPaymentLink(payment_link);
         orderRepository.save(foundOrder);
 
         return payment_link;
     }
 
-    public Mono<APIResponse> cancelPaymentLink(CancelPaymentRequest requestBody) {
-        WebClient webClient = webClientBuilder.baseUrl(PAY_SERVER).build();
-
-        return webClient.post()
-                .uri("/cancel-payment")
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(APIResponse.class);
+    public APIResponse<Object> cancelPaymentLink(CancelPaymentRequest requestBody) {
+        return payRepo.cancelPaymentLink(requestBody);
     }
 
-    public Mono<APIResponse> verifyPayment(Object requestBody) {
-        WebClient webClient = webClientBuilder.baseUrl(PAY_SERVER).build();
-        return webClient.post()
-                .uri("/verify-payment")
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(APIResponse.class);
+    public APIResponse<PayResponse> verifyPayment(Object requestBody) {
+        return payRepo.verifyPayment(requestBody);
     }
-
 }

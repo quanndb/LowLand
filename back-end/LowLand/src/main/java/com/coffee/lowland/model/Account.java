@@ -32,6 +32,7 @@ public class Account {
     String address;
     @Enumerated(value = EnumType.STRING)
     Role role;
+    String imageName;
     String imageURL;
     String cloudId;
 }

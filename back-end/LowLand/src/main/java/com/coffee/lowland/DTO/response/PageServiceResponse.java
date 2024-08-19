@@ -20,5 +20,5 @@ public class PageServiceResponse<T> {
     String query;
     String sortedBy;
     String sortDirection;
-    List<?> response;
+    List<T> response;
 }

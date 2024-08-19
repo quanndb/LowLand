@@ -170,6 +170,7 @@ const Header = () => {
               fontWeight: "bold",
             }}
             onClick={handleOpenCartDrawer}
+            title="Cart"
           >
             <Badge badgeContent={quantityInCart} color="primary">
               <ShoppingCartOutlinedIcon />
@@ -179,7 +180,7 @@ const Header = () => {
           {!isMobile ? (
             <></>
           ) : (
-            <IconButton onClick={() => setShowNav(!showNav)}>
+            <IconButton onClick={() => setShowNav(!showNav)} title="Menu">
               <MenuIcon />
             </IconButton>
           )}

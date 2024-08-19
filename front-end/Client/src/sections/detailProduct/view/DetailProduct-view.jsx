@@ -17,6 +17,7 @@ import {
   Box,
   IconButton,
   Skeleton,
+  ListItem,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
@@ -41,12 +42,14 @@ import ProductSkeleton from "src/components/ProductSkeleton";
 
 const MaterialItem = ({ displayName, value, unit }) => {
   return (
-    <ListItemButton>
-      <ListItemIcon>
-        <StarBorder />
-      </ListItemIcon>
-      <ListItemText primary={`${displayName}: ${value} ${unit}`} />
-    </ListItemButton>
+    <ListItem>
+      <ListItemButton>
+        <ListItemIcon>
+          <StarBorder />
+        </ListItemIcon>
+        <ListItemText primary={`${displayName}: ${value} ${unit}`} />
+      </ListItemButton>
+    </ListItem>
   );
 };
 
@@ -131,9 +134,7 @@ const DetailProductView = ({ productData, list, isFetching }) => {
           {/* Here */}
           <Grid item md={6} xs={12}>
             {isFetching || !productData ? (
-              <Box height={"100%"}>
-                <Skeleton height={"100%"} />
-              </Box>
+              <Skeleton height={"100%"} variant="rectangular" />
             ) : (
               <CustomSwiper isProductSwipper={true}>
                 {productData?.images.map((image) => (
@@ -142,7 +143,7 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                       sx={{
                         height: {
                           xs: "360px",
-                          md: "700px",
+                          md: "460px",
                         },
                         width: "100%",
                       }}
@@ -258,32 +259,36 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                   <>
                     {productData?.sizesAndPrices?.map((size) => {
                       return (
-                        <ListItemButton
-                          key={size.productSizeId}
-                          onClick={() => setSelectedSize(size)}
-                          sx={{
-                            border: "1px solid #ccc",
-                            padding: "5px 10px",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            textAlign: "center",
-                            backgroundColor:
-                              size.productSizeId === selectedSize?.productSizeId
-                                ? "var(--secondary-color)"
-                                : "transparent",
-                            color:
-                              size.productSizeId === selectedSize?.productSizeId
-                                ? "white"
-                                : "dark",
-                            "&:hover": {
-                              backgroundColor: "var(--secondary-color)",
-                              opacity: ".7",
-                              color: "white",
-                            },
-                          }}
-                        >
-                          <ListItemText primary={size.sizeName} />
-                        </ListItemButton>
+                        <ListItem disablePadding>
+                          <ListItemButton
+                            key={size.productSizeId}
+                            onClick={() => setSelectedSize(size)}
+                            sx={{
+                              border: "1px solid #ccc",
+                              py: "5px",
+                              borderRadius: "5px",
+                              cursor: "pointer",
+                              textAlign: "center",
+                              backgroundColor:
+                                size.productSizeId ===
+                                selectedSize?.productSizeId
+                                  ? "var(--secondary-color)"
+                                  : "transparent",
+                              color:
+                                size.productSizeId ===
+                                selectedSize?.productSizeId
+                                  ? "white"
+                                  : "dark",
+                              "&:hover": {
+                                backgroundColor: "var(--secondary-color)",
+                                opacity: ".7",
+                                color: "white",
+                              },
+                            }}
+                          >
+                            <ListItemText primary={size.sizeName} />
+                          </ListItemButton>
+                        </ListItem>
                       );
                     })}
                   </>
@@ -317,6 +322,7 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                       transform: "translateY(10%)",
                     }}
                     onClick={handleDecreaseQuantity}
+                    title="Decrease quantity"
                   >
                     <RemoveCircleIcon color="secondary" />
                   </IconButton>
@@ -334,6 +340,7 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                       padding: "8px",
                       textAlign: "center",
                     }}
+                    aria-label="Quantity"
                   />
                   <IconButton
                     sx={{
@@ -343,6 +350,7 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                       transform: "translateY(10%)",
                     }}
                     onClick={handleIncreaseQuantity}
+                    title="Increase quantity"
                   >
                     <AddCircleIcon color="secondary" />
                   </IconButton>
@@ -486,24 +494,28 @@ const DetailProductView = ({ productData, list, isFetching }) => {
             </Typography>
 
             <List>
-              <ListItemButton>
-                <ListItemIcon>
-                  <StarBorder sx={{ color: "white", fontSize: "40px" }} />
-                </ListItemIcon>
-                <Box>
-                  <ListItemText primary="Premium Quality" />
-                  <ListItemText primary="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in." />
-                </Box>
-              </ListItemButton>
-              <ListItemButton>
-                <ListItemIcon>
-                  <StarBorder sx={{ color: "white", fontSize: "40px" }} />
-                </ListItemIcon>
-                <Box>
-                  <ListItemText primary="Gentle to the Environment" />
-                  <ListItemText primary="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in." />
-                </Box>
-              </ListItemButton>
+              <ListItem>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <StarBorder sx={{ color: "white", fontSize: "40px" }} />
+                  </ListItemIcon>
+                  <Box>
+                    <ListItemText primary="Premium Quality" />
+                    <ListItemText primary="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in." />
+                  </Box>
+                </ListItemButton>
+              </ListItem>
+              <ListItem>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <StarBorder sx={{ color: "white", fontSize: "40px" }} />
+                  </ListItemIcon>
+                  <Box>
+                    <ListItemText primary="Gentle to the Environment" />
+                    <ListItemText primary="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in." />
+                  </Box>
+                </ListItemButton>
+              </ListItem>
             </List>
           </Grid>
         </Grid>

@@ -1,13 +1,13 @@
 package com.coffee.lowland.exception;
 
 import com.coffee.lowland.DTO.response.APIResponse;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Objects;
 
@@ -59,11 +59,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
-    @ExceptionHandler(value = WebClientResponseException.class)
-    ResponseEntity<APIResponse<?>> handlePayExceptions(Exception exceptions){
+    @ExceptionHandler(value = FeignException.class)
+    ResponseEntity<APIResponse<?>> handlePayExceptions(FeignException exceptions){
         APIResponse<?> apiResponse = APIResponse.builder()
                 .code(ErrorCode.INVALID_ORDER.getCode())
                 .message(ErrorCode.INVALID_ORDER.getMessage())
+                .result(exceptions.contentUTF8())
                 .build();
         return ResponseEntity.status(ErrorCode.INVALID_ORDER.getStatusCode()).body(apiResponse);
     }

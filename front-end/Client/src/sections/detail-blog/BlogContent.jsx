@@ -38,9 +38,7 @@ const AuthorInfo = memo(({ author }) => {
       <Typography sx={{ mb: "15px", fontWeight: "bold" }}>
         {author.name}
       </Typography>
-      <Typography sx={{ mb: "15px" }} variant="subtitle1">
-        {author.description}
-      </Typography>
+      <Typography sx={{ mb: "15px" }}>{author.description}</Typography>
       <Button variant="contained">All author's blogs</Button>
     </Paper>
   );
@@ -164,7 +162,7 @@ const BLogContent = memo(({ data }) => {
           </IconButton>
           <BlogCommentDrawer />
         </div>
-        <IconButton onClick={handleCopyToClipboard}>
+        <IconButton onClick={handleCopyToClipboard} title="Copy link">
           <ShareIcon />
         </IconButton>
       </Box>

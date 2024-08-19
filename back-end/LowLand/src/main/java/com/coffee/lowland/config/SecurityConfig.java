@@ -37,7 +37,9 @@ public class SecurityConfig {
     @Value("${SECRET_KEY}")
     String SECRET_KEY;
     String[] PUBLIC_ENDPOINTS = {
-            "**", "auth/**"
+            "auth/**",
+            "products", "products/{product_id}",
+            "product-types"
     };
 
     JWTDecoder jwtDecoder;

@@ -2,8 +2,8 @@ package com.coffee.lowland.service.Account;
 
 import com.coffee.lowland.DTO.request.auth.GetGoogleTokenRequest;
 import com.coffee.lowland.DTO.response.auth.GoogleUserResponse;
-import com.coffee.lowland.JPA.repository.OutBound.GoogleTokenRepo;
-import com.coffee.lowland.JPA.repository.OutBound.GoogleUserRepo;
+import com.coffee.lowland.service.Utilities.OutBound.GoogleTokenRepo;
+import com.coffee.lowland.service.Utilities.OutBound.GoogleUserRepo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,17 +15,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class OutBoundService {
+    @NonFinal
     @Value("${CLIENT_ID}")
-    @NonFinal
     String CLIENT_ID;
+    @NonFinal
     @Value("${CLIENT_SECRET}")
-    @NonFinal
     String CLIENT_SECRET;
-    @Value("${REDIRECT_URI}")
     @NonFinal
+    @Value("${REDIRECT_URI}")
     String REDIRECT_URI;
     @NonFinal
-    String GRANT_TYPE = "authorization_code";
+    @Value("${GRANT_TYPE}")
+    String GRANT_TYPE;
 
 
     GoogleTokenRepo tokenRepo;

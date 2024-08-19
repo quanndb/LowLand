@@ -16,10 +16,10 @@ public class ProductResponse {
     @Id
     String productId;
     String productName;
-    int price;
+    Double price;
     String typeName;
     String description;
-    boolean isActive;
+    Boolean isActive;
     String imageName;
     String imageUrl;
 }

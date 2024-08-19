@@ -1,25 +1,25 @@
 import axios from "src/services";
 
 const orderAPI = {
-  createOrder: (params) => {
-    const url = "/orders/new-order";
+  createOrder: (accountId, params) => {
+    const url = `/accounts/${accountId}/orders`;
     return axios.post(url, params);
   },
-  cancelOrder: (params) => {
-    const url = "/orders/cancel-order";
+  cancelOrder: (accountId, orderId, params) => {
+    const url = `/accounts/${accountId}/orders/${orderId}/cancel`;
     return axios.put(url, params);
   },
-  updateOrder: (params) => {
-    const url = "/orders/my-orders";
+  updateOrder: (accountId, orderId, params) => {
+    const url = `/accounts/${accountId}/orders/${orderId}`;
     return axios.put(url, params);
   },
-  getMyOrders: () => {
-    const url = "/orders/my-orders";
+  getMyOrders: (accountId, params) => {
+    const url = `/accounts/${accountId}/orders`;
+    return axios.get(url, { params });
+  },
+  getOrderDetails: (accountId, orderId) => {
+    const url = `/accounts/${accountId}/orders/${orderId}`;
     return axios.get(url);
-  },
-  getOrderDetails: (params) => {
-    const url = "/orders/" + params;
-    return axios.get(url, params);
   },
 };
 

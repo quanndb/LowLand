@@ -42,7 +42,7 @@ const FormWrap = () => {
           }}
         >
           <Grid item md={8} xs={12}>
-            <Typography variant="h6">CONTACT FORM</Typography>
+            <Typography>CONTACT FORM</Typography>
             <Typography sx={{ marginBottom: "30px" }}>
               Drop us your message and I'll get back to you as soon as possible.
             </Typography>
@@ -108,14 +108,10 @@ const FormWrap = () => {
               xs: "center",
             }}
           >
-            <Typography variant="h6">CONTACT FORM</Typography>
+            <Typography>CONTACT FORM</Typography>
 
-            <Typography
-              variant="h5"
-              fontWeight={"Bold"}
-              sx={{ marginBottom: "30px" }}
-            >
-              CoffeeStyle. Inc
+            <Typography fontWeight={"Bold"} sx={{ marginBottom: "30px" }}>
+              Lowland Coffee. Inc
             </Typography>
             <Typography>Minh Khai</Typography>
             <Typography>Cau Dien</Typography>
@@ -125,7 +121,7 @@ const FormWrap = () => {
               +84 (415) 555-1212
             </Typography>
             <Typography>EMAIL US</Typography>
-            <Typography>us@lowlandCoffee.io</Typography>
+            <Typography>site@lowlandCoffee.io</Typography>
           </Grid>
         </Grid>
       </Container>
@@ -301,6 +297,7 @@ const ContactView = () => {
           loading="lazy"
           allow="geolocation"
           referrerPolicy="no-referrer-when-downgrade"
+          title="map"
         ></iframe>
       </Container>
 

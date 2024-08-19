@@ -18,12 +18,6 @@ public class PayResponse {
     String description;
     String reference;
     String transactionDateTime;
-    String virtualAccountNumber;
-    String counterAccountBankId;
-    String counterAccountBankName;
-    String counterAccountName;
-    String counterAccountNumber;
-    String virtualAccountName;
     String currency;
     int orderCode;
     String paymentLinkId;

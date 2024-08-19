@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useGoogleLogin } from "@react-oauth/google";
 
@@ -18,23 +19,19 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 
 import UserManagerSlice from "src/redux/slices/UserManagerSlice";
-import LoadingManagerSlice from "src/redux/slices/LoadingManagerSlice";
-import { loading } from "src/redux/selectors/LoadingSelector";
 
 import SideLayout from "src/layouts/sideLayout";
 import LowLandLogo from "src/components/navigation/logo";
-import LoadingComp from "src/components/LoadingComp";
 import { useRouter } from "src/routes/hooks";
 
 import authAPI from "src/services/API/authAPI";
 import { user } from "src/redux/selectors/UserSelector";
+import LoadingComp from "src/components/LoadingComp";
 
 const LoginView = () => {
   const router = useRouter();
 
   const dispatch = useDispatch();
-
-  const isLoading = useSelector(loading);
 
   const userData = useSelector(user);
 
@@ -44,54 +41,45 @@ const LoginView = () => {
 
   const [showPass, setShowPass] = useState(false);
 
+  const { isPending: isPendingWhileLogin, mutate: loginByUsernameAndPassword } =
+    useMutation({
+      mutationKey: ["login", { username: username }],
+      mutationFn: (data) => authAPI.login(data),
+    });
+
+  const { isPending: isPendingWhileLoginWithGoogle, mutate: loginWithGoogle } =
+    useMutation({
+      mutationKey: ["Login with google auth-code"],
+      mutationFn: (code) => authAPI.loginWithGoogle(code),
+    });
+
   const handleLogin = () => {
     if (!username || !password) {
       setAttempt(true);
-      toast.error("Username and password cannot be empty");
+      toast.error("Please enter your username and password");
       return;
     }
-    dispatch(LoadingManagerSlice.actions.setLoading(true));
-    authAPI
-      .login({
-        email: username,
-        password: password,
-      })
-      .then((res) => {
-        if (res && res.userResponse) {
-          dispatch(UserManagerSlice.actions.setUser(res));
+    loginByUsernameAndPassword(
+      { email: username, password: password },
+      {
+        onSuccess: (data) => {
+          dispatch(UserManagerSlice.actions.setUser(data));
           toast.success("Logged in successfully");
           router.replace("/");
-          dispatch(LoadingManagerSlice.actions.setLoading(false));
-        } else {
-          toast.error("Invalid login response");
-        }
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+        },
+      }
+    );
   };
 
   const handleLoginWithGoogle = useGoogleLogin({
-    onSuccess: async (response) => {
-      try {
-        // Send the authorization code to your backend server
-        authAPI
-          .loginWithGoogle(response.code)
-          .then((res) => {
-            if (res && res.userResponse) {
-              dispatch(UserManagerSlice.actions.setUser(res));
-              toast.success("Logged in successfully");
-              router.replace("/");
-            } else {
-              toast.error("Invalid login response");
-            }
-          })
-          .catch((error) => {
-            toast.error(error);
-          });
-      } catch (error) {
-        toast.error(error);
-      }
+    onSuccess: (response) => {
+      loginWithGoogle(response.code, {
+        onSuccess: (res) => {
+          dispatch(UserManagerSlice.actions.setUser(res));
+          toast.success("Logged in successfully");
+          router.replace("/");
+        },
+      });
     },
     onError: (error) => {
       toast.error(error);
@@ -101,16 +89,16 @@ const LoginView = () => {
 
   useEffect(() => {
     if (userData) {
-      router.replace("/");
+      router.back();
     }
   }, []);
 
   return (
     <SideLayout title={"Login"}>
       <Paper sx={{ my: "100px" }}>
-        {isLoading ? (
-          <LoadingComp />
-        ) : (
+        <LoadingComp
+          isLoading={isPendingWhileLogin || isPendingWhileLoginWithGoogle}
+        >
           <Grid
             container
             columns={{ xm: 1, md: 3 }}
@@ -224,7 +212,7 @@ const LoginView = () => {
               </Typography>
             </Grid>
           </Grid>
-        )}
+        </LoadingComp>
       </Paper>
     </SideLayout>
   );

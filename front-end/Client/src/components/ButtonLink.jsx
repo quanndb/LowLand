@@ -2,7 +2,15 @@ import { Button } from "@mui/material";
 
 import { useRouter } from "src/routes/hooks";
 
-const ButtonLink = ({ href, sx, children, variant, color, callBack }) => {
+const ButtonLink = ({
+  href,
+  sx,
+  children,
+  variant,
+  color,
+  callBack,
+  ariaLabel,
+}) => {
   const router = useRouter();
 
   const handleRouter = (e) => {
@@ -20,6 +28,7 @@ const ButtonLink = ({ href, sx, children, variant, color, callBack }) => {
         handleRouter(e);
         if (callBack) callBack();
       }}
+      aria-label={ariaLabel || "link"}
     >
       {children}
     </Button>

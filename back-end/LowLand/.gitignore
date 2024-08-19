@@ -6,7 +6,7 @@ build/
 !**/src/main/resources/**
 !**/src/test/**/build/
 # Ignore application.properties
-application.properties
+**/application.properties
 
 ### STS ###
 .apt_generated

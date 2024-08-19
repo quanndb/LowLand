@@ -88,11 +88,11 @@ const ProductsView = () => {
               Our Products
             </Typography>
             <Typography
-              variant="h6"
               fontSize={14}
               sx={{
                 marginTop: "20px",
                 marginBottom: "30px",
+                textAlign: "center",
               }}
             >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -105,9 +105,12 @@ const ProductsView = () => {
               display: "flex",
               mb: " 30px",
               justifyContent: "space-between",
+              flexWrap: "wrap",
             }}
           >
-            <FormControl sx={{ width: "200px" }}>
+            <FormControl
+              sx={{ width: { xs: "100%", sm: "200px" }, mb: "15px" }}
+            >
               <InputLabel id="demo-simple-select-label">Menu</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -135,17 +138,28 @@ const ProductsView = () => {
               </Select>
             </FormControl>
 
-            <Box sx={{ display: "flex" }}>
+            <Box
+              sx={{
+                display: "flex",
+                height: "fit-content",
+                width: { xs: "100%", sm: "350px" },
+              }}
+            >
               <TextField
                 label="Search your favorite coffee..."
                 variant="outlined"
+                sx={{ width: "100%", mr: "10px" }}
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
                   setCurrentPage(1);
                 }}
               />
-              <Button startIcon={<SearchIcon />} variant="contained">
+              <Button
+                startIcon={<SearchIcon />}
+                variant="contained"
+                sx={{ px: "20px" }}
+              >
                 Search
               </Button>
             </Box>

@@ -43,7 +43,6 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log(error);
     return Promise.reject(error);
   }
 );
@@ -63,7 +62,11 @@ instance.interceptors.response.use(
     } else if (error.response && error.response.status === 404) {
       window.location.href = "/404";
     } else {
-      toast.error(error.response?.data?.message || "An error occurred.");
+      toast.error(
+        error.response?.data?.message ||
+          error.response?.data?.result ||
+          "An error occurred."
+      );
     }
     throw error;
   }

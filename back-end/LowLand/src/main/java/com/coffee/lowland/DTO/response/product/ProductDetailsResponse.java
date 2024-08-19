@@ -15,7 +15,7 @@ public class ProductDetailsResponse{
     String productId;
     String productName;
     String description;
-    boolean isActive;
+    Boolean isActive;
     String typeName;
     List<ProductImageResponse> images;
     List<ProductRecipeDetailsResponse> recipes;

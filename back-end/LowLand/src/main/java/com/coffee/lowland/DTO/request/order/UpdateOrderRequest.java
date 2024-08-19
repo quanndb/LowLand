@@ -1,5 +1,7 @@
 package com.coffee.lowland.DTO.request.order;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +11,11 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateOrderRequest {
-    String orderId;
+    @NotBlank(message = "ORDER_FIELD_NOT_BE_BLANK")
     String customerName;
+    @NotBlank(message = "ORDER_FIELD_NOT_BE_BLANK")
     String phoneNumber;
-    String message;
+    @NotBlank(message = "ORDER_FIELD_NOT_BE_BLANK")
     String address;
+    String message;
 }

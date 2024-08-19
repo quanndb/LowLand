@@ -1,12 +1,6 @@
-import { useSelector } from "react-redux";
-
 import { Box, CircularProgress } from "@mui/material";
 
-import { loading } from "src/redux/selectors/LoadingSelector";
-
-const InnerLoading = ({ children }) => {
-  const isLoading = useSelector(loading);
-
+const InnerLoading = ({ isLoading, sx }) => {
   return (
     <>
       {isLoading && (
@@ -14,15 +8,18 @@ const InnerLoading = ({ children }) => {
           sx={{
             p: 3,
             width: "100%",
+            height: "100%",
             display: "flex",
             justifyContent: "center",
+            position: "absolute",
+            top: -10,
             alignItems: "center",
+            ...sx,
           }}
         >
           <CircularProgress />
         </Box>
       )}
-      {children}
     </>
   );
 };

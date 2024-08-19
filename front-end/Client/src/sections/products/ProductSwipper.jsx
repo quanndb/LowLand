@@ -67,7 +67,7 @@ const Productswiper = () => {
         >
           <Grid
             container
-            sx={{ width: "100%", padding: "40px" }}
+            sx={{ width: "100%", padding: { md: "0px 40px", sm: "0px" } }}
             columns={{ md: 2, sm: 1 }}
             onClick={() => router.push("/blogs/1")}
           >
@@ -117,7 +117,7 @@ const Productswiper = () => {
         <SwiperSlide>
           <Grid
             container
-            sx={{ width: "100%", padding: "40px" }}
+            sx={{ width: "100%", padding: { md: "0px 40px", sm: "0px" } }}
             columns={{ md: 2, sm: 1 }}
             onClick={() => router.push("/blogs/1")}
           >
