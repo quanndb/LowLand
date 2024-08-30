@@ -2,17 +2,18 @@ package com.coffee.lowland.service.Utilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+@Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class JSONMapper<T> {
-    Class<T> type;
-    ObjectMapper mapper = new ObjectMapper();
-
-    public T JSONToObject(String JSON) throws JsonProcessingException {
+public class JSONMapper {
+    ObjectMapper mapper;
+    public <T> T JSONToObject(String JSON, Class<T> type) throws JsonProcessingException {
         return mapper.readValue(JSON, type);
     }
 }

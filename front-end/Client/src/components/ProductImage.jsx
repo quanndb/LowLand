@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 
 import Image from "./Image";
 
-const ProductImage = ({ sx, imageURL, isActive, unShowOverlay }) => {
+const ProductImage = ({ sx, imageURL, isSale, unShowOverlay }) => {
   return (
     <Box
       sx={{
@@ -15,7 +15,7 @@ const ProductImage = ({ sx, imageURL, isActive, unShowOverlay }) => {
         sx={{ ...sx }}
         unShowOverlay={unShowOverlay ? unShowOverlay : null}
       />
-      {isActive ? (
+      {isSale ? (
         <Button
           sx={{
             position: "absolute",
@@ -24,6 +24,10 @@ const ProductImage = ({ sx, imageURL, isActive, unShowOverlay }) => {
             margin: "8px",
             backgroundColor: "white",
             color: "var(--secondary-color)",
+            "&:hover": {
+              backgroundColor: "var(--secondary-color)",
+              color: "white",
+            },
           }}
         >
           On Sale

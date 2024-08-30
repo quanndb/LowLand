@@ -6,18 +6,18 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import { Box } from "@mui/material";
-import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Card,
+  Pagination,
+  Skeleton,
+  TextField,
+} from "@mui/material";
 
 import { user } from "src/redux/selectors/UserSelector";
 import chartAPI from "src/services/API/chartAPI";
-import materialAPI from "src/services/API/materialAPI";
-import accountAPI from "src/services/API/accountsAPI";
-import orderAPI from "src/services/API/orderAPI";
-import sizeAPI from "src/services/API/sizeAPI";
 
-import ChartLowSelling from "../ChartLowSelling";
 import ChartTotalMoney from "../ChartTotalMoney";
 import AppWebsiteVisits from "../app-website-visits";
 import MaterialColumnChart from "../customChart";
@@ -29,108 +29,19 @@ import {
   Person,
   WrapText,
 } from "@mui/icons-material";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useDebounce } from "src/hooks/use-debounce";
 
 export default function AppView() {
   const userData = useSelector(user);
 
-  const [month, setMonth] = useState(6);
-  const [year, setYear] = useState(2024);
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [pageMaterial, setPageMaterial] = useState(1);
+  const [query, setQuery] = useState("");
 
-  const [data, setData] = useState([]);
-  const [dataChart2, setDataForChart2] = useState([]);
-  const [dataChart3, setDataForChart3] = useState([]);
-
-  const [materials, setMaterials] = useState([]);
-  useEffect(() => {
-    materialAPI
-      .getAll()
-      .then((res) => {
-        setMaterials(res);
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
-  }, []);
-
-  const [orderList, setOrderList] = useState([]);
-  useEffect(() => {
-    orderAPI
-      .getAll()
-      .then((res) => setOrderList(res))
-      .catch((error) => toast.error(error));
-  }, []);
-
-  const [accounts, setAccounts] = useState([]);
-  useEffect(() => {
-    accountAPI
-      .getAlls()
-      .then((res) => {
-        setAccounts(res);
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
-  }, []);
-
-  const [sizes, setSizes] = useState([]);
-  useEffect(() => {
-    sizeAPI
-      .getAll()
-      .then((res) => {
-        setSizes(res);
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
-  }, []);
-  const fetchTotalMoneyData = (month, year) => {
-    chartAPI
-      .getToltalMoneyDayinMonth(month, year)
-      .then((res) => {
-        if (res) {
-          setData(res);
-        } else {
-          toast.error("Unexpected response format for total money data");
-        }
-      })
-      .catch((err) => {
-        toast.error(err.message || "Failed to fetch total money data");
-      });
-  };
-
-  useEffect(() => {
-    fetchTotalMoneyData(month, year);
-  }, [month, year]);
-
-  useEffect(() => {
-    chartAPI
-      .getTopBestSaleProduct(5)
-      .then((res) => {
-        if (res) {
-          setDataForChart2(res);
-        } else {
-          toast.error("Unexpected response format for top best sale products");
-        }
-      })
-      .catch((err) => {
-        toast.error(err.message || "Failed to fetch top best sale products");
-      });
-  }, []);
-
-  useEffect(() => {
-    chartAPI
-      .getTopLowSaleProduct(5)
-      .then((res) => {
-        if (res) {
-          setDataForChart3(res);
-        } else {
-          toast.error("Unexpected response format for top low sale products");
-        }
-      })
-      .catch((err) => {
-        toast.error(err.message || "Failed to fetch top low sale products");
-      });
-  }, []);
+  const queryValue = useDebounce(query, 500);
 
   const handleMonthChange = (event) => {
     const value = Number(event.target.value);
@@ -145,6 +56,36 @@ export default function AppView() {
       setYear(value);
     }
   };
+
+  const { data: totalMoneyInMonth } = useQuery({
+    queryKey: ["getTotalMoneyInMonth", { monthInput: month, yearInput: year }],
+    queryFn: () =>
+      chartAPI.getTotalMoneyInMonth({ monthInput: month, yearInput: year }),
+  });
+
+  const { data: stuffs } = useQuery({
+    queryKey: ["getStuff"],
+    queryFn: () => chartAPI.getStuff(),
+  });
+
+  const { data: topSale } = useQuery({
+    queryKey: ["getTopSale", { top: 10 }],
+    queryFn: () => chartAPI.getTopSale({ topProduct: 10 }),
+  });
+
+  const { data: materialsPage } = useQuery({
+    queryKey: [
+      "getMaterial",
+      { page: pageMaterial, size: 10, query: queryValue },
+    ],
+    queryFn: () =>
+      chartAPI.getMaterialChart({
+        page: pageMaterial,
+        size: 10,
+        query: queryValue,
+      }),
+  });
+
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -178,106 +119,164 @@ export default function AppView() {
         </FormControl>
       </Box>
 
-      <Grid item xs={12} md={12} lg={12}>
-        <ChartTotalMoney
-          title="Monthly Revenue"
-          subheader="Daily Revenue for the Month"
-          chart={{
-            labels: data.map((item) =>
-              item.dayInMonth ? item.dayInMonth.toString() : "N/A"
-            ),
-            series: [
-              {
-                name: "Revenue",
-                type: "column",
-                fill: "solid",
-                data: data.map((item) => item.totalMoney || 0),
-              },
-            ],
-          }}
-        />
-      </Grid>
+      <Box>
+        {totalMoneyInMonth ? (
+          <ChartTotalMoney
+            title="Monthly Revenue"
+            subheader="Daily Revenue for the Month"
+            chart={{
+              labels: totalMoneyInMonth?.map((item) =>
+                item.dayInMonth ? item.dayInMonth.toString() : "N/A"
+              ),
+              series: [
+                {
+                  name: "Revenue",
+                  type: "column",
+                  fill: "solid",
+                  data: totalMoneyInMonth?.map((item) => item.totalMoney || 0),
+                },
+              ],
+            }}
+          />
+        ) : (
+          <Skeleton variant="rounded" width="100%" height={300} />
+        )}
+      </Box>
 
       <Grid
-        item
-        xs={12}
-        sx={{ my: 3, display: "flex", justifyContent: "space-between" }}
+        container
+        spacing={1}
+        sx={{ my: 3, justifyContent: { xs: "center", lg: "space-between" } }}
       >
-        <AppWidgetSummary
-          title="Accounts"
-          total={accounts.length}
-          icon={<Person fontSize="large" />}
-          color="primary"
-        />
-        <AppWidgetSummary
-          title="Materials"
-          total={materials.length}
-          icon={<AlignHorizontalRightOutlined fontSize="large" />}
-          color="primary"
-        />
-
-        <AppWidgetSummary
-          title="Sizes"
-          total={sizes.length}
-          icon={<WrapText fontSize="large" />}
-          color="primary"
-        />
-
-        <AppWidgetSummary
-          title="Materials"
-          total={orderList.length}
-          icon={<AddShoppingCart fontSize="large" />}
-          color="primary"
-        />
-        <AppWidgetSummary
-          title="Blog"
-          // total={materials.length}
-          total={203}
-          icon={<GridView fontSize="large" />}
-          color="primary"
-        />
+        {[
+          {
+            title: "Customers",
+            total: stuffs?.customer,
+            icon: <Person fontSize="large" />,
+          },
+          {
+            title: "Orders in month",
+            total: stuffs?.orderInMonth,
+            icon: <AlignHorizontalRightOutlined fontSize="large" />,
+          },
+          {
+            title: "Products",
+            total: stuffs?.product,
+            icon: <WrapText fontSize="large" />,
+          },
+          {
+            title: "Product types",
+            total: stuffs?.productType,
+            icon: <AddShoppingCart fontSize="large" />,
+          },
+          {
+            title: "Materials",
+            total: stuffs?.material,
+            icon: <GridView fontSize="large" />,
+          },
+        ].map((item, index) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={2}
+            key={index}
+            sx={{ width: { xs: "100%", md: "fit-content" } }}
+          >
+            {stuffs ? (
+              <AppWidgetSummary
+                title={item.title}
+                total={item.total}
+                icon={item.icon}
+                color="primary"
+              />
+            ) : (
+              <Skeleton variant="rounded" sx={{ height: 150 }} />
+            )}
+          </Grid>
+        ))}
       </Grid>
 
-      <Grid item xs={12}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Materials
-        </Typography>
-        <MaterialColumnChart materials={materials} />
-      </Grid>
+      <Box>
+        {topSale && (
+          <AppWebsiteVisits
+            title="Top Best-Selling Product"
+            chart={{
+              labels: topSale.map((item) => item.productName || "N/A"),
+              series: [
+                {
+                  name: "Total",
+                  type: "column",
+                  fill: "solid",
+                  data: topSale.map((item) => item.quantity || 0),
+                },
+              ],
+            }}
+          />
+        )}
+      </Box>
 
-      <Grid item xs={12} md={6}>
-        <AppWebsiteVisits
-          title="Top Best-Selling Product"
-          chart={{
-            labels: dataChart2.map((item) => item.productName || "N/A"),
-            series: [
-              {
-                name: "Total",
-                type: "column",
-                fill: "solid",
-                data: dataChart2.map((item) => item.quantity || 0),
-              },
-            ],
-          }}
-        />
-      </Grid>
-
-      <Grid item xs={12} md={6}>
-        <ChartLowSelling
-          title="Top Low-Selling Product"
-          chart={{
-            labels: dataChart3.map((item) => item.productName || "N/A"),
-            series: [
-              {
-                name: "Revenue",
-                type: "column",
-                fill: "solid",
-                data: dataChart3.map((item) => item.quantity || 0),
-              },
-            ],
-          }}
-        />
-      </Grid>
+      <Box sx={{ my: 3 }}>
+        <Card>
+          <Typography variant="h5" sx={{ my: 3, mx: 3 }}>
+            Materials
+          </Typography>
+          <Box sx={{ mx: 3 }}>
+            <TextField
+              placeholder="Search material..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              sx={{ height: "100%", py: 2 }}
+              color="secondary"
+            >
+              Search
+            </Button>
+          </Box>
+          {materialsPage ? (
+            <>
+              <MaterialColumnChart
+                chart={{
+                  labels: materialsPage.response.map(
+                    (item) =>
+                      item.materialName + " (" + item.unitName + ")" || "N/A"
+                  ),
+                  series: [
+                    {
+                      name: "Current",
+                      type: "column",
+                      fill: "solid",
+                      data: materialsPage.response.map(
+                        (item) => item.quantity || 0
+                      ),
+                    },
+                    {
+                      name: "Minimum",
+                      type: "column",
+                      fill: "solid",
+                      data: materialsPage.response.map(
+                        (item) => item.minQuantity || 0
+                      ),
+                    },
+                  ],
+                }}
+              />
+              <Pagination
+                count={materialsPage.totalPages}
+                page={pageMaterial}
+                onChange={(e, v) => setPageMaterial(v)}
+                color="primary"
+                sx={{ my: 2, justifyContent: "center", display: "flex" }}
+              />
+            </>
+          ) : (
+            <Skeleton variant="rounded" height={300} sx={{ my: 3, mx: 3 }} />
+          )}
+        </Card>
+      </Box>
     </Container>
   );
 }

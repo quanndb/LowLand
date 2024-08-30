@@ -134,7 +134,10 @@ const DetailProductView = ({ productData, list, isFetching }) => {
           {/* Here */}
           <Grid item md={6} xs={12}>
             {isFetching || !productData ? (
-              <Skeleton height={"100%"} variant="rectangular" />
+              <Skeleton
+                sx={{ height: "100%", minHeight: "460px" }}
+                variant="rectangular"
+              />
             ) : (
               <CustomSwiper isProductSwipper={true}>
                 {productData?.images.map((image) => (
@@ -210,10 +213,14 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                 }}
               >
                 <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-                  {formatPrice(selectedSize?.price ? selectedSize.price : 0)}
+                  {formatPrice(
+                    selectedSize?.salePrice
+                      ? selectedSize.salePrice
+                      : selectedSize.price
+                  )}
                   <sup>đ</sup>
                 </span>
-                {productData?.isActive && (
+                {selectedSize?.salePrice && (
                   <span
                     style={{
                       textDecoration: "line-through",

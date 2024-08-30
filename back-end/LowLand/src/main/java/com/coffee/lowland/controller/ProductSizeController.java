@@ -1,7 +1,7 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.productType.ProductSizeDto;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.service.Product.ProductSizeService;
 import lombok.AccessLevel;
@@ -10,17 +10,18 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/productSize")
+@RequestMapping("/productSizes")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ProductSizeController {
     ProductSizeService _service;
 
     @GetMapping("")
-    public APIResponse<?> getAll(@RequestParam String keyWords){
+    public APIResponse<?> getSizes(@RequestParam(required = false, defaultValue = "") String query,
+                                   @RequestParam(required = false) Integer size){
         return APIResponse.builder()
                 .code(2000)
-                .result(_service.getAllSize(keyWords))
+                .result(_service.getSizes(query, size))
                 .build();
     }
     @GetMapping("/{sizeId}")

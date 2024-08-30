@@ -11,6 +11,7 @@ import {
   IconButton,
   InputAdornment,
   Paper,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -53,7 +54,8 @@ const LoginView = () => {
       mutationFn: (code) => authAPI.loginWithGoogle(code),
     });
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
     if (!username || !password) {
       setAttempt(true);
       toast.error("Please enter your username and password");
@@ -95,7 +97,7 @@ const LoginView = () => {
 
   return (
     <SideLayout title={"Login"}>
-      <Paper sx={{ my: "100px" }}>
+      <Paper sx={{ my: "100px", width: "100%" }}>
         <LoadingComp
           isLoading={isPendingWhileLogin || isPendingWhileLoginWithGoogle}
         >
@@ -149,43 +151,54 @@ const LoginView = () => {
               </Paper>
             </Grid>
             <Grid item sm={1} md={1}>
-              <TextField
-                label="Username"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-                sx={{ width: "100%", marginBottom: "20px" }}
-                error={username === "" && attemp}
-                helperText={
-                  username === "" && attemp ? "Please enter your username" : ""
-                }
-              />
-              <TextField
-                label="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type={showPass ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPass(!showPass)}>
-                        {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                error={password === "" && attemp}
-                helperText={
-                  password === "" && attemp ? "Please enter your password" : ""
-                }
-                sx={{ width: "100%", marginBottom: "20px" }}
-              />
-              <Button
-                variant="contained"
-                sx={{ width: "100%" }}
-                onClick={handleLogin}
-              >
-                Login
-              </Button>
+              <Stack component={"form"} onSubmit={handleLogin}>
+                <TextField
+                  label="Username"
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
+                  sx={{ width: "100%", marginBottom: "20px" }}
+                  error={username === "" && attemp}
+                  helperText={
+                    username === "" && attemp
+                      ? "Please enter your username"
+                      : ""
+                  }
+                />
+                <TextField
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type={showPass ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setShowPass(!showPass)}>
+                          {showPass ? (
+                            <VisibilityIcon />
+                          ) : (
+                            <VisibilityOffIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  error={password === "" && attemp}
+                  helperText={
+                    password === "" && attemp
+                      ? "Please enter your password"
+                      : ""
+                  }
+                  sx={{ width: "100%", marginBottom: "20px" }}
+                />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  sx={{ width: "100%" }}
+                  onClick={handleLogin}
+                >
+                  Login
+                </Button>
+              </Stack>
               <Divider sx={{ mt: 2 }}>
                 <Typography>Or login with</Typography>
               </Divider>

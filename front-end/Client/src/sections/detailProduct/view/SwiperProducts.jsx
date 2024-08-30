@@ -10,18 +10,18 @@ export const SwiperProducts = ({ list }) => {
   return (
     <>
       {list && (
-        <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
+        <Container maxWidth={"lg"} sx={{ mb: "50px", display: "flex" }}>
           <CustomSwiper sx={{ mb: "20px" }}>
             {list.map((item) => {
               return (
-                <SwiperSlide key={item.productId}>
+                <SwiperSlide key={item?.productId}>
                   <ProductItem
-                    imageURL={item.imageUrl}
-                    isActive={item.isActive}
-                    name={item.productName}
-                    salePrices={formatPrice(item.price)}
-                    originalPrices={formatPrice(item.price)}
-                    id={item.productId}
+                    imageURL={item?.imageUrl}
+                    isSale={Boolean(item?.salePrice)}
+                    name={item?.productName}
+                    salePrices={formatPrice(item?.salePrice)}
+                    originalPrices={formatPrice(item?.price)}
+                    id={item?.productId}
                   />
                 </SwiperSlide>
               );

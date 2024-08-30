@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,19 +34,13 @@ public class TokenService {
 
     TokenRepository tokenRepository;
 
-    public String generateToken(Account account) {
-        Optional<Token> current = tokenRepository.findByAccountId(account.getAccountId());
-        String tokenId = null;
-        if(current.isPresent()){
-            current.get().setLogout(false);
-            tokenId = tokenRepository.save(current.get()).getTokenId();
-        }
-        else{
-            tokenId = tokenRepository.save(Token.builder()
-                    .isLogout(false)
+    public String generateToken(Account account,String details) {
+        String tokenId  = tokenRepository.save(Token.builder()
+                    .logout(false)
                     .accountId(account.getAccountId())
+                    .lastLogin(LocalDateTime.now().toString())
+                    .details(details)
                     .build()).getTokenId();
-        }
         try {
             JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
             JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -60,20 +56,22 @@ public class TokenService {
 
             JWSObject jwsObject = new JWSObject(header, payload);
             jwsObject.sign(new MACSigner(SECRET_KEY.getBytes()));
-            String token = jwsObject.serialize();
 
-            return token;
+            return jwsObject.serialize();
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void setLogout(String accountId){
-        Token current = tokenRepository
-                .findByAccountId(accountId)
-                .orElseThrow(()->new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
-        current.setLogout(true);
-        tokenRepository.save(current);
+        List<Token> current = tokenRepository
+                .findByAccountIdAndLogout(accountId,false);
+        if(!current.isEmpty()){
+            for(Token item : current){
+                item.setLogout(true);
+            }
+            tokenRepository.saveAll(current);
+        }
     }
 
     public boolean verifyToken(String token) throws JOSEException, ParseException {

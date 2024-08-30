@@ -1,18 +1,24 @@
 import axios from "src/services";
 
 const chartAPI = {
-    getToltalMoneyDayinMonth: (monthInput, yearInput) => {
-        const url = `/Chart/GetToltalMoneyDayinMonth?monthInput=${monthInput}&yearInput=${yearInput}`;
-        return axios.get(url);
-    },
-    getTopBestSaleProduct: (topProduct) => {
-        const url = `/Chart/GetTopBestSaleProduct?topProduct=${topProduct}`;
-        return axios.get(url);
-    },
-    getTopLowSaleProduct: (topProduct) => {
-        const url = `/Chart/GetTopLowSaleProduct?topProduct=${topProduct}`;
-        return axios.get(url);
-    },
+  getTotalMoneyInMonth: (params) => {
+    const url = `/charts/totalMoneyInMonth`;
+    return axios.get(url, { params });
+  },
+  getStuff: () => {
+    const url = `/charts/totalStuff`;
+    return axios.get(url);
+  },
+
+  getTopSale: (params) => {
+    const url = `/charts/topSale`;
+    return axios.get(url, { params });
+  },
+
+  getMaterialChart: (params) => {
+    const url = `/charts/materialsChart`;
+    return axios.get(url, { params });
+  },
 };
 
 export default chartAPI;

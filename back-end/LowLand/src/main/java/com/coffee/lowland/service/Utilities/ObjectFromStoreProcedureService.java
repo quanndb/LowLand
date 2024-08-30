@@ -6,15 +6,17 @@ import jakarta.persistence.StoredProcedureQuery;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Component
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ObjectFromStoreProcedureService<T> {
-    final EntityManager entityManager;
+    EntityManager entityManager;
+
     public StoredProcedureQuery prepareStore(String storeName, Class<T> responseType) {
         return entityManager
                 .createStoredProcedureQuery(storeName, responseType);

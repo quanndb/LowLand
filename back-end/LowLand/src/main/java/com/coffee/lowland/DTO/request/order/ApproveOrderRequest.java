@@ -13,8 +13,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApproveOrderRequest {
-    @NotNull(message = "ORDER_ID_NOT_BE_NULL")
-    String orderId;
     @NotBlank(message = "ORDER_FIELD_NOT_BE_BLANK")
     String customerName;
     @NotBlank(message = "ORDER_FIELD_NOT_BE_BLANK")

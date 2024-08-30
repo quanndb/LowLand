@@ -1,7 +1,7 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.order.*;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.service.Order.OrderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

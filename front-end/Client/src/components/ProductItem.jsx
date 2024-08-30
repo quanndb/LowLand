@@ -1,9 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 
 import ProductImage from "./ProductImage";
 
 import { useRouter } from "src/routes/hooks";
 import { formatPrice } from "src/utils/format-number";
+import { BorderBottom } from "@mui/icons-material";
 
 const ProductItem = ({
   sx,
@@ -11,28 +12,55 @@ const ProductItem = ({
   name,
   originalPrices,
   salePrices,
-  isActive,
+  isSale,
   id,
 }) => {
   const router = useRouter();
 
   return (
-    <Box
+    <Paper
+      elevation={3}
       sx={{
         ...sx,
         position: "relative",
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
+        textDecoration: "none",
+        borderRadius: "20px",
+        overflow: "hidden",
+        "&:hover": {
+          boxShadow: "0 2px 14px 0 rgb(32 54 70 / 8%)",
+          transform: "translateY(-4px)",
+          scale: "1.01",
+        },
       }}
-      onClick={() => router.push(`/products/${id}`)}
+      component={"a"}
+      href={`/products/${id}`}
+      onClick={(e) => {
+        e.preventDefault();
+        router.push(`/products/${id}`);
+      }}
     >
       <ProductImage
-        isActive={isActive}
+        isSale={isSale}
         imageURL={imageURL}
-        sx={{ width: "100%", height: "400px", position: "relative" }}
+        sx={{
+          width: "100%",
+          height: "400px",
+          position: "relative",
+          backgroundColor: "rgba(162, 95, 75, 0.05)",
+        }}
       />
-      <Typography sx={{ textAlign: "center", marginTop: "30px" }}>
+      <Typography
+        sx={{
+          textAlign: "center",
+          marginTop: "30px",
+          fontWeight: "600",
+          fontSize: "20px",
+          color: "var(--primary-color)",
+        }}
+      >
         {name}
       </Typography>
 
@@ -47,10 +75,12 @@ const ProductItem = ({
         }}
       >
         <span style={{ color: "#a25f4b", fontSize: "25px" }}>
-          {formatPrice(originalPrices || 0)}
+          {isSale
+            ? formatPrice(salePrices || 0)
+            : formatPrice(originalPrices || 0)}
           <sup>đ</sup>
         </span>
-        {isActive && (
+        {isSale && (
           <span
             style={{
               textDecoration: "line-through",
@@ -59,12 +89,12 @@ const ProductItem = ({
               marginLeft: "10px",
             }}
           >
-            {formatPrice(salePrices || 0)}
+            {formatPrice(originalPrices || 0)}
             <sup>đ</sup>
           </span>
         )}
       </Typography>
-    </Box>
+    </Paper>
   );
 };
 export default ProductItem;

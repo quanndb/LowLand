@@ -1,17 +1,21 @@
 import axios from "src/services";
 
 const productAPI = {
-  getAll: () => {
-    const url = "/Product/GetAll?ProductId=0&inputRow=0";
-    return axios.get(url);
+  getProducts: (params) => {
+    const url = "/products";
+    return axios.get(url, { params });
   },
   getById: (params) => {
-    const url = "/Product?ProductId=" + params;
-    return axios.get(url, params);
+    const url = "/products/" + params;
+    return axios.get(url);
   },
-  update: (params) => {
-    const url = "/Product/CreateOrUpdate";
-    return axios.post(url, params);
+  update: (productId, params) => {
+    const url = `/products/${productId}`;
+    return axios.put(url, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
   delete: (params) => {
     const url = "/Product/Delete?id=" + params;
@@ -20,6 +24,15 @@ const productAPI = {
   getDetails: (params) => {
     const url = "/ProductDetail/GetAllByProductId?ProductId=" + params;
     return axios.get(url, params);
+  },
+
+  deleteProductImage: (productId, productImageId) => {
+    const url = `/products/${productId}/images/${productImageId}`;
+    return axios.delete(url);
+  },
+  deleteDetails: (productId, detailsId) => {
+    const url = `products/${productId}/sizesAndPrices/${detailsId}`;
+    return axios.delete(url);
   },
 };
 

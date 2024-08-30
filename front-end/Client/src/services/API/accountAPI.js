@@ -9,6 +9,11 @@ const accountAPI = {
       },
     });
   },
+
+  register: (params) => {
+    const url = "/auth/register";
+    return axios.post(url, params);
+  },
 };
 
 export default accountAPI;

@@ -11,6 +11,7 @@ const Author = ({ name, position, imageURL }) => {
       <Image
         imageURL={imageURL}
         sx={{ height: "200px", width: "100%", mb: "30px" }}
+        unShowOverlay={true}
       />
       <Typography sx={{ fontWeight: "600", fontSize: "22px", mb: "15px" }}>
         {name}
@@ -24,37 +25,29 @@ const AuthorsIntro = () => {
   return (
     <Box>
       <SectionTitle>authors introduction</SectionTitle>
-      <Grid
-        container
-        justifyContent={"center"}
-        columnSpacing={{ md: 4, sm: 0 }}
-        rowSpacing={6}
-        columns={{ sm: 1, md: 3 }}
-      >
-        <Grid item md={1} sm>
+      <Grid container justifyContent={"center"} spacing={2}>
+        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
             imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
-        <Grid item md={1} sm>
+        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
             imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
-        <Grid item md={1} sm>
-          {" "}
+        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}
             imageURL={"/static/images/logo.jpg"}
           />
         </Grid>
-        <Grid item md={1} sm>
-          {" "}
+        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
           <Author
             name={"Vu Minh Quan"}
             position={"BRAND OWNER"}

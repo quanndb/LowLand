@@ -1,6 +1,7 @@
 package com.coffee.lowland.service.Account;
 
 import com.coffee.lowland.DTO.request.auth.AuthenticationRequest;
+import com.coffee.lowland.DTO.request.auth.DetailsLogin;
 import com.coffee.lowland.DTO.response.auth.AuthenticationResponse;
 import com.coffee.lowland.DTO.response.auth.GoogleUserResponse;
 import com.coffee.lowland.DTO.response.auth.UserResponse;
@@ -32,15 +33,16 @@ public class AuthenticationService {
     OutBoundService outBoundService;
     RandomCodeService randomCodeService;
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticate(AuthenticationRequest request, DetailsLogin detailsLogin){
         var account = accountRepository.findByEmail(request.getEmail())
                 .orElseThrow(()->new AppExceptions(ErrorCode.EMAIL_NOT_EXIST));
+        if(!account.getIsActive()) throw new AppExceptions(ErrorCode.ACCOUNT_NOT_ACTIVE);
         boolean authenticate = passwordEncoder.matches(request.getPassword(),
                 account.getPassword());
 
         if(!authenticate) throw new AppExceptions(ErrorCode.EMAIL_PASSWORD_INVALID);
 
-        var token = tokenService.generateToken(account);
+        var token = tokenService.generateToken(account, detailsLogin.toString());
 
         return AuthenticationResponse.builder()
                 .accessToken(token)
@@ -49,7 +51,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse loginWithGoogle(String code){
+    public AuthenticationResponse loginWithGoogle(String code, DetailsLogin detailsLogin){
         String googleToken = outBoundService.getGoogleToken(code);
         GoogleUserResponse res = outBoundService.userData(googleToken);
         Account foundUser = accountRepository.findByEmail(res.getEmail())
@@ -64,8 +66,8 @@ public class AuthenticationService {
                             .build();
                     return accountRepository.save(newAccount);
                 });
-
-            var token = tokenService.generateToken(foundUser);
+        if(!foundUser.getIsActive()) throw new AppExceptions(ErrorCode.ACCOUNT_NOT_ACTIVE);
+        var token = tokenService.generateToken(foundUser, detailsLogin.toString());
             return AuthenticationResponse.builder()
                     .accessToken(token)
                     .authenticated(true)

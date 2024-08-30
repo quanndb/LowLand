@@ -1,8 +1,17 @@
-import { Grid, Card, Typography, TextField, Box ,Button} from "@mui/material";
+import {
+  Grid,
+  Card,
+  Typography,
+  TextField,
+  Box,
+  Button,
+  InputLabel,
+  FormControl,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
-const EditTab = ({ user }) => {
-  const { fullName, phoneNumber, email, address } = user;
-
+const EditTab = ({ editData, setEditData, onSubmit, disable }) => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -17,29 +26,60 @@ const EditTab = ({ user }) => {
           <Box sx={{ mt: 3 }}>
             <TextField
               fullWidth
-              label="Full Name"
-              defaultValue={fullName}
-              // onChange handler here if needed
+              label="Email"
+              value={editData.email}
+              disabled
             />
+            <TextField
+              fullWidth
+              label="Full Name"
+              value={editData.fullName}
+              sx={{ mt: 2 }}
+              onChange={(e) =>
+                setEditData((prev) => ({
+                  ...prev,
+                  fullName: e.target.value,
+                }))
+              }
+            />
+            <FormControl fullWidth sx={{ my: 2, textAlign: "left" }}>
+              <InputLabel id="demo-simple-select-label2">Gender</InputLabel>
+              <Select
+                labelId="demo-simple-select-label2"
+                value={editData.gender}
+                name="gender"
+                label="Gender"
+                onChange={(e) => {
+                  setEditData((prev) => ({
+                    ...prev,
+                    gender: Number(e.target.value),
+                  }));
+                }}
+              >
+                <MenuItem value={1}>Male</MenuItem>
+                <MenuItem value={0}>Female</MenuItem>
+              </Select>
+            </FormControl>
             <TextField
               fullWidth
               label="Mobile"
-              defaultValue={phoneNumber}
-              // onChange handler here if needed
+              value={editData.phoneNumber}
+              onChange={(e) =>
+                setEditData((prev) => ({
+                  ...prev,
+                  phoneNumber: e.target.value,
+                }))
+              }
               sx={{ mt: 2 }}
             />
-            <TextField
-              fullWidth
-              label="Email"
-              defaultValue={email}
-              // onChange handler here if needed
-              sx={{ mt: 2 }}
-            />
+
             <TextField
               fullWidth
               label="Location"
-              defaultValue={address}
-              // onChange handler here if needed
+              value={editData.address}
+              onChange={(e) =>
+                setEditData((prev) => ({ ...prev, address: e.target.value }))
+              }
               sx={{ mt: 2 }}
             />
 
@@ -47,7 +87,9 @@ const EditTab = ({ user }) => {
               type="submit"
               variant="contained"
               color="primary"
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, mx: { xs: "auto", sm: 0 }, display: "block", px: 5 }}
+              disabled={disable}
+              onClick={onSubmit}
             >
               Edit
             </Button>

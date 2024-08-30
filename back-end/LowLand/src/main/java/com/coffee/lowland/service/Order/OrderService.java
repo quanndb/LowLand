@@ -2,8 +2,8 @@ package com.coffee.lowland.service.Order;
 
 import com.coffee.lowland.DTO.request.order.*;
 
-import com.coffee.lowland.DTO.response.APIResponse;
-import com.coffee.lowland.DTO.response.PageServiceResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.DTO.response.order.GetOrderDetailsResponse;
 import com.coffee.lowland.DTO.response.order.GetOrderResponse;
 import com.coffee.lowland.DTO.response.order.GetOrdersResponse;
@@ -15,7 +15,10 @@ import com.coffee.lowland.model.Order;
 import com.coffee.lowland.JPA.repository.OrderDetailsRepository;
 import com.coffee.lowland.JPA.repository.OrderRepository;
 import com.coffee.lowland.JPA.repository.ProductDetailsRepository;
+import com.coffee.lowland.model.ProductDetails;
 import com.coffee.lowland.service.Pay.PayService;
+import com.coffee.lowland.service.Product.MaterialService;
+import com.coffee.lowland.service.Product.ProductService;
 import com.coffee.lowland.service.Utilities.PageService;
 import com.coffee.lowland.service.Utilities.RandomCodeService;
 import jakarta.persistence.StoredProcedureQuery;
@@ -37,9 +40,11 @@ public class OrderService {
     OrderRepository orderRepository;
     OrderDetailsRepository orderDetailsRepository;
     ProductDetailsRepository productDetailsRepository;
+    ProductService productService;
     OrderMapper orderMapper;
     RandomCodeService randomCodeService;
     OrderDetailsService orderDetailsService;
+    MaterialService materialService;
     PayService payService;
     PageService<GetOrdersResponse> pageService;
 
@@ -61,6 +66,16 @@ public class OrderService {
             "or @securityService.isOwner(authentication, #accountId)")
     @SuppressWarnings("unused")
     public String createOrder(String accountId, CreateOrderRequest request){
+        // pre check product
+        request.getItems().forEach(item->{
+            ProductDetails details = productDetailsRepository
+                    .findById(item.getProductDetailsId())
+                    .orElseThrow(()->new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+            boolean isActiveProduct = productService.isActiveProduct(details.getProductId());
+            if(!isActiveProduct) throw new AppExceptions(ErrorCode.PRODUCT_NOT_ACTIVE);
+        });
+
+        // create new order
         Order newOrder = orderMapper.toOrder(request);
         String createdUser = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
@@ -121,7 +136,7 @@ public class OrderService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Order approveOrder(String orderId, ApproveOrderRequest request){
         Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
@@ -129,11 +144,7 @@ public class OrderService {
                 foundOrder.getStatus()==3){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
-//        int Status = request.getStatus();
-//
-//        if(Status==2){
-//            UpdateQuantityMaterial(request.getOrderId());
-//        }
+        materialService.updateQuantityMaterialAfterApproveOrder(orderId);
         orderMapper.approveOrder(foundOrder, request);
         foundOrder.setUpdatedDate(LocalDateTime.now());
         foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -164,26 +175,4 @@ public class OrderService {
         orderMapper.getOrder(res, foundOrder);
         return res;
     }
-
-
-
-    //Update lại số lượng trong Material
-//    private void UpdateQuantityMaterial(String OrderId){
-//        List<MaterialDTO> lstMaterialId = new ArrayList<MaterialDTO>();
-//        List<Object[]> lstStore = orderRepository.spGetAllMeterialIdByOrder(OrderId);
-//        for(Object[] item : lstStore) {
-//            lstMaterialId.add(
-//                    MaterialDTO.builder()
-//                            .MaterialId((String)item[0])
-//                            .Quantity((Integer)item[0])
-//                            .build());
-//        }
-//        if(!lstMaterialId.isEmpty()){
-//            for(MaterialDTO material : lstMaterialId){
-//                String MaterialId = material.getMaterialId();
-//                int Quantity = -material.getQuantity();
-//                _materialService.AddQuantity(Quantity,MaterialId);
-//            }
-//        }
-//    }
 }

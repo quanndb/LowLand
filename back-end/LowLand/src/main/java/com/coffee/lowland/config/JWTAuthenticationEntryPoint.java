@@ -1,6 +1,6 @@
 package com.coffee.lowland.config;
 
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

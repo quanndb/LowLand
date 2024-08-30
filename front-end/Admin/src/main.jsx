@@ -9,10 +9,15 @@ import { store } from "./redux/store.jsx";
 import { ToastContainer } from "react-toastify";
 import { routes } from "./routes/sections.jsx";
 import ThemeProvider from "./theme/index.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { DialogProvider } from "./components/dialog/DialogProvider.jsx";
 
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const client = new QueryClient();
 
 root.render(
   <HelmetProvider>
@@ -23,11 +28,16 @@ root.render(
           pauseOnHover={false}
           position="bottom-left"
         />
-        <ThemeProvider>
-          <RouterProvider router={routes}>
-            <App />
-          </RouterProvider>
-        </ThemeProvider>
+        <QueryClientProvider client={client}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <ThemeProvider>
+            <RouterProvider router={routes}>
+              <DialogProvider>
+                <App />
+              </DialogProvider>
+            </RouterProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
       </StoreProvider>
     </Suspense>
   </HelmetProvider>

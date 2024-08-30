@@ -31,6 +31,7 @@ export function fData(number) {
 }
 
 export function formatPrice(number) {
+  if (!number) return "0.00";
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 

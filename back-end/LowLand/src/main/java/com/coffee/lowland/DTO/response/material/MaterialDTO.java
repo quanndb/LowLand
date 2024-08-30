@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO;
+package com.coffee.lowland.DTO.response.material;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
@@ -16,5 +16,4 @@ public class MaterialDTO {
     String materialName;
     String unitName;
     Double minQuantity;
-    Double quantity;
 }

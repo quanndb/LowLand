@@ -35,4 +35,5 @@ public class Account {
     String imageName;
     String imageURL;
     String cloudId;
+    Boolean isActive;
 }

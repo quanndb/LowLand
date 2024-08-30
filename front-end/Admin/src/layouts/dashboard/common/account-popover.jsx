@@ -14,6 +14,8 @@ import { user } from "src/redux/selectors/UserSelector";
 import UserManagerSlice from "src/redux/slices/UserManagerSlice";
 import authAPI from "src/services/API/authAPI";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
+import LoadingComp from "src/components/loading/LoadingComp";
 
 // ----------------------------------------------------------------------
 
@@ -51,21 +53,24 @@ export default function AccountPopover() {
   };
 
   const handleLogout = () => {
-    authAPI
-      .logout()
-      .then(() => {
+    logout(null, {
+      onSuccess: () => {
         dispatch(UserManagerSlice.actions.removeUser());
         toast.success("Logout successfully");
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+      },
+    });
   };
+
+  const { mutate: logout, isPending } = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: () => authAPI.logout(),
+  });
 
   const handleMenuClick = (linkTo) => {
     router.push(linkTo);
     handleClose();
   };
+
   return (
     <>
       <IconButton
@@ -139,6 +144,7 @@ export default function AccountPopover() {
           Logout
         </MenuItem>
       </Popover>
+      <LoadingComp isLoading={isPending} />
     </>
   );
 }

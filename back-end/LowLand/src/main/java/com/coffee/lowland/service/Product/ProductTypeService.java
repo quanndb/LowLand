@@ -7,6 +7,8 @@ import com.coffee.lowland.JPA.repository.ProductTypeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ProductTypeService {
     ProductTypeRepository _repo;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public ProductType createNewType(ProductTypeDto data){
         checkTypeName(data.getTypeName());
         return _repo.save(ProductType.builder()
@@ -24,25 +27,44 @@ public class ProductTypeService {
                 .description(data.getDescription())
                 .build());
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public ProductType updateType(ProductType data){
         getProductTypeById(data.getProductTypeId());
         checkTypeName(data.getTypeName());
         return _repo.save(data);
     }
 
-    public List<ProductType> getAllProductType(String query){
-        return _repo.findByTypeNameContainsIgnoreCase(query);
+    public List<ProductType> getAllProductType(String query, Integer size){
+        if(size != null){
+            Pageable pageable = Pageable.ofSize(size);
+            return _repo.findByTypeNameContainsIgnoreCase(query,pageable).getContent();
+        }
+        else return _repo.findByTypeNameContainsIgnoreCase(query);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public boolean deleteProductTypeById(String id){
-        getProductTypeById(id);
-        _repo.deleteById(id);
+        ProductType foundType = getProductTypeById(id);
+        foundType.setIsActive(false);
+        _repo.save(foundType);
         return true;
     }
     public ProductType getProductTypeById(String id){
         return _repo.findById(id)
                 .orElseThrow(()->
                         new AppExceptions(ErrorCode.PRODUCT_TYPE_NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
+    public ProductType getOrCreateProductTypeByName(ProductTypeDto type){
+        return _repo.findByTypeNameIgnoreCase(type.getTypeName())
+                .orElseGet(() -> {
+                    ProductType newType = new ProductType();
+                    newType.setTypeName(type.getTypeName());
+                    newType.setDescription(type.getDescription());
+                    return _repo.save(newType);
+                });
     }
 
     public void checkTypeName(String typeName){

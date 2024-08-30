@@ -1,9 +1,10 @@
 package com.coffee.lowland.service.Account;
 
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
+import com.coffee.lowland.DTO.request.account.CreateAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
-import com.coffee.lowland.DTO.response.CloudResponse;
-import com.coffee.lowland.DTO.response.PageServiceResponse;
+import com.coffee.lowland.DTO.response.utilities.CloudResponse;
+import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
@@ -40,7 +41,7 @@ public class AccountService {
     PageService<UserResponse> pageService;
 
     @Transactional
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public PageServiceResponse<UserResponse> getAccounts(int page, int size,
                                                     String sortedBy, String sortDirection,
                                                     String query, String role){
@@ -60,25 +61,29 @@ public class AccountService {
                 });
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         Account newAccount = new Account();
-        accountMapper.createAccount(newAccount,account);
+        newAccount.setIsActive(true);
+        accountMapper.register(newAccount,account);
         newAccount.setRole(Role.CUSTOMER);
         accountRepository.save(newAccount);
         return "Register successfully!";
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public UserResponse createAccount(Account request){
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public UserResponse createAccount(CreateAccountRequest request){
         accountRepository
                 .findByEmail(request.getEmail())
                 .ifPresent(account -> {
                     throw new AppExceptions(ErrorCode.ACCOUNT_EXISTED);
                 });
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        Account res = accountRepository.save(request);
-        return accountMapper.toUserResponse(res);
+        Account newAccount = new Account();
+        newAccount.setIsActive(true);
+        accountMapper.createAccount(newAccount, request);
+        accountRepository.save(newAccount);
+        return accountMapper.toUserResponse(newAccount);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN') " +
+    @PreAuthorize("hasAnyAuthority('ADMIN') " +
             "or @securityService.isOwner(authentication, #accountId)")
     public UserResponse updateAccount(String accountId, UpdateAccountRequest request, MultipartFile image) throws IOException {
         Account foundAccount = findAccountById(accountId);
@@ -92,32 +97,29 @@ public class AccountService {
             request.setImageName(res.getOriginalFilename());
             request.setCloudId(res.getPublicId());
         }
-
+        if(request.getPassword() != null)
+            request.setPassword(passwordEncoder.encode(request.getPassword()));
         accountMapper.updateAccount(foundAccount,request);
         accountRepository.save(foundAccount);
 
         return accountMapper.toUserResponse(foundAccount);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public boolean deleteAccount(String accountId){
-        accountRepository.findById(accountId)
+       Account foundAccount = accountRepository.findById(accountId)
                 .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
-        accountRepository.deleteById(accountId);
-        return true;
+       foundAccount.setIsActive(false);
+       accountRepository.save(foundAccount);
+       return true;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public UserResponse getAccountById(String accountId) {
         Account foundAccount = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
         return accountMapper.toUserResponse(foundAccount);
     }
-
-//    public Account findAccountByEmail(String username){
-//        return accountRepository.findByEmail(username)
-//                .orElseThrow(()-> new AppExceptions(ErrorCode.EMAIL_NOT_EXIST));
-//    }
 
     public Account findAccountById(String accountId){
         return accountRepository.findById(accountId)

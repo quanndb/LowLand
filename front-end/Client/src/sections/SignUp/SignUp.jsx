@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   Paper,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -18,6 +19,8 @@ import LowLandLogo from "src/components/navigation/logo";
 import { useRouter } from "src/routes/hooks";
 
 import accountAPI from "src/services/API/accountAPI";
+import { useMutation } from "@tanstack/react-query";
+import LoadingComp from "src/components/LoadingComp";
 
 const SignUpPageView = () => {
   const router = useRouter();
@@ -32,7 +35,8 @@ const SignUpPageView = () => {
 
   const [showPass, setShowPass] = useState(false);
 
-  const handleSignUp = () => {
+  const handleSignUp = (e) => {
+    e.preventDefault();
     if (!username || !password || !confirmPass || !fullName || !phone) {
       setAttempt(true);
       toast.error("Please fill all fields");
@@ -42,25 +46,30 @@ const SignUpPageView = () => {
       toast.error("Password not match");
       return;
     }
-    accountAPI
-      .register({
+    register(
+      {
         email: username,
-        password: password,
-        fullName: fullName,
+        password,
+        fullName,
         phoneNumber: phone,
-      })
-      .then((res) => {
-        router.push("/login");
-        toast.success("Sign up successfully");
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+      },
+      {
+        onSuccess: (res) => {
+          toast.success("Register successfully");
+          router.push("/login");
+        },
+      }
+    );
   };
+
+  const { mutate: register, isPending } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: (params) => accountAPI.register(params),
+  });
 
   return (
     <SideLayout title={"Login"}>
-      <Paper sx={{ my: "100px" }}>
+      <Paper sx={{ my: "100px", width: "100%" }}>
         <Grid
           container
           columns={{ xm: 1, md: 3 }}
@@ -110,82 +119,87 @@ const SignUpPageView = () => {
             </Paper>
           </Grid>
           <Grid item sm={1} md={1}>
-            <TextField
-              label="Email"
-              value={username}
-              onChange={(e) => setUserName(e.target.value)}
-              sx={{ width: "100%", marginBottom: "20px" }}
-              error={username === "" && attempt}
-              helperText={username === "" && attempt && "Email cannot be empty"}
-            />
-            <TextField
-              label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type={showPass ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPass(!showPass)}>
-                      {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ width: "100%", marginBottom: "20px" }}
-              error={password === "" && attempt}
-              helperText={
-                password === "" && attempt && "Password cannot be empty"
-              }
-            />
-            <TextField
-              label="ConfirmPass"
-              value={confirmPass}
-              onChange={(e) => setConfirmPass(e.target.value)}
-              type={showPass ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPass(!showPass)}>
-                      {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ width: "100%", marginBottom: "20px" }}
-              error={confirmPass === "" && attempt}
-              helperText={
-                confirmPass === "" && attempt && "Password cannot be empty"
-              }
-            />
-            <TextField
-              label="FullName"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              sx={{ width: "100%", marginBottom: "20px" }}
-              error={fullName === "" && attempt}
-              helperText={
-                fullName === "" && attempt && "FullName cannot be empty"
-              }
-            />
-            <TextField
-              label="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              sx={{ width: "100%", marginBottom: "20px" }}
-              error={phone === "" && attempt}
-              helperText={
-                phone === "" && attempt && "Phone Number cannot be empty"
-              }
-            />
+            <Stack component={"form"} onSubmit={handleSignUp}>
+              <TextField
+                label="Email"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+                sx={{ width: "100%", marginBottom: "20px" }}
+                error={username === "" && attempt}
+                helperText={
+                  username === "" && attempt && "Email cannot be empty"
+                }
+              />
+              <TextField
+                label="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type={showPass ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPass(!showPass)}>
+                        {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: "100%", marginBottom: "20px" }}
+                error={password === "" && attempt}
+                helperText={
+                  password === "" && attempt && "Password cannot be empty"
+                }
+              />
+              <TextField
+                label="ConfirmPass"
+                value={confirmPass}
+                onChange={(e) => setConfirmPass(e.target.value)}
+                type={showPass ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPass(!showPass)}>
+                        {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: "100%", marginBottom: "20px" }}
+                error={confirmPass === "" && attempt}
+                helperText={
+                  confirmPass === "" && attempt && "Password cannot be empty"
+                }
+              />
+              <TextField
+                label="FullName"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                sx={{ width: "100%", marginBottom: "20px" }}
+                error={fullName === "" && attempt}
+                helperText={
+                  fullName === "" && attempt && "FullName cannot be empty"
+                }
+              />
+              <TextField
+                label="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                sx={{ width: "100%", marginBottom: "20px" }}
+                error={phone === "" && attempt}
+                helperText={
+                  phone === "" && attempt && "Phone Number cannot be empty"
+                }
+              />
 
-            <Button
-              variant="contained"
-              sx={{ width: "100%" }}
-              onClick={handleSignUp}
-            >
-              Sign Up
-            </Button>
+              <Button
+                variant="contained"
+                sx={{ width: "100%" }}
+                onClick={handleSignUp}
+                type="submit"
+              >
+                Sign Up
+              </Button>
+            </Stack>
 
             <Typography sx={{ mt: "20px" }}>
               Clicking on "Sign Up" means you agree to our{" "}
@@ -205,6 +219,7 @@ const SignUpPageView = () => {
           </Grid>
         </Grid>
       </Paper>
+      <LoadingComp isLoading={isPending} />
     </SideLayout>
   );
 };

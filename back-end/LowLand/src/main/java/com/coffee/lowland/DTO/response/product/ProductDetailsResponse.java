@@ -1,7 +1,5 @@
 package com.coffee.lowland.DTO.response.product;
 
-import com.coffee.lowland.DTO.response.ProductDetailResponse;
-import com.coffee.lowland.model.ProductImage;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

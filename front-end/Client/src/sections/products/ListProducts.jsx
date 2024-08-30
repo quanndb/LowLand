@@ -24,10 +24,10 @@ const ListProducts = ({ products }) => {
                     <ProductItem
                       id={item.productId}
                       imageURL={item?.imageUrl}
-                      isActive={item.isActive}
+                      isSale={Boolean(item?.salePrice)}
                       name={item.productName}
-                      salePrices={formatPrice(item.price)}
-                      originalPrices={formatPrice(item.price)}
+                      salePrices={formatPrice(item?.salePrice)}
+                      originalPrices={formatPrice(item?.price)}
                     />
                   </Grid>
                 );

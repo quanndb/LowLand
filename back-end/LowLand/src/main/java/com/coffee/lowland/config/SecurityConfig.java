@@ -38,8 +38,10 @@ public class SecurityConfig {
     String SECRET_KEY;
     String[] PUBLIC_ENDPOINTS = {
             "auth/**",
+            "payments/verified-payment",
+            "orders/payment-result",
             "products", "products/{product_id}",
-            "product-types"
+            "productTypes"
     };
 
     JWTDecoder jwtDecoder;

@@ -59,6 +59,9 @@ instance.interceptors.response.use(
   (error) => {
     if (error.code === "ERR_NETWORK") {
       toast.error("Network error. Please check your internet connection.");
+    } else if (error.response.data.code === 4002) {
+      store.dispatch(UserManagerSlice.actions.removeUser());
+      toast.error("Your session has expired. Please login again.");
     } else if (error.response && error.response.status === 404) {
       window.location.href = "/404";
     } else {

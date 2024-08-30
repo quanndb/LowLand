@@ -1,27 +1,47 @@
-import ApexChart from 'react-apexcharts';
+import ApexChart from "react-apexcharts";
 import Chart, { useChart } from "src/components/chart";
 
-const MaterialColumnChart = ({ materials }) => {
+const MaterialColumnChart = ({ title, subheader, chart, ...other }) => {
+  const { labels, colors, series, options } = chart;
+
   const chartOptions = useChart({
-    chart: {
-      type: 'bar',
+    colors,
+    plotOptions: {
+      bar: {
+        columnWidth: "30%",
+      },
     },
-    series: [
-      {
-        name: 'Quantity',
-        data: materials.map(material => material.quantity),
-      },
-      {
-        name: 'Min Quantity',
-        data: materials.map(material => material.minQuantity),
-      },
-    ],
+    fill: {
+      type: series.map((i) => i.fill),
+    },
+    labels,
     xaxis: {
-      categories: materials.map(material => material.materialName),
+      type: "text",
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: (value) => {
+          if (typeof value !== "undefined") {
+            return `${value.toLocaleString()}`;
+          }
+          return value;
+        },
+      },
     },
   });
 
-  return <ApexChart options={chartOptions} series={chartOptions.series} type="bar" height={400} />;
+  return (
+    <Chart
+      dir="ltr"
+      type="line"
+      series={series}
+      options={chartOptions}
+      width="100%"
+      height={364}
+    />
+  );
 };
 
 export default MaterialColumnChart;

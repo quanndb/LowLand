@@ -1,21 +1,26 @@
 import axios from "src/services";
 
 const accountAPI = {
-  getAlls: () => {
+  getAccounts: (params) => {
     const url = "/accounts";
-    return axios.get(url);
+    return axios.get(url, { params });
   },
   createAccount: (params) => {
-    const url = "/accounts/new-account";
+    const url = "/accounts";
     return axios.post(url, params);
   },
-  updateAccount: (params) => {
-    const url = `/accounts/edit-account`;
-    return axios.post(url, params);
+
+  updateAccount: (accountId, params) => {
+    const url = `/accounts/${accountId}`;
+    return axios.post(url, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
   deleteAccount: (id) => {
-    const url = `/accounts/delete-account?accountId=${id}`;
-    return axios.post(url);
+    const url = `/accounts/${id}`;
+    return axios.delete(url);
   },
 };
 

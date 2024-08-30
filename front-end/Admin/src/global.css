@@ -1,3 +1,43 @@
 /* scrollbar */
 @import "simplebar-react/dist/simplebar.min.css";
 @import "react-toastify/dist/ReactToastify.css";
+@import "swiper/css";
+
+#root {
+  --primary-color: #1d1f2e;
+  --secondary-color: #a25f4b;
+
+  --background-color: #d5d5d534;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a27d72;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9b6b5c;
+}
+
+.swiper {
+  .swiper-pagination {
+    top: 92% !important;
+    .swiper-pagination-bullet.swiper-pagination-bullet-active {
+      background-color: #a25f4b;
+    }
+  }
+  .swiper-button-next {
+    color: var(--primary-color) !important;
+  }
+  .swiper-button-prev {
+    color: var(--primary-color) !important;
+  }
+}

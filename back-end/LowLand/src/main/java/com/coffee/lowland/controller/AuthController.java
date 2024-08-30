@@ -3,10 +3,12 @@ package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.auth.AuthenticationRequest;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.request.auth.DetailsLogin;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 
 import com.coffee.lowland.service.Account.AccountService;
 import com.coffee.lowland.service.Account.AuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +25,28 @@ public class AuthController {
     AccountService accountService;
 
     @PostMapping("/login")
-    public APIResponse<?> login(@RequestBody @Valid AuthenticationRequest request) {
+    public APIResponse<?> login(@RequestBody @Valid AuthenticationRequest request,
+                                HttpServletRequest details) {
+        DetailsLogin detailsLogin = DetailsLogin.builder()
+                .IP(details.getRemoteAddr())
+                .userAgent(details.getHeader("User-Agent"))
+                .build();
         return APIResponse.builder()
                 .code(2000)
-                .result(authenticationService.authenticate(request))
+                .result(authenticationService.authenticate(request,detailsLogin))
                 .build();
     }
 
     @PostMapping ("/google")
-    public APIResponse<?> loginWithGoogle(@RequestParam String code) {
+    public APIResponse<?> loginWithGoogle(@RequestParam String code
+                ,HttpServletRequest details) {
+       DetailsLogin detailsLogin = DetailsLogin.builder()
+                .IP(details.getRemoteAddr())
+                .userAgent(details.getHeader("User-Agent"))
+                .build();
         return APIResponse.builder()
                 .code(2000)
-                .result(authenticationService.loginWithGoogle(code))
+                .result(authenticationService.loginWithGoogle(code, detailsLogin))
                 .build();
     }
 

@@ -31,7 +31,7 @@ public class OrderDetailsService {
     @Transactional
     public List<GetOrderDetailsResponse> getOrderDetailsByOrderId(String id){
         StoredProcedureQuery sp = store
-                .prepareStore("spGetOrderDetailsByOrderId"
+                .prepareStore(" spGetOrderDetailsByOrderId"
                         , GetOrderDetailsResponse.class);
         store.addField(sp, "inputOrderID", String.class, id);
         return store.get(sp);

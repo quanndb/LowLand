@@ -18,4 +18,5 @@ public class ProductType {
     String productTypeId;
     String typeName;
     String description;
+    Boolean isActive;
 }

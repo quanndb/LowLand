@@ -40,12 +40,22 @@ const ProductsView = () => {
       {
         queryKey: [
           "products",
-          { page: currentPage, query: debouncedSearch, productTypeId: menu.id },
+          {
+            page: currentPage,
+            size: 12,
+            query: debouncedSearch,
+            productTypeId: menu.id,
+            isActive: true,
+          },
         ],
         queryFn: () =>
-          productAPI.getProducts(
-            `?page=${currentPage}&size=12&query=${debouncedSearch}&productTypeId=${menu.id}`
-          ),
+          productAPI.getProducts({
+            page: currentPage,
+            size: 12,
+            query: debouncedSearch,
+            productTypeId: menu.id,
+            isActive: true,
+          }),
         placeholderData: keepPreviousData,
         staleTime: 1000 * 60,
       },

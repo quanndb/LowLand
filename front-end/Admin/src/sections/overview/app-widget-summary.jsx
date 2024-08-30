@@ -25,6 +25,8 @@ export default function AppWidgetSummary({
       sx={{
         px: 3,
         py: 5,
+        height: "100%",
+        width: "100%",
         borderRadius: 2,
         ...sx,
       }}
@@ -32,7 +34,7 @@ export default function AppWidgetSummary({
     >
       {icon && <Box sx={{ width: 64, height: 64 }}>{icon}</Box>}
 
-      <Stack spacing={0.5}>
+      <Stack spacing={0.5} sx={{ ml: "5px !important" }}>
         <Typography variant="h4">{fShortenNumber(total)}</Typography>
 
         <Typography variant="subtitle2" sx={{ color: "text.disabled" }}>

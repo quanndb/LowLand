@@ -1,7 +1,8 @@
 package com.coffee.lowland.exception;
 
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import feign.FeignException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<APIResponse<?>> handleForbiddenExceptions(Exception exception){
+    ResponseEntity<APIResponse<?>> handleForbiddenExceptions(){
         APIResponse<?> apiResponse = APIResponse.builder()
                 .code(ErrorCode.FORBIDDEN_EXCEPTION.getCode())
                 .message(ErrorCode.FORBIDDEN_EXCEPTION.getMessage())
@@ -46,15 +47,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<APIResponse<?>> handleValidationException(MethodArgumentNotValidException exception){
-        String enumkey = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
+        String enumKey = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         try{
-        errorCode = ErrorCode.valueOf(enumkey);
+        errorCode = ErrorCode.valueOf(enumKey);
         }
-        catch (Exception exc){}
+        catch (Exception ignored){}
         APIResponse<?> apiResponse = APIResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    ResponseEntity<APIResponse<?>> handleValidationsException(ConstraintViolationException exception){
+        String[] details = Objects.requireNonNull(exception
+                .getMessage()).split(" ");
+        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+        try{
+            errorCode = ErrorCode.valueOf(details[1]);
+        }
+        catch (Exception ignored){}
+        APIResponse<?> apiResponse = APIResponse.builder()
+                .code(errorCode.getCode())
+                .message(details[0] + errorCode.getMessage())
                 .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }

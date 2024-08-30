@@ -24,4 +24,5 @@ public class ProductSize {
     String productSizeId;
     String sizeName;
     String description;
+    Boolean isActive;
 }

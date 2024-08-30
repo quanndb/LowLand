@@ -18,8 +18,18 @@ import productAPI from "src/services/API/productAPI";
 
 const HomeView = () => {
   const { data: pageData, isFetching } = useQuery({
-    queryKey: ["products", { type: "Page" }],
-    queryFn: () => productAPI.getProducts("?page=1&size=12"),
+    queryKey: [
+      "products",
+      {
+        size: 12,
+        isActive: true,
+      },
+    ],
+    queryFn: () =>
+      productAPI.getProducts({
+        size: 12,
+        isActive: true,
+      }),
     staleTime: 1000 * 60 * 60,
   });
 

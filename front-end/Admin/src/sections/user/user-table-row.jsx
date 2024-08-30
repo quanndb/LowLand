@@ -18,11 +18,12 @@ export default function UserTableRow({
   full_name,
   role,
   gender,
+  isActive,
   phone_number,
   avatarUrl,
   handleClick,
-  handleEdit, 
-  handleDelete, 
+  handleEdit,
+  handleDelete,
 }) {
   const [open, setOpen] = useState(null);
 
@@ -61,6 +62,17 @@ export default function UserTableRow({
         <TableCell>{role}</TableCell>
         <TableCell>{gender}</TableCell>
         <TableCell>{phone_number}</TableCell>
+        <TableCell>
+          {isActive ? (
+            <Iconify
+              icon="teenyicons:tick-circle-solid"
+              sx={{ color: "green" }}
+            />
+          ) : (
+            // đỏ đậm
+            <Iconify icon="zondicons:close-solid" sx={{ color: "#ba1f1d" }} />
+          )}
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>

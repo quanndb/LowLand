@@ -1,6 +1,6 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.service.Utilities.ChartService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,32 +11,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Chart")
+@RequestMapping("/charts")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ChartController {
     ChartService _service;
-    @GetMapping("/GetToltalMoneyDayinMonth")
-    public APIResponse<Object> GetToltalMoneyDayinMonth(@RequestParam int monthInput,@RequestParam int yearInput){
+    @GetMapping("/totalMoneyInMonth")
+    public APIResponse<Object> getTotalMoneyInMonth(@RequestParam int monthInput,@RequestParam int yearInput){
         return APIResponse.<Object>builder()
                 .code(2000)
-                .result(_service.GetTotalMoneyDayanMonth(monthInput, yearInput))
+                .result(_service.getTotalMoneyInMonth(monthInput, yearInput))
                 .build();
     }
 
-    @GetMapping("/GetTopBestSaleProduct")
-    public APIResponse<Object> GetTopBestSaleProduct(@RequestParam int topProduct){
-        return APIResponse.<Object>builder()
+    @GetMapping("/totalStuff")
+    public APIResponse<?> getTotalStuff(){
+        return APIResponse.builder()
                 .code(2000)
-                .result(_service.GetTopProduct(topProduct, 1))
+                .result(_service.getStuff())
                 .build();
     }
 
-    @GetMapping("/GetTopLowSaleProduct")
-    public APIResponse<Object> GetTopLowSaleProduct(@RequestParam int topProduct){
+    @GetMapping("/topSale")
+    public APIResponse<Object> getTopSale(@RequestParam int topProduct){
         return APIResponse.<Object>builder()
                 .code(2000)
-                .result(_service.GetTopProduct(topProduct, 0))
+                .result(_service.GetTopProduct(topProduct))
+                .build();
+    }
+
+    @GetMapping("/materialsChart")
+    public APIResponse<Object> getMaterialChart(@RequestParam(required = false, defaultValue = "1") int page,
+                                          @RequestParam(required = false, defaultValue = "10") int size,
+                                          @RequestParam(required = false, defaultValue = "") String query,
+                                          @RequestParam(required = false, defaultValue = "material_name") String sortedBy,
+                                          @RequestParam(required = false, defaultValue = "DESC") String sortDirection){
+        return APIResponse.<Object>builder()
+                .code(2000)
+                .result(_service.getMaterialChart(page,size,query, sortedBy, sortDirection))
                 .build();
     }
 }

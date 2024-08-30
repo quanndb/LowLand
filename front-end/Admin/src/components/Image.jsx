@@ -42,7 +42,7 @@ const Overlay = ({ hovered, overlayContent }) => {
   );
 };
 
-const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
+const Image = ({ sx, imageURL, unShowOverlay, overlayContent, children }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -60,8 +60,12 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
       {unShowOverlay ? (
         <></>
       ) : (
-        <Overlay hovered={hovered} overlayContent={overlayContent ? overlayContent : null} />
+        <Overlay
+          hovered={hovered}
+          overlayContent={overlayContent ? overlayContent : null}
+        />
       )}
+      {children}
     </Box>
   );
 };

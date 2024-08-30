@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.response;
+package com.coffee.lowland.DTO.response.utilities;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

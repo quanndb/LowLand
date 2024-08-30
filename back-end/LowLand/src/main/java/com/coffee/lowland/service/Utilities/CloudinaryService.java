@@ -2,7 +2,6 @@ package com.coffee.lowland.service.Utilities;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.coffee.lowland.DTO.response.CloudResponse;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +31,8 @@ public class CloudinaryService {
 
     public Map<?,?> upload(MultipartFile multipartFile) throws IOException {
         File file = convert(multipartFile);
-        Map<?,?> result = cloudinary.uploader().upload(file, ObjectUtils.asMap("overwrite", true));
+        Map<?,?> result = cloudinary.uploader()
+                .upload(file, ObjectUtils.asMap("overwrite", true));
         if (!Files.deleteIfExists(file.toPath())) {
             throw new IOException("Failed to delete temporary file: " + file.getAbsolutePath());
         }
@@ -45,7 +44,16 @@ public class CloudinaryService {
     }
 
     private File convert(MultipartFile multipartFile) throws IOException {
-        File file = new File(String.valueOf(multipartFile));
+        String originalFilename = multipartFile.getOriginalFilename();
+
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            throw new IllegalArgumentException("Filename is not present in the MultipartFile.");
+        }
+
+        File file = new File(System.getProperty("java.io.tmpdir"), originalFilename);
+
+        file.deleteOnExit();
+
         try (FileOutputStream fo = new FileOutputStream(file)) {
             fo.write(multipartFile.getBytes());
         }

@@ -19,5 +19,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.UUID)
     String tokenId;
     String accountId;
-    boolean isLogout;
+    boolean logout;
+    String lastLogin;
+    String details;
 }

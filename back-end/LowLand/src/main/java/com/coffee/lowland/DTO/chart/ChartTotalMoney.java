@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class chartTotalMoney {
-    int dayInMonth;
-    int totalMoney;
+public class ChartTotalMoney {
+    Integer dayInMonth;
+    BigDecimal totalMoney;
 }

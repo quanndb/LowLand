@@ -8,13 +8,16 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 
 import Iconify from "src/components/iconify";
+import { useMutation } from "@tanstack/react-query";
+import { de } from "date-fns/locale";
 
 // ----------------------------------------------------------------------
 
 export default function UserTableToolbar({
   numSelected,
-  filterName,
+  onDeleting,
   onFilterName,
+  filterName,
 }) {
   return (
     <Toolbar
@@ -51,7 +54,7 @@ export default function UserTableToolbar({
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onDeleting}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>
         </Tooltip>

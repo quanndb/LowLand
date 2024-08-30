@@ -26,5 +26,6 @@ public class UserResponse {
     String imageName;
     String imageURL;
     String cloudId;
+    Boolean isActive;
     String role;
 }

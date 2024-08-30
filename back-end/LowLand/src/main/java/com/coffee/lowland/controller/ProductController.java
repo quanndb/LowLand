@@ -1,9 +1,14 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.request.product.CreateProductData;
+import com.coffee.lowland.DTO.request.product.CreateProductDetails;
+import com.coffee.lowland.DTO.request.product.CreateProductRecipe;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
+import com.coffee.lowland.service.Product.ProductDetailsService;
 import com.coffee.lowland.service.Product.ProductImageService;
 import com.coffee.lowland.service.Product.ProductService;
-import jakarta.validation.constraints.Null;
+import com.coffee.lowland.service.Utilities.JSONMapper;
+import com.coffee.lowland.service.Utilities.ObjectValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,6 +24,9 @@ import java.io.IOException;
 public class ProductController {
     ProductService _service;
     ProductImageService productImageService;
+    ProductDetailsService productDetailsService;
+    JSONMapper jsonMapper;
+    ObjectValidator objectValidator;
 
     @GetMapping
     public APIResponse<?> getProductPage(
@@ -44,31 +52,87 @@ public class ProductController {
                 .build();
     }
 
+    @PostMapping
+    public APIResponse<?> createNewProduct(@RequestParam MultipartFile[] images
+            ,@RequestParam String recipes
+            ,@RequestParam String details
+            ,@RequestParam String productData) throws IOException {
+        // convert to object
+        CreateProductData data = jsonMapper.JSONToObject(productData, CreateProductData.class);
+        CreateProductDetails[] productDetails = jsonMapper.JSONToObject(details, CreateProductDetails[].class);
+        CreateProductRecipe[] productRecipe = jsonMapper.JSONToObject(recipes, CreateProductRecipe[].class);
+        // validate
+        objectValidator.validateObject(data);
+        for(CreateProductDetails item : productDetails) objectValidator.validateObject(item);
+        for(CreateProductRecipe item : productRecipe) objectValidator.validateObject(item);
+        return APIResponse.builder()
+                .code(2000)
+                .result(_service.createProduct(data, productDetails, productRecipe, images))
+                .build();
+    }
 
+    @PutMapping("/{productId}")
+    public APIResponse<?> updateProduct(
+            @RequestParam(required = false) MultipartFile[] images,
+            @RequestParam(required = false) String recipes,
+            @RequestParam(required = false) String details,
+            @RequestParam(required = false) String productData,
+            @PathVariable String productId) throws IOException {
+        CreateProductData data = null;
+        CreateProductDetails[] productDetails = null;
+        CreateProductRecipe[] productRecipe = null;
+        if (productData != null) {
+            data = jsonMapper.JSONToObject(productData, CreateProductData.class);
+            objectValidator.validateObject(data);
+        }
+        if (details != null) {
+            productDetails = jsonMapper.JSONToObject(details, CreateProductDetails[].class);
+            for (CreateProductDetails item : productDetails) objectValidator.validateObject(item);
+        }
+        if (recipes != null) {
+            productRecipe = jsonMapper.JSONToObject(recipes, CreateProductRecipe[].class);
+            for (CreateProductRecipe item : productRecipe) objectValidator.validateObject(item);
+        }
+        return APIResponse.builder()
+                .code(2000)
+                .result(_service.updateProduct(productId, data, productDetails, productRecipe, images))
+                .build();
+    }
+
+    // product sizes and prices
+    @DeleteMapping("/{productId}/sizesAndPrices/{detailsId}")
+    public APIResponse<?> deleteSizeAndPrice(@PathVariable String productId
+            , @PathVariable String detailsId) {
+        return APIResponse.builder()
+                .code(2000)
+                .result(productDetailsService.deleteDetailsById(productId,detailsId))
+                .build();
+    }
 
     // product images
     @GetMapping("/{productId}/images")
-    public APIResponse<Object> getProductImagesByProductId(@PathVariable String productId) throws IOException {
-        return APIResponse.<Object>builder()
+    public APIResponse<?> getProductImagesByProductId(@PathVariable String productId) throws IOException {
+        return APIResponse.builder()
                 .code(2000)
                 .result(productImageService.getProductImages(productId))
                 .build();
     }
 
     @PostMapping("/{productId}/images")
-    public APIResponse<?> uploadProductImage(@RequestParam MultipartFile image,
+    public APIResponse<?> uploadProductImage(@RequestParam MultipartFile[] images,
                                              @PathVariable String productId) throws IOException {
         return APIResponse.builder()
                 .code(2000)
-                .result(productImageService.createProductImage(image,productId))
+                .result(productImageService.createProductImages(images,productId))
                 .build();
     }
 
-    @DeleteMapping("/images/{productImageId}")
-    public APIResponse<Boolean> deleteProductImage(@PathVariable String productImageId) throws IOException {
+    @DeleteMapping("/{productId}/images/{productImageId}")
+    public APIResponse<Boolean> deleteProductImage(@PathVariable String productImageId,
+                                                   @PathVariable String productId) throws IOException {
         return APIResponse.<Boolean>builder()
                 .code(2000)
-                .result(productImageService.deleteProductImage(productImageId))
+                .result(productImageService.deleteProductImage(productId,productImageId))
                 .message("Deleted success!")
                 .build();
     }

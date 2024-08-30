@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.request.product;
+package com.coffee.lowland.DTO.request.importStock;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,10 +8,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductDto {
-    String productId;
-    String productName;
-    boolean isActive;
+public class DetailsImportStockRequest {
+    String materialName;
     String description;
-    int productTypeId;
+    String unitName;
+    Long quantity;
+    Long price;
 }

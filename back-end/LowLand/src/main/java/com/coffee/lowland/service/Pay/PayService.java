@@ -3,7 +3,7 @@ package com.coffee.lowland.service.Pay;
 import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
 import com.coffee.lowland.DTO.request.order.CreatePayRequest;
 import com.coffee.lowland.DTO.request.order.PayOrderItem;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.DTO.response.order.PayResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
@@ -16,8 +16,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,11 +23,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class PayService {
-
     OrderDetailsService orderDetailsService;
     OrderRepository orderRepository;
     PayRepo payRepo;
-
 
     public String createPaymentLink(String orderId) {
         Order foundOrder = orderRepository.findById(orderId)
@@ -55,8 +51,8 @@ public class PayService {
         return payment_link;
     }
 
-    public APIResponse<Object> cancelPaymentLink(CancelPaymentRequest requestBody) {
-        return payRepo.cancelPaymentLink(requestBody);
+    public void cancelPaymentLink(CancelPaymentRequest requestBody) {
+        payRepo.cancelPaymentLink(requestBody);
     }
 
     public APIResponse<PayResponse> verifyPayment(Object requestBody) {

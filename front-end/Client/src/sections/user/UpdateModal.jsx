@@ -24,13 +24,11 @@ import {
 } from "@mui/material";
 
 import Image from "src/components/Image";
-import { useRouter } from "src/routes/hooks";
 import { formatPrice } from "src/utils/format-number";
 
 import payAPI from "src/services/API/payAPI";
 import orderAPI from "src/services/API/orderAPI";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { is } from "date-fns/locale";
 import LoadingComp from "src/components/LoadingComp";
 
 const ProductTable = ({ products }) => {
@@ -123,7 +121,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
 
   const orderStatus = {
     0: {
-      name: "Pending",
+      name: "Waiting",
       color: "#f1c40f",
     },
     1: {

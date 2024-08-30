@@ -16,7 +16,4 @@ import java.util.Optional;
 public interface OrderRepository extends CrudRepository<Order,String> {
 
     Optional<Order> findByOrderCode(int orderCode);
-
-    @Procedure
-    List<Object[]> spGetAllMeterialIdByOrder(String orderId);
 }

@@ -15,7 +15,7 @@ export default function AppWebsiteVisits({
   chart,
   ...other
 }) {
-  const { labels, colors, series, options, forMat } = chart;
+  const { labels, colors, series, options } = chart;
 
   const chartOptions = useChart({
     colors,
@@ -43,7 +43,6 @@ export default function AppWebsiteVisits({
         },
       },
     },
-    ...options,
   });
 
   return (

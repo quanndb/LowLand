@@ -1,5 +1,6 @@
 package com.coffee.lowland.service.Product;
 
+import com.coffee.lowland.DTO.request.product.CreateProductRecipe;
 import com.coffee.lowland.DTO.response.product.ProductRecipeDetailsResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
@@ -10,9 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,7 @@ public class ProductRecipeService {
                     Material material = materialService
                             .getMaterialById(item.getMaterialId());
                     return ProductRecipeDetailsResponse.builder()
+                            .productId(productId)
                             .productRecipeId(item.getProductRecipeId())
                             .materialName(material.getMaterialName())
                             .unitName(material.getUnitName())
@@ -40,11 +40,22 @@ public class ProductRecipeService {
                 .collect(Collectors.toList());
     }
 
-    public boolean createNewRecipe(List<ProductRecipe> data, String productId){
-        _repo.deleteAllByProductId(productId);
-        data.forEach(p -> p.setProductId(productId));
-        _repo.saveAll(data);
-        return true;
+    public void createNewRecipe(CreateProductRecipe[] data, String productId){
+        for(CreateProductRecipe item : data){
+            Material foundMaterial = materialService.getMaterialByName(item.getMaterialName());
+            _repo.save(ProductRecipe.builder()
+                     .materialId(foundMaterial.getMaterialId())
+                     .productId(productId)
+                     .quantity(item.getQuantity())
+                     .build());
+        }
+    }
+
+    public void deleteRecipesByProductId(String productId){
+        List<ProductRecipe> list = _repo.findAllByProductId(productId);
+        for(ProductRecipe item : list){
+            deleteRecipe(item.getProductRecipeId());
+        }
     }
 
     public void deleteRecipe(String recipeId){

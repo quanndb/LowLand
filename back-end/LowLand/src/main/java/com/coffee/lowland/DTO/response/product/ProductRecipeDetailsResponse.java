@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductRecipeDetailsResponse {
+    String productId;
     String productRecipeId;
     String materialName;
     String unitName;

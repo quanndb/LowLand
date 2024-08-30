@@ -1,6 +1,6 @@
 package com.coffee.lowland.service.Utilities;
 
-import com.coffee.lowland.DTO.response.PageServiceResponse;
+import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;

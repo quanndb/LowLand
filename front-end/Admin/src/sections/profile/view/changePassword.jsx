@@ -1,44 +1,7 @@
 import { Grid, Card, Typography, TextField, Box, Button } from "@mui/material";
 import { useState } from "react";
 
-const ChangePasswordTab = ({ user }) => {
-  const { password } = user;
-
-  const [formValues, setFormValues] = useState({
-    username: "",
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (formValues.oldPassword !== password) {
-      alert("Old password is incorrect");
-      return;
-    }
-
-    if (formValues.newPassword !== formValues.confirmPassword) {
-      alert("New password and confirm password do not match");
-      return;
-    }
-
-    console.log("Password change request:", formValues);
-
-    setFormValues({
-      username: "",
-      oldPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
-  };
-
+const ChangePasswordTab = ({ editData, setEditData, disable, onSubmit }) => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -49,24 +12,16 @@ const ChangePasswordTab = ({ user }) => {
           <Typography variant="body2" color="textSecondary" gutterBottom>
             Please fill out the following fields to change your password.
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <TextField
-              fullWidth
-              label="Old Password"
-              type="password"
-              name="oldPassword"
-              value={formValues.oldPassword}
-              onChange={handleChange}
-              autoComplete="current-password"
-              sx={{ mb: 2 }}
-            />
+          <Box sx={{ mt: 3 }}>
             <TextField
               fullWidth
               label="New Password"
               type="password"
               name="newPassword"
-              value={formValues.newPassword}
-              onChange={handleChange}
+              value={editData?.password ? editData.password : ""}
+              onChange={(e) =>
+                setEditData((prev) => ({ ...prev, password: e.target.value }))
+              }
               autoComplete="new-password"
               sx={{ mb: 2 }}
             />
@@ -75,12 +30,32 @@ const ChangePasswordTab = ({ user }) => {
               label="Confirm Password"
               type="password"
               name="confirmPassword"
-              value={formValues.confirmPassword}
-              onChange={handleChange}
-              autoComplete="new-password"
+              value={editData?.confirmPassword ? editData.confirmPassword : ""}
+              onChange={(e) =>
+                setEditData((prev) => ({
+                  ...prev,
+                  confirmPassword: e.target.value,
+                }))
+              }
+              error={editData?.password !== editData?.confirmPassword}
+              helperText={
+                editData?.password !== editData?.confirmPassword
+                  ? "Passwords do not match"
+                  : ""
+              }
+              autoComplete="confirm-password"
               sx={{ mb: 2 }}
             />
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2, mx: { xs: "auto", sm: 0 }, display: "block", px: 5 }}
+              disabled={
+                disable || editData?.password !== editData?.confirmPassword
+              }
+              onClick={onSubmit}
+            >
               Change Password
             </Button>
           </Box>

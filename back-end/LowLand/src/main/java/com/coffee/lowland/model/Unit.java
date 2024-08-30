@@ -21,4 +21,5 @@ public class Unit {
     String unitId;
     String unitName;
     String unitDescription;
+    Boolean isActive;
 }

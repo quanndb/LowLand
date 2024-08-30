@@ -27,6 +27,10 @@ public enum ErrorCode {
     ACCOUNT_EXISTED(4010,"Email existed", HttpStatus.BAD_REQUEST),
     FIELD_NOT_BLANK(4011,"These fields can't not be blank", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(4012,"Invalid email type", HttpStatus.BAD_REQUEST),
+    INVALID_CODE(4013,"Invalid google code", HttpStatus.BAD_REQUEST),
+    USER_FIELDS_NOT_BLANK(4014,"User fields can not be blank", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_ACTIVE(4015,"Your account is not active", HttpStatus.BAD_REQUEST),
+
     // blog
     BLOG_NOT_EXISTED(4020,"Your blogID is not existed", HttpStatus.BAD_REQUEST),
     // order
@@ -39,6 +43,7 @@ public enum ErrorCode {
     ORDER_FIELD_NOT_BE_BLANK(4036,"Please fill all the blank", HttpStatus.BAD_REQUEST),
     INVALID_ORDER_STATUS(4036,"Invalid order status", HttpStatus.BAD_REQUEST),
     ORDER_ID_NOT_BE_NULL(4036,"OrderID not be null", HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_ACTIVE(4037,"Product not active", HttpStatus.BAD_REQUEST),
     // product
     PRODUCT_TYPE_EXISTED(4040,"Product type code existed",HttpStatus.BAD_REQUEST),
     PRODUCT_TYPE_NOT_FOUND(4041,"Product type not found",HttpStatus.NOT_FOUND),
@@ -49,6 +54,13 @@ public enum ErrorCode {
     PRODUCT_IMAGE_NOT_FOUND(4051,"Product image not found",HttpStatus.NOT_FOUND),
     PRODUCT_MATERIAL_NOT_FOUND(4061,"Material not found",HttpStatus.NOT_FOUND),
     PRODUCT_MATERIAL_EXISTED(4062,"Material name existed",HttpStatus.BAD_REQUEST),
+    UNIT_NOT_FOUND(4063,"Unit not found",HttpStatus.NOT_FOUND),
+    UNIT_EXISTED(4064,"Unit name existed",HttpStatus.BAD_REQUEST),
+    PRODUCT_FIELDS_NOT_BLANK(4065, "Product fields cannot be blank", HttpStatus.BAD_REQUEST),
+    PRODUCT_PRICE_AT_LEAST(4066, "Product price must be at least 10k", HttpStatus.BAD_REQUEST),
+    INVALID_MATERIAL_IN_PRODUCT(4067, "Invalid quantity of material in product", HttpStatus.BAD_REQUEST),
+    //import stock
+    IMPORT_NOTFOUND(4070,"Not found import stock", HttpStatus.NOT_FOUND);
     ;
 
     int code;

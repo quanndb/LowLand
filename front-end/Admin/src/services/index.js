@@ -1,6 +1,9 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+
 import UserManagerSlice from "src/redux/slices/UserManagerSlice";
-import { store } from "src/redux/store"; // Import the Redux store
+import { store } from "src/redux/store";
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_BASE_URL,
@@ -9,16 +12,34 @@ const instance = axios.create({
   },
 });
 
+function isTokenExpired(token) {
+  if (!token) {
+    return true;
+  }
+
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    return decodedToken.exp < currentTime;
+  } catch (error) {
+    return true;
+  }
+}
+
 // Add a request interceptor
 instance.interceptors.request.use(
   (config) => {
     const state = store.getState();
     const token = state.UserManager?.accessToken;
-
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      if (isTokenExpired(token)) {
+        store.dispatch(UserManagerSlice.actions.removeUser());
+        toast.error("Your session has expired. Please login again.");
+      } else {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
-
     return config;
   },
   (error) => {
@@ -36,10 +57,22 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
-    if (error.response.data.code === 4002) {
+    console.log(error);
+    if (error.code === "ERR_NETWORK") {
+      toast.error("Network error. Please check your internet connection.");
+    } else if (error.response.data.code === 4002) {
       store.dispatch(UserManagerSlice.actions.removeUser());
+      toast.error("Your session has expired. Please login again.");
+    } else if (error.response && error.response.status === 404) {
+      window.location.href = "/404";
+    } else {
+      toast.error(
+        error.response?.data?.message ||
+          error.response?.data?.result ||
+          "An error occurred."
+      );
     }
-    throw error.response.data.message;
+    throw error;
   }
 );
 

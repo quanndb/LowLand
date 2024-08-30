@@ -1,7 +1,7 @@
 package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.productType.ProductTypeDto;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 
 import com.coffee.lowland.model.ProductType;
 import com.coffee.lowland.service.Product.ProductTypeService;
@@ -12,17 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/product-types")
+@RequestMapping("/productTypes")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ProductTypeController {
     ProductTypeService _service;
 
     @GetMapping("")
-    public APIResponse<?> getAll(@RequestParam(required = false, defaultValue = "") String query){
+    public APIResponse<?> getTypes(@RequestParam(required = false, defaultValue = "") String query,
+                                   @RequestParam(required = false) Integer size){
         return APIResponse.builder()
                 .code(2000)
-                .result(_service.getAllProductType(query))
+                .result(_service.getAllProductType(query, size))
                 .build();
     }
 

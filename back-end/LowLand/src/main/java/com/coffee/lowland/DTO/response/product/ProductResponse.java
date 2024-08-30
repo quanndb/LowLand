@@ -17,6 +17,7 @@ public class ProductResponse {
     String productId;
     String productName;
     Double price;
+    Double salePrice;
     String typeName;
     String description;
     Boolean isActive;

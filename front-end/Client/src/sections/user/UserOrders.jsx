@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import Pagination from "@mui/material/Pagination";
 import {
@@ -22,7 +21,6 @@ import { user as userSelector } from "src/redux/selectors/UserSelector";
 import InnerLoading from "src/components/InnerLoading";
 import { useDebounce } from "src/hooks/use-debounce";
 import SectionTitleB from "src/components/SectionTitleB";
-import { set } from "lodash";
 import UpdateModal from "./UpdateModal";
 
 const UserOrders = () => {
@@ -39,6 +37,29 @@ const UserOrders = () => {
   const [orderId, setOrderId] = useState(null);
 
   const debounceValue = useDebounce(search, 500);
+
+  const orderStatus = {
+    0: {
+      value: "WAITING",
+      color: "#FF9800",
+    },
+    1: {
+      value: "PAID",
+      color: "#2196F3",
+    },
+    2: {
+      value: "SHIPPING",
+      color: "#4CAF50",
+    },
+    3: {
+      value: "COMPLETED",
+      color: "#9C27B0",
+    },
+    4: {
+      value: "CANCELED",
+      color: "#F44336",
+    },
+  };
 
   const {
     data: pageOrders,
@@ -155,7 +176,26 @@ const UserOrders = () => {
               headerName: "Created Date ",
               width: 170,
             },
-            { field: "status", headerName: "Status", width: 90 },
+            {
+              field: "status",
+              headerName: "Status",
+              width: 90,
+              renderCell: (param) => (
+                <span
+                  style={{
+                    backgroundColor: orderStatus[param.row.status].color,
+                    color: "white",
+                    padding: "5px 5px",
+                    borderRadius: "5px",
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                  }}
+                >
+                  {orderStatus[param.row.status].value}
+                </span>
+              ),
+            },
             {
               field: "totalMoney",
               headerName: "Total",

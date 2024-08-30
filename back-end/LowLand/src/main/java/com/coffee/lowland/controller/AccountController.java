@@ -1,13 +1,15 @@
 package com.coffee.lowland.controller;
 
+import com.coffee.lowland.DTO.request.account.CreateAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
 import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
 import com.coffee.lowland.DTO.request.order.UpdateOrderRequest;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.model.Account;
 import com.coffee.lowland.service.Account.AccountService;
 import com.coffee.lowland.service.Order.OrderService;
 import com.coffee.lowland.service.Utilities.JSONMapper;
+import com.coffee.lowland.service.Utilities.ObjectValidator;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ public class AccountController {
 
     AccountService accountService;
     OrderService orderService;
+    ObjectValidator objectValidator;
+    JSONMapper jsonMapper;
 
     @GetMapping
     public APIResponse<?> getAccounts(
@@ -49,7 +53,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public APIResponse<?> createAccount(@RequestBody Account account) {
+    public APIResponse<?> createAccount(@RequestBody @Valid CreateAccountRequest account) {
         return APIResponse.builder()
                 .code(2000)
                 .result(accountService.createAccount(account))
@@ -70,9 +74,8 @@ public class AccountController {
             @RequestParam(value = "image", required = false) MultipartFile image,
             @PathVariable String accountId) throws IOException {
 
-        UpdateAccountRequest updateRequest = new JSONMapper<>(UpdateAccountRequest.class)
-                .JSONToObject(userInfo);
-
+        UpdateAccountRequest updateRequest = jsonMapper.JSONToObject(userInfo, UpdateAccountRequest.class);
+        objectValidator.validateObject(updateRequest);
         return APIResponse.builder()
                 .code(2000)
                 .result(accountService.updateAccount(accountId, updateRequest, image))

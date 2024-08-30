@@ -1,9 +1,7 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.request.order.CancelPaymentRequest;
-import com.coffee.lowland.DTO.response.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.service.Pay.PayService;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,11 +20,6 @@ public class PayController {
                 .code(2000)
                 .result(payService.createPaymentLink(orderId))
                 .build();
-    }
-
-    @PostMapping("/cancel-payment")
-    public APIResponse<?> cancelPayment(@RequestBody @Valid CancelPaymentRequest request){
-        return payService.cancelPaymentLink(request);
     }
 
     @GetMapping("/verified-payment")

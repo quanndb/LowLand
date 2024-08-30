@@ -1,9 +1,8 @@
 package com.coffee.lowland.mapper;
 
-import com.coffee.lowland.DTO.response.CloudResponse;
+import com.coffee.lowland.DTO.response.utilities.CloudResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+
 
 import java.util.Map;
 
@@ -19,7 +18,13 @@ public interface CloudImageMapper {
             fileMetadata.setPublicId(String.valueOf(map.get("public_id")));
         }
         if (map.containsKey("original_filename")) {
-            fileMetadata.setOriginalFilename(String.valueOf(map.get("original_filename")));
+            fileMetadata.setOriginalFilename(
+                    String.valueOf(map.get("original_filename")));
+        }
+        if(map.containsKey("format")){
+            fileMetadata.setOriginalFilename(
+                    fileMetadata.getOriginalFilename()+"."+ map.get("format")
+            );
         }
         return fileMetadata;
     }

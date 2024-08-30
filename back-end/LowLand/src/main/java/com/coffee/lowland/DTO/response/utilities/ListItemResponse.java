@@ -1,4 +1,4 @@
-package com.coffee.lowland.DTO.response;
+package com.coffee.lowland.DTO.response.utilities;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

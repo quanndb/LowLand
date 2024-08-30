@@ -16,10 +16,23 @@ const port = 3000;
 
 const payos = new PayOS(CLIENT_ID, API_KEY, CHECKSUM_KEY);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: BACK_END,
+  })
+);
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  const clientHost = req.hostname;
+
+  if (clientHost === BACK_END) {
+    next();
+  } else {
+    res.status(403).send("Access Denied");
+  }
+});
 
 const DOMAIN = CLIENT_HOST;
 
@@ -32,8 +45,8 @@ app.post("/create-payment-link", async (req, res) => {
   try {
     const order = {
       description: "LowLand thanh toan",
-      returnUrl: `${DOMAIN}/`,
-      cancelUrl: `${DOMAIN}/payment-cancel`,
+      returnUrl: `${DOMAIN}/user`,
+      cancelUrl: `${DOMAIN}/user`,
     };
     order.amount = req.body.amount;
     order.orderCode = req.body.orderCode;

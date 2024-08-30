@@ -19,7 +19,9 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.UUID)
     String materialId;
     String materialName;
+    String description;
     Double quantity;
     Double minQuantity;
     String unitName;
+    Boolean isActive;
 }

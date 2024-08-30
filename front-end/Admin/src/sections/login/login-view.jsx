@@ -1,3 +1,10 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { useMutation } from "@tanstack/react-query";
+
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -8,17 +15,12 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+
 import Iconify from "src/components/iconify";
 import { useRouter } from "src/routes/hooks";
 import { bgGradient } from "src/theme/css";
-import { Navigate, useNavigate } from "react-router-dom";
 import Logo from "src/components/logo";
 import authAPI from "src/services/API/authAPI";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
 import UserManagerSlice from "src/redux/slices/UserManagerSlice";
 import { accessToken } from "src/redux/selectors/UserSelector";
 
@@ -35,41 +37,62 @@ export default function LoginView() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [userName, setUserName] = useState("");
-
   const [passWord, setPassWord] = useState("");
+  const [attempt, setAttempt] = useState(false);
 
-  const handleClick = () => {
-    authAPI
-      .login({
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (userName === "" || passWord === "") {
+      toast.error("Please enter your username and password");
+      setAttempt(true);
+      return;
+    }
+    login(
+      {
         email: userName,
         password: passWord,
-      })
-      .then((res) => {
-        const accessToken = res.accessToken;
-        if (jwtDecode(accessToken).scope !== "ADMIN") {
-          toast.error("You are not able to login with this account");
-          return;
-        }
-        dispatch(UserManagerSlice.actions.setUser(res));
-        router.replace("/dashboard");
-        toast.success("Login success!");
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
+      },
+      {
+        onSuccess: (res) => {
+          const accessToken = res.accessToken;
+          if (jwtDecode(accessToken).scope !== "ADMIN") {
+            toast.error("You are not able to login with this account");
+            return;
+          }
+          dispatch(UserManagerSlice.actions.setUser(res));
+          router.replace("/dashboard");
+          toast.success("Login success!");
+        },
+      }
+    );
   };
 
-  if (token && jwtDecode(token).scope === "ADMIN") {
+  const { mutate: login, isPending: isLogining } = useMutation({
+    mutationKey: ["login", { userName }],
+    mutationFn: (params) => authAPI.login(params),
+  });
+
+  if (
+    token &&
+    (jwtDecode(token).scope === "ADMIN" ||
+      jwtDecode(token).scope === "EMPLOYEE")
+  ) {
     return <Navigate to={"/dashboard"} replace={true} />;
   }
 
   const renderForm = (
     <>
-      <Stack spacing={3}>
+      <Stack spacing={3} component={"form"} onSubmit={handleClick}>
         <TextField
           name="email"
           label="User Name"
           value={userName}
+          error={attempt && userName === ""}
+          disabled={isLogining}
+          helperText={
+            attempt && userName === "" ? "Please enter your username" : ""
+          }
+          autoComplete="username"
           onChange={(e) => setUserName(e.target.value)}
         />
 
@@ -77,8 +100,14 @@ export default function LoginView() {
           name="password"
           label="Password"
           type={showPassword ? "text" : "password"}
+          error={attempt && passWord === ""}
+          disabled={isLogining}
+          helperText={
+            attempt && passWord === "" ? "Please enter your password" : ""
+          }
           value={passWord}
           onChange={(e) => setPassWord(e.target.value)}
+          autoComplete="current-password"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -94,19 +123,19 @@ export default function LoginView() {
             ),
           }}
         />
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          color="inherit"
+          onClick={handleClick}
+          loading={isLogining}
+          sx={{ mt: 3 }}
+        >
+          Login
+        </LoadingButton>
       </Stack>
-
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        color="inherit"
-        onClick={handleClick}
-        sx={{ mt: 3 }}
-      >
-        Login
-      </LoadingButton>
     </>
   );
 

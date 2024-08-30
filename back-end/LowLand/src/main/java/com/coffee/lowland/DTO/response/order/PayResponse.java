@@ -1,13 +1,9 @@
 package com.coffee.lowland.DTO.response.order;
 
-import com.coffee.lowland.DTO.response.APIResponse;
-import jakarta.security.auth.message.callback.PasswordValidationCallback;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
