@@ -5,6 +5,7 @@ import { Box, Container, Typography } from "@mui/material";
 import Loading from "src/components/Loading";
 import LowLandLogo from "src/components/navigation/logo";
 import { useScrollToTop } from "src/hooks/use-scroll-to-top";
+import FloatInOnScroll from "src/components/FloatIn";
 
 const Header = lazy(() => import("./Header"));
 const Footer = lazy(() => import("./Footer"));
@@ -70,10 +71,21 @@ const DefaultLayout = ({ children, notShowHeader, title }) => {
           }}
         >
           {!notShowHeader ? <Header /> : <SideHeader title={title} />}
-          <Container sx={{ mt: "80px" }} disableGutters>
+          <Container
+            disableGutters
+            maxWidth={"100%"}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mt: "100px",
+            }}
+          >
             {children}
           </Container>
-          <Footer />
+          <FloatInOnScroll>
+            <Footer />
+          </FloatInOnScroll>
         </Box>
       </Container>
     </Suspense>

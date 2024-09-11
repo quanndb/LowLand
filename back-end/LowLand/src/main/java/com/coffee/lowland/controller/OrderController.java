@@ -2,6 +2,7 @@ package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.order.*;
 import com.coffee.lowland.DTO.response.utilities.APIResponse;
+import com.coffee.lowland.model.Order;
 import com.coffee.lowland.service.Order.OrderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -30,7 +31,7 @@ public class OrderController {
                 .build();
     }
 
-    @PutMapping("/{orderId}/approve")
+    @PutMapping("/{orderId}")
     public APIResponse<?> approveOrder(@PathVariable String orderId,
                                             @RequestBody @Valid ApproveOrderRequest request) {
         return APIResponse.builder()

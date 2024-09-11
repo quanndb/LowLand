@@ -3,6 +3,7 @@ package com.coffee.lowland.service.Account;
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.account.CreateAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
+import com.coffee.lowland.DTO.response.auth.UserPage;
 import com.coffee.lowland.DTO.response.utilities.CloudResponse;
 import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.DTO.response.auth.UserResponse;
@@ -11,8 +12,10 @@ import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.AccountMapper;
 import com.coffee.lowland.mapper.CloudImageMapper;
 import com.coffee.lowland.model.Account;
+import com.coffee.lowland.model.Author;
 import com.coffee.lowland.model.Role;
 import com.coffee.lowland.JPA.repository.AccountRepository;
+import com.coffee.lowland.service.Blog.AuthorService;
 import com.coffee.lowland.service.Utilities.CloudinaryService;
 import com.coffee.lowland.service.Utilities.PageService;
 import jakarta.persistence.StoredProcedureQuery;
@@ -38,15 +41,16 @@ public class AccountService {
     AccountMapper accountMapper;
     CloudImageMapper cloudImageMapper;
     CloudinaryService cloudinaryService;
-    PageService<UserResponse> pageService;
+    AuthorService authorService;
+    PageService<UserPage> pageService;
 
     @Transactional
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public PageServiceResponse<UserResponse> getAccounts(int page, int size,
+    public PageServiceResponse<UserPage> getAccounts(int page, int size,
                                                     String sortedBy, String sortDirection,
                                                     String query, String role){
         StoredProcedureQuery store = pageService
-                .prepareStatement("spGetAccountsByPage", UserResponse.class,
+                .prepareStatement("spGetAccountsByPage", UserPage.class,
                                     page, size, query,
                                     sortedBy, sortDirection);
         pageService.addField(store,"role", String.class, role);
@@ -79,14 +83,19 @@ public class AccountService {
         Account newAccount = new Account();
         newAccount.setIsActive(true);
         accountMapper.createAccount(newAccount, request);
-        accountRepository.save(newAccount);
-        return accountMapper.toUserResponse(newAccount);
+        Account saved = accountRepository.save(newAccount);
+        authorService.save(Author.builder()
+                        .accountId(saved.getAccountId())
+                        .position(request.getPosition())
+                        .description(request.getDescription())
+                        .build());
+        return getAccountById(saved.getAccountId());
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN') " +
             "or @securityService.isOwner(authentication, #accountId)")
     public UserResponse updateAccount(String accountId, UpdateAccountRequest request, MultipartFile image) throws IOException {
-        Account foundAccount = findAccountById(accountId);
+        Account foundAccount =  findAccountById(accountId);
         if(image != null){
             if(foundAccount.getCloudId() != null){
                 cloudinaryService.delete(foundAccount.getCloudId());
@@ -101,8 +110,12 @@ public class AccountService {
             request.setPassword(passwordEncoder.encode(request.getPassword()));
         accountMapper.updateAccount(foundAccount,request);
         accountRepository.save(foundAccount);
-
-        return accountMapper.toUserResponse(foundAccount);
+        Author foundAuthor = authorService
+                .getOrCreateAuthorByAccountId(foundAccount.getAccountId());
+        foundAuthor.setPosition(request.getPosition());
+        foundAuthor.setDescription(request.getDescription());
+        authorService.save(foundAuthor);
+        return getAccountById(foundAccount.getAccountId());
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -114,15 +127,24 @@ public class AccountService {
        return true;
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN') " +
+            "or @securityService.isOwner(authentication, #accountId)")
     public UserResponse getAccountById(String accountId) {
-        Account foundAccount = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
-        return accountMapper.toUserResponse(foundAccount);
+        return getInfoAfterAuthenticated(accountId);
     }
 
     public Account findAccountById(String accountId){
         return accountRepository.findById(accountId)
                 .orElseThrow(()-> new AppExceptions(ErrorCode.ACCOUNT_NOT_EXIST));
+    }
+
+    public UserResponse getInfoAfterAuthenticated(String accountId){
+        Account foundAccount = findAccountById(accountId);
+        Author foundAuthor = authorService.getOrCreateAuthorByAccountId(foundAccount.getAccountId());
+
+        UserResponse res = accountMapper.toUserResponse(foundAccount);
+        res.setPosition(foundAuthor.getPosition());
+        res.setDescription(foundAuthor.getDescription());
+        return res;
     }
 }

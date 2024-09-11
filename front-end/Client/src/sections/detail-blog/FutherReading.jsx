@@ -3,13 +3,24 @@ import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 
-import { Box, Button } from "@mui/material";
+import { Box, Button, Card, Skeleton } from "@mui/material";
 
 import BlogItem from "src/components/BlogItem";
 import { useRouter } from "src/routes/hooks";
+import { useQuery } from "@tanstack/react-query";
+import blogAPI from "src/services/API/blogAPI";
 
 const FutherReading = () => {
   const router = useRouter();
+
+  const { data: blogsPage } = useQuery({
+    queryKey: ["blogs", { size: 4 }],
+    queryFn: () =>
+      blogAPI.getBlogs({
+        size: 4,
+        isActive: true,
+      }),
+  });
   return (
     <Box
       sx={{
@@ -30,41 +41,47 @@ const FutherReading = () => {
             slidesPerView: 2,
           },
         }}
-        style={{ paddingBottom: "50px" }}
+        spaceBetween={32}
+        style={{ paddingBottom: "30px" }}
       >
-        <SwiperSlide>
-          <BlogItem
-            url={"/blogs/2"}
-            imageURL={"/static/images/blog1.jpg"}
-            title={"How long does a cup of coffee keep you awake?"}
-            description={
-              "It is a paradisematic country, in which roasted parts. Vel qui et ad voluptatem."
-            }
-            date={"November 12, 2018"}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BlogItem
-            url={"/blogs/2"}
-            imageURL={"/static/images/blog2.jpg"}
-            title={"How to make a nice coffee?"}
-            description={
-              "It is a paradisematic country, in which roasted parts. Vel qui et ad voluptatem."
-            }
-            date={"November 12, 2024"}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BlogItem
-            url={"/blogs/2"}
-            imageURL={"/static/images/blog1.jpg"}
-            title={"How long does a cup of coffee keep you awake?"}
-            description={
-              "It is a paradisematic country, in which roasted parts. Vel qui et ad voluptatem."
-            }
-            date={"November 18, 2023"}
-          />
-        </SwiperSlide>
+        {blogsPage
+          ? blogsPage.response.map((blog, index) => (
+              <SwiperSlide
+                key={index}
+                style={{
+                  height: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <BlogItem
+                  url={`/blogs/${blog?.blogId}`}
+                  imageURL={blog?.imageURL}
+                  title={blog?.title}
+                  description={blog?.description}
+                  date={blog?.date}
+                  sx={{ height: "100%" }}
+                />
+              </SwiperSlide>
+            ))
+          : [...Array(4)].map((_, index) => (
+              <SwiperSlide key={index}>
+                <Card sx={{ p: 3 }}>
+                  <Skeleton
+                    sx={{ height: "200px", width: "100%" }}
+                    variant="rounded"
+                  />
+                  <Skeleton
+                    sx={{ height: "20px", width: "100%", mt: "10px" }}
+                    variant="rounded"
+                  />
+                  <Skeleton
+                    sx={{ height: "80px", width: "100%", mt: "10px" }}
+                    variant="rounded"
+                  />
+                </Card>
+              </SwiperSlide>
+            ))}
       </Swiper>
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>

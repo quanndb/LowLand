@@ -26,8 +26,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AuthenticationService {
 
-    AccountMapper accountMapper;
     AccountRepository accountRepository;
+    AccountService accountService;
     PasswordEncoder passwordEncoder;
     TokenService tokenService;
     OutBoundService outBoundService;
@@ -43,11 +43,11 @@ public class AuthenticationService {
         if(!authenticate) throw new AppExceptions(ErrorCode.EMAIL_PASSWORD_INVALID);
 
         var token = tokenService.generateToken(account, detailsLogin.toString());
-
+        UserResponse response = accountService.getInfoAfterAuthenticated(account.getAccountId());
         return AuthenticationResponse.builder()
                 .accessToken(token)
                 .authenticated(true)
-                .userResponse(accountMapper.toUserResponse(account))
+                .userResponse(response)
                 .build();
     }
 
@@ -67,11 +67,12 @@ public class AuthenticationService {
                     return accountRepository.save(newAccount);
                 });
         if(!foundUser.getIsActive()) throw new AppExceptions(ErrorCode.ACCOUNT_NOT_ACTIVE);
+        UserResponse response = accountService.getInfoAfterAuthenticated(foundUser.getAccountId());
         var token = tokenService.generateToken(foundUser, detailsLogin.toString());
             return AuthenticationResponse.builder()
                     .accessToken(token)
                     .authenticated(true)
-                    .userResponse(accountMapper.toUserResponse(foundUser))
+                    .userResponse(response)
                     .build();
     }
 
@@ -83,7 +84,8 @@ public class AuthenticationService {
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        Account account = accountRepository.findByEmail(name).orElseThrow(() -> new AppExceptions(ErrorCode.USER_NOT_EXISTED));
-        return accountMapper.toUserResponse(account);
+        Account account = accountRepository.findByEmail(name)
+                .orElseThrow(() -> new AppExceptions(ErrorCode.USER_NOT_EXISTED));
+        return accountService.getInfoAfterAuthenticated(account.getAccountId());
     }
 }

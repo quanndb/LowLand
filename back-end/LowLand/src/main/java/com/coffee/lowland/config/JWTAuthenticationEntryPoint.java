@@ -28,7 +28,10 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
-        response.flushBuffer();
+        try {
+            response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+            response.flushBuffer();
+        } catch (IOException ignored) {
+        }
     }
 }

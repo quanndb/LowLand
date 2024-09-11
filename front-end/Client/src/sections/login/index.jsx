@@ -28,6 +28,7 @@ import { useRouter } from "src/routes/hooks";
 import authAPI from "src/services/API/authAPI";
 import { user } from "src/redux/selectors/UserSelector";
 import LoadingComp from "src/components/LoadingComp";
+import FloatInOnScroll from "src/components/FloatIn";
 
 const LoginView = () => {
   const router = useRouter();
@@ -97,136 +98,138 @@ const LoginView = () => {
 
   return (
     <SideLayout title={"Login"}>
-      <Paper sx={{ my: "100px", width: "100%" }}>
-        <LoadingComp
-          isLoading={isPendingWhileLogin || isPendingWhileLoginWithGoogle}
-        >
-          <Grid
-            container
-            columns={{ xm: 1, md: 3 }}
-            spacing={4}
-            justifyContent={"space-evenly"}
-            sx={{ p: "30px" }}
+      <FloatInOnScroll>
+        <Paper sx={{ my: "100px", width: "100%" }}>
+          <LoadingComp
+            isLoading={isPendingWhileLogin || isPendingWhileLoginWithGoogle}
           >
             <Grid
-              item
-              md={2}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "start",
-                width: "100%",
-              }}
+              container
+              columns={{ xm: 1, md: 3 }}
+              spacing={4}
+              justifyContent={"space-evenly"}
+              sx={{ p: "30px" }}
             >
-              <Paper
+              <Grid
+                item
+                md={2}
                 sx={{
                   display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
                   flexDirection: "column",
+                  alignItems: "start",
                   width: "100%",
-                  height: "100%",
-                  py: "20px",
-                  backgroundImage:
-                    "linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/static/images/shop2.jpg)",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                 }}
               >
-                <LowLandLogo />
-
-                <Typography
-                  variant="h4"
-                  textAlign={"center"}
-                  fontWeight={900}
-                  color={"#fff"}
+                <Paper
                   sx={{
-                    textShadow: "3px 3px 6px rgba(0, 0, 0, 0.5)",
-                    //text border
-                    WebkitTextStroke: "1px #eee",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    width: "100%",
+                    height: "100%",
+                    py: "20px",
+                    backgroundImage:
+                      "linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/static/images/shop2.jpg)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}
                 >
-                  Login to join our Chill'in
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item sm={1} md={1}>
-              <Stack component={"form"} onSubmit={handleLogin}>
-                <TextField
-                  label="Username"
-                  value={username}
-                  onChange={(e) => setUserName(e.target.value)}
-                  sx={{ width: "100%", marginBottom: "20px" }}
-                  error={username === "" && attemp}
-                  helperText={
-                    username === "" && attemp
-                      ? "Please enter your username"
-                      : ""
-                  }
-                />
-                <TextField
-                  label="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  type={showPass ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPass(!showPass)}>
-                          {showPass ? (
-                            <VisibilityIcon />
-                          ) : (
-                            <VisibilityOffIcon />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  error={password === "" && attemp}
-                  helperText={
-                    password === "" && attemp
-                      ? "Please enter your password"
-                      : ""
-                  }
-                  sx={{ width: "100%", marginBottom: "20px" }}
-                />
-                <Button
-                  variant="contained"
-                  type="submit"
-                  sx={{ width: "100%" }}
-                  onClick={handleLogin}
-                >
-                  Login
-                </Button>
-              </Stack>
-              <Divider sx={{ mt: 2 }}>
-                <Typography>Or login with</Typography>
-              </Divider>
+                  <LowLandLogo />
 
-              <Button
-                sx={{ mt: 2, width: "100%" }}
-                variant="contained"
-                startIcon={<GoogleIcon />}
-                onClick={handleLoginWithGoogle}
-              >
-                Google
-              </Button>
-              <Typography sx={{ mt: 2 }}>
-                Don't have an account?{" "}
+                  <Typography
+                    variant="h4"
+                    textAlign={"center"}
+                    fontWeight={900}
+                    color={"#fff"}
+                    sx={{
+                      textShadow: "3px 3px 6px rgba(0, 0, 0, 0.5)",
+                      //text border
+                      WebkitTextStroke: "1px #eee",
+                    }}
+                  >
+                    Login to join our Chill'in
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item sm={1} md={1}>
+                <Stack component={"form"} onSubmit={handleLogin}>
+                  <TextField
+                    label="Username"
+                    value={username}
+                    onChange={(e) => setUserName(e.target.value)}
+                    sx={{ width: "100%", marginBottom: "20px" }}
+                    error={username === "" && attemp}
+                    helperText={
+                      username === "" && attemp
+                        ? "Please enter your username"
+                        : ""
+                    }
+                  />
+                  <TextField
+                    label="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type={showPass ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => setShowPass(!showPass)}>
+                            {showPass ? (
+                              <VisibilityIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={password === "" && attemp}
+                    helperText={
+                      password === "" && attemp
+                        ? "Please enter your password"
+                        : ""
+                    }
+                    sx={{ width: "100%", marginBottom: "20px" }}
+                  />
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    sx={{ width: "100%" }}
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </Button>
+                </Stack>
+                <Divider sx={{ mt: 2 }}>
+                  <Typography>Or login with</Typography>
+                </Divider>
+
                 <Button
-                  color="secondary"
-                  variant="text"
-                  onClick={() => router.push("/signUp")}
-                  sx={{ textDecoration: "underline" }}
+                  sx={{ mt: 2, width: "100%" }}
+                  variant="contained"
+                  startIcon={<GoogleIcon />}
+                  onClick={handleLoginWithGoogle}
                 >
-                  Sign Up
+                  Google
                 </Button>
-                now!
-              </Typography>
+                <Typography sx={{ mt: 2 }}>
+                  Don't have an account?{" "}
+                  <Button
+                    color="secondary"
+                    variant="text"
+                    onClick={() => router.push("/signUp")}
+                    sx={{ textDecoration: "underline" }}
+                  >
+                    Sign Up
+                  </Button>
+                  now!
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        </LoadingComp>
-      </Paper>
+          </LoadingComp>
+        </Paper>
+      </FloatInOnScroll>
     </SideLayout>
   );
 };

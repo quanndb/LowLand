@@ -9,6 +9,7 @@ import DefaultLayout from "src/layouts/defaultLayout";
 const ProtectedRoute = lazy(() => import("./ProtectedRoute"));
 const HomePage = lazy(() => import("src/pages/Home"));
 const BlogsPage = lazy(() => import("src/pages/Blogs"));
+const AuthorBlogsPage = lazy(() => import("src/pages/AuthorBlogs"));
 const ContactPage = lazy(() => import("src/pages/Contact"));
 const AboutPage = lazy(() => import("src/pages/About"));
 const ProductsPage = lazy(() => import("src/pages/Products"));
@@ -51,9 +52,12 @@ const routes = createBrowserRouter([
         element: <BlogsPage />,
       },
       {
-        path: "blogs/:blogID",
+        path: "blogs/:blogId",
         element: <DetailBlogPage />,
-        loader: fetchBlogById,
+      },
+      {
+        path: "authors/:authorId/blogs",
+        element: <AuthorBlogsPage />,
       },
       {
         path: "contact",

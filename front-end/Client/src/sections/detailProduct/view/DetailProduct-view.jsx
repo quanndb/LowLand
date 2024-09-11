@@ -266,9 +266,8 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                   <>
                     {productData?.sizesAndPrices?.map((size) => {
                       return (
-                        <ListItem disablePadding>
+                        <ListItem disablePadding key={size.productSizeId}>
                           <ListItemButton
-                            key={size.productSizeId}
                             onClick={() => setSelectedSize(size)}
                             sx={{
                               border: "1px solid #ccc",
@@ -378,9 +377,9 @@ const DetailProductView = ({ productData, list, isFetching }) => {
                     handleAddToCart(
                       productData.productId,
                       productData.productName,
-                      productData.images[0].imageUrl,
+                      productData?.images[0]?.imageUrl || "",
                       quantity,
-                      selectedSize.price,
+                      selectedSize?.salePrice || selectedSize?.price,
                       selectedSize.sizeName,
                       selectedSize.productDetailsId
                     )

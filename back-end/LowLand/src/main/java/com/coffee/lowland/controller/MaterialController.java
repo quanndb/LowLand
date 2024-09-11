@@ -17,10 +17,11 @@ public class MaterialController {
     MaterialService _service;
 
     @GetMapping("")
-    public APIResponse<?> getAll(@RequestParam(required = false, defaultValue = "") String query){
+    public APIResponse<?> getMaterials(@RequestParam(required = false, defaultValue = "") String query,
+                                 @RequestParam(required = false) Integer size){
         return APIResponse.builder()
                 .code(2000)
-                .result(_service.getAllByQuery(query))
+                .result(_service.getAllByQuery(query, size))
                 .build();
     }
 

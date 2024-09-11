@@ -22,6 +22,7 @@ import {
   TableCell,
   TableRow,
   Typography,
+  Grid,
 } from "@mui/material";
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -136,6 +137,11 @@ export default function UserPage() {
       accountAPI.updateAccount(accountId, params),
   });
 
+  const { mutate: getDetails, isPending: isLoadingDetails } = useMutation({
+    mutationKey: ["getDetails", editUserInfo?.accountId],
+    mutationFn: (id) => accountAPI.getDetails(id),
+  });
+
   const handleSubmitNewUser = () => {
     createAccount(userInfo, {
       onSuccess: () => {
@@ -167,8 +173,12 @@ export default function UserPage() {
   };
 
   const handleOpenEditModal = (user) => {
-    setEditUserInfo(user);
-    setOpenEditModal(true);
+    getDetails(user.accountId, {
+      onSuccess: (res) => {
+        setEditUserInfo(res);
+        setOpenEditModal(true);
+      },
+    });
   };
 
   const handleSubmitEditUser = () => {
@@ -180,6 +190,8 @@ export default function UserPage() {
       address: editUserInfo.address,
       isActive: editUserInfo.isActive,
       password: password.value,
+      position: editUserInfo?.position || "",
+      description: editUserInfo?.description || "",
     };
 
     formData.append("userInfo", JSON.stringify(userInfo));
@@ -197,203 +209,6 @@ export default function UserPage() {
       }
     );
   };
-
-  // const [openAddModal, setOpenAddModal] = useState(false);
-  // const [openEditModal, setOpenEditModal] = useState(false);
-  // const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  // const [newUser, setNewUser] = useState({
-  //   fullName: "",
-  //   email: "",
-  //   password: "",
-  //   phoneNumber: "",
-  //   gender: 1,
-  //   address: "",
-  //   role: tabValue === 0 ? "ADMIN" : tabValue === 1 ? "EMPLOYEE" : "USER",
-  // });
-
-  // const [editUser, setEditUser] = useState({
-  //   id: null,
-  //   fullName: "",
-  //   email: "",
-  //   phoneNumber: "",
-  //   gender: 1,
-  //   address: "",
-  // });
-
-  // const handleSort = (event, id) => {
-  //   const isAsc = orderBy === id && order === "asc";
-  //   if (id !== "") {
-  //     setOrder(isAsc ? "desc" : "asc");
-  //     setOrderBy(id);
-  //   }
-  // };
-
-  // const handleSelectAllClick = (event) => {
-  //   if (event.target.checked) {
-  //     const newSelecteds = filteredAccounts.map((n) => n.email);
-  //     setSelected(newSelecteds);
-  //     return;
-  //   }
-  //   setSelected([]);
-  // };
-
-  // const handleClick = (event, name) => {
-  //   const selectedIndex = selected.indexOf(name);
-  //   let newSelected = [];
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, name);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1)
-  //     );
-  //   }
-  //   setSelected(newSelected);
-  // };
-
-  // const handleChangePage = (event, newPage) => {
-  //   setPage(newPage);
-  // };
-
-  // const handleChangeRowsPerPage = (event) => {
-  //   setPage(0);
-  //   setRowsPerPage(parseInt(event.target.value, 10));
-  // };
-
-  // const handleFilterByName = (event) => {
-  //   setPage(0);
-  //   setFilterName(event.target.value);
-  // };
-
-  // const handleTabChange = (event, newValue) => {
-  //   setTabValue(newValue);
-  //   setNewUser({
-  //     fullName: "",
-  //     email: "",
-  //     password: "",
-  //     phoneNumber: "",
-  //     gender: 1,
-  //     address: "",
-  //     role: newValue === 0 ? "ADMIN" : newValue === 1 ? "EMPLOYEE" : "USER",
-  //   });
-  //   setPage(0);
-  // };
-
-  // const handleOpenAddModal = () => {
-  //   setOpenAddModal(true);
-  // };
-
-  // const handleCloseAddModal = () => {
-  //   setOpenAddModal(false);
-  // };
-
-  // const handleOpenEditModal = (user) => {
-  //   setEditUser(user);
-  //   setOpenEditModal(true);
-  // };
-
-  // const handleOpenDeleteModal = (user) => {
-  //   setEditUser(user);
-  //   setOpenDeleteModal(true);
-  // };
-
-  // const handleCloseDeleteModal = () => {
-  //   // setDeleteUser(null);
-  //   setOpenDeleteModal(false);
-  // };
-
-  // const handleCloseEditModal = () => {
-  //   setOpenEditModal(false);
-  //   setEditUser({
-  //     id: null,
-  //     fullName: "",
-  //     email: "",
-  //     phoneNumber: "",
-  //     gender: "",
-  //     address: "",
-  //     role: "",
-  //   });
-  // };
-
-  // const handleChangeNewUser = (e) => {
-  //   setNewUser({ ...newUser, [e.target.name]: e.target.value });
-  // };
-
-  // const handleChangeEditUser = (e) => {
-  //   setEditUser({ ...editUser, [e.target.name]: e.target.value });
-  // };
-
-  // const handleSubmitNewUser = () => {
-  //   accountAPI
-  //     .createAccount(newUser)
-  //     .then((res) => {
-  //       toast.success("Create user successfully");
-  //       setAccounts([...accounts, res]);
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err);
-  //     })
-  //     .finally(() => {
-  //       setNewUser({
-  //         fullName: "",
-  //         email: "",
-  //         password: "",
-  //         phoneNumber: "",
-  //         gender: 1,
-  //         address: "",
-  //         role: tabValue === 0 ? "ADMIN" : tabValue === 1 ? "EMPLOYEE" : "USER",
-  //       });
-  //     });
-  //   setOpenAddModal(false);
-  // };
-
-  // const handleSubmitEditUser = () => {
-  //   accountAPI
-  //     .updateAccount(editUser)
-  //     .then((res) => {
-  //       toast.success("Update user successfully");
-  //       console.log(res, editUser);
-  //       setAccounts(
-  //         accounts.map((account) => {
-  //           return account.accountId === res.accountId ? res : account;
-  //         })
-  //       );
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err);
-  //     });
-  //   setOpenEditModal(false);
-  // };
-
-  // const handleSubmitDeleteUser = () => {
-  //   accountAPI
-  //     .deleteAccount(editUser.accountId)
-  //     .then((res) => {
-  //       toast.success("Delete user successfully");
-  //       setAccounts(
-  //         accounts.filter((account) => account.accountId !== editUser.accountId)
-  //       );
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err);
-  //     });
-  //   setOpenDeleteModal(false);
-  // };
-
-  // const filteredAccounts = getFilteredAccountsByRole(role);
-
-  // const dataFiltered = applyFilter({
-  //   inputData: filteredAccounts,
-  //   comparator: getComparator(order, orderBy),
-  //   filterName,
-  // });
-
-  // const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
@@ -549,24 +364,42 @@ export default function UserPage() {
               fullWidth
               autoComplete="fullName"
               variant="outlined"
-              value={userInfo.fullName}
+              value={userInfo.fullName || ""}
               onChange={(e) =>
                 setUserInfo({ ...userInfo, fullName: e.target.value })
               }
             />
-            <TextField
-              margin="dense"
-              name="email"
-              label="Email"
-              type="email"
-              autoComplete="email"
-              fullWidth
-              variant="outlined"
-              value={userInfo.email}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, email: e.target.value })
-              }
-            />
+            <Grid container spacing={2} my={1}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
+                  fullWidth
+                  variant="outlined"
+                  value={userInfo.email || ""}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, email: e.target.value })
+                  }
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  name="position"
+                  label="
+                Position"
+                  type="text"
+                  autoComplete="position"
+                  fullWidth
+                  variant="outlined"
+                  value={userInfo.position || ""}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, position: e.target.value })
+                  }
+                />
+              </Grid>
+            </Grid>
             <TextField
               margin="dense"
               name="password"
@@ -575,40 +408,45 @@ export default function UserPage() {
               autoComplete="password"
               fullWidth
               variant="outlined"
-              value={userInfo.password}
+              value={userInfo.password || ""}
               onChange={(e) =>
                 setUserInfo({ ...userInfo, password: e.target.value })
               }
             />
-            <TextField
-              margin="dense"
-              name="phoneNumber"
-              autoComplete="phoneNumber"
-              label="Phone Number"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={userInfo.phoneNumber}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, phoneNumber: e.target.value })
-              }
-            />
-            <FormControl fullWidth sx={{ my: 2 }}>
-              <InputLabel id="demo-simple-select-label2">Gender</InputLabel>
-              <Select
-                labelId="demo-simple-select-label2"
-                value={userInfo.gender}
-                name="gender"
-                label="Gender"
-                autoComplete="gender"
-                onChange={(e) =>
-                  setUserInfo({ ...userInfo, gender: e.target.value })
-                }
-              >
-                <MenuItem value={1}>Male</MenuItem>
-                <MenuItem value={0}>Female</MenuItem>
-              </Select>
-            </FormControl>
+            <Grid container spacing={2} my={1}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  name="phoneNumber"
+                  autoComplete="phoneNumber"
+                  label="Phone Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  value={userInfo.phoneNumber || ""}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, phoneNumber: e.target.value })
+                  }
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label2">Gender</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label2"
+                    value={userInfo.gender || 1}
+                    name="gender"
+                    label="Gender"
+                    autoComplete="gender"
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, gender: e.target.value })
+                    }
+                  >
+                    <MenuItem value={1}>Male</MenuItem>
+                    <MenuItem value={0}>Female</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
             <TextField
               margin="dense"
               name="address"
@@ -617,9 +455,23 @@ export default function UserPage() {
               type="text"
               fullWidth
               variant="outlined"
-              value={userInfo.address}
+              value={userInfo.address || ""}
               onChange={(e) =>
                 setUserInfo({ ...userInfo, address: e.target.value })
+              }
+            />
+            {/* description */}
+            <TextField
+              margin="dense"
+              name="description"
+              autoComplete="description"
+              label="Description"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={userInfo.description || ""}
+              onChange={(e) =>
+                setUserInfo({ ...userInfo, description: e.target.value })
               }
             />
           </DialogContent>
@@ -647,56 +499,111 @@ export default function UserPage() {
               type="text"
               fullWidth
               variant="outlined"
-              value={editUserInfo?.fullName}
+              value={editUserInfo?.fullName || ""}
               onChange={(e) =>
-                setEditUserInfo((pre) => ({ ...pre, fullName: e.target.value }))
-              }
-            />
-            <TextField
-              margin="dense"
-              name="email"
-              label="Email"
-              type="email"
-              fullWidth
-              variant="outlined"
-              value={editUserInfo?.email}
-              disabled
-            />
-            <TextField
-              margin="dense"
-              name="phoneNumber"
-              label="Phone Number"
-              type="text"
-              autoComplete="phoneNumber"
-              fullWidth
-              variant="outlined"
-              value={editUserInfo?.phoneNumber}
-              onChange={(e) => {
                 setEditUserInfo((pre) => ({
                   ...pre,
-                  phoneNumber: e.target.value,
-                }));
-              }}
+                  fullName: e.target.value,
+                }))
+              }
             />
-            <FormControl fullWidth sx={{ my: 2 }}>
-              <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                value={editUserInfo?.gender}
-                name="gender"
-                label="Gender"
-                autoComplete="gender"
-                onChange={(e) => {
-                  setEditUserInfo((pre) => ({
-                    ...pre,
-                    gender: e.target.value,
-                  }));
-                }}
-              >
-                <MenuItem value={1}>Male</MenuItem>
-                <MenuItem value={0}>Female</MenuItem>
-              </Select>
-            </FormControl>
+            <Grid container spacing={2} sx={{ my: 1 }}>
+              <Grid item md={8} xs={12}>
+                <TextField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  variant="outlined"
+                  value={editUserInfo?.email || ""}
+                  disabled
+                />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Active</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    value={editUserInfo?.isActive ? 1 : 0}
+                    name="isActive"
+                    label="Active"
+                    autoComplete="isActive"
+                    onChange={(e) => {
+                      setEditUserInfo((pre) => ({
+                        ...pre,
+                        isActive: e.target.value,
+                      }));
+                    }}
+                  >
+                    <MenuItem value={1}>
+                      <Typography
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Iconify
+                          icon="teenyicons:tick-circle-solid"
+                          sx={{ color: "green", mr: 1 }}
+                        />
+                        Active
+                      </Typography>
+                    </MenuItem>
+                    <MenuItem
+                      value={0}
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Typography
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Iconify
+                          icon="zondicons:close-solid"
+                          sx={{ color: "#ba1f1d", mr: 1 }}
+                        />
+                        Inactive
+                      </Typography>
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ my: 1 }}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  name="phoneNumber"
+                  label="Phone Number"
+                  type="text"
+                  autoComplete="phoneNumber"
+                  fullWidth
+                  variant="outlined"
+                  value={editUserInfo?.phoneNumber || ""}
+                  onChange={(e) => {
+                    setEditUserInfo((pre) => ({
+                      ...pre,
+                      phoneNumber: e.target.value,
+                    }));
+                  }}
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    value={editUserInfo?.gender ? 1 : 0}
+                    name="gender"
+                    label="Gender"
+                    autoComplete="gender"
+                    onChange={(e) => {
+                      setEditUserInfo((pre) => ({
+                        ...pre,
+                        gender: e.target.value,
+                      }));
+                    }}
+                  >
+                    <MenuItem value={1}>Male</MenuItem>
+                    <MenuItem value={0}>Female</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
 
             <TextField
               margin="dense"
@@ -706,7 +613,7 @@ export default function UserPage() {
               autoComplete="address"
               fullWidth
               variant="outlined"
-              value={editUserInfo?.address}
+              value={editUserInfo?.address || ""}
               onChange={(e) => {
                 setEditUserInfo((pre) => ({
                   ...pre,
@@ -714,44 +621,7 @@ export default function UserPage() {
                 }));
               }}
             />
-            <FormControl fullWidth sx={{ my: 2 }}>
-              <InputLabel id="demo-simple-select-label">Active</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                value={editUserInfo?.isActive ? 1 : 0}
-                name="isActive"
-                label="Active"
-                autoComplete="isActive"
-                onChange={(e) => {
-                  setEditUserInfo((pre) => ({
-                    ...pre,
-                    isActive: e.target.value,
-                  }));
-                }}
-              >
-                <MenuItem value={1}>
-                  <Typography sx={{ display: "flex", alignItems: "center" }}>
-                    <Iconify
-                      icon="teenyicons:tick-circle-solid"
-                      sx={{ color: "green", mr: 1 }}
-                    />
-                    Active
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  value={0}
-                  sx={{ display: "flex", alignItems: "center" }}
-                >
-                  <Typography sx={{ display: "flex", alignItems: "center" }}>
-                    <Iconify
-                      icon="zondicons:close-solid"
-                      sx={{ color: "#ba1f1d", mr: 1 }}
-                    />
-                    Inactive
-                  </Typography>
-                </MenuItem>
-              </Select>
-            </FormControl>
+
             <TextField
               margin="dense"
               name="password"
@@ -789,6 +659,40 @@ export default function UserPage() {
                 }));
               }}
             />
+
+            <TextField
+              margin="dense"
+              name="position"
+              label="Position"
+              type="text"
+              autoComplete="position"
+              fullWidth
+              variant="outlined"
+              value={editUserInfo?.position || ""}
+              onChange={(e) => {
+                setEditUserInfo((pre) => ({
+                  ...pre,
+                  position: e.target.value,
+                }));
+              }}
+            />
+
+            <TextField
+              margin="dense"
+              name="description"
+              label="Description"
+              type="text"
+              autoComplete="description"
+              fullWidth
+              variant="outlined"
+              value={editUserInfo?.description || ""}
+              onChange={(e) => {
+                setEditUserInfo((pre) => ({
+                  ...pre,
+                  description: e.target.value,
+                }));
+              }}
+            />
           </DialogContent>
         </form>
         <DialogActions>
@@ -801,7 +705,13 @@ export default function UserPage() {
       {/* Edit User Modal End */}
 
       <LoadingComp
-        isLoading={isCreating || isDeleting || isDeletingAccount || isUpdating}
+        isLoading={
+          isCreating ||
+          isDeleting ||
+          isDeletingAccount ||
+          isUpdating ||
+          isLoadingDetails
+        }
       />
     </Container>
   );

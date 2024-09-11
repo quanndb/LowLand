@@ -1,96 +1,63 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Pagination,
   Grid,
   Container,
-  Button,
   Paper,
   Avatar,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  TextField,
+  Button,
 } from "@mui/material";
-import orderAPI from "src/services/API/orderAPI";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+
 import { DataGrid } from "@mui/x-data-grid";
 import UpdateModal from "./updateModal";
-// import ProductCard from '../product-card';
-// import ProductDetailModal from './ProductDetailModal';
-// import AddProductModal from './AddProductModal';
-// import { sp } from 'src/_mock/sp';
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useDebounce } from "src/hooks/use-debounce";
+import orderAPI from "src/services/API/orderAPI";
 
 export default function OrderView() {
-  const [orderList, setOrderList] = useState([]);
-  useEffect(() => {
-    orderAPI
-      .getAll()
-      .then((res) => setOrderList(res))
-      .catch((error) => toast.error(error));
-  }, []);
-  const dispatch = useDispatch();
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(-1);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10;
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
-  const statusMap = {
-    0: "Waiting",
-    1: "Paid",
-    2: "Delivered",
-    3: "Canceled",
-  };
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value);
-    setPage(1);
-  };
-  let filteredOrders = orderList
-    ? status !== ""
-      ? orderList.filter((order) => order.status === parseInt(status))
-      : orderList
-    : [];
+  const [query, setQuery] = useState("");
 
-  let paginatedOrders = filteredOrders.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-  let ordersWithId = paginatedOrders.map((order, index) => ({
-    ...order,
-    id: index + 1 + (page - 1) * itemsPerPage,
-    status: statusMap[order.status],
-    totalMoney: `${order.totalMoney} VNĐ`,
-  }));
+  const queryValue = useDebounce(query, 500);
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  const handleClickRow = (params) => {
-    setSelectedOrder(params.row.orderId);
-    // console.log(params.row);
-    setOpenModal(true);
-  };
+  const {
+    data: orderPages,
+    refetch,
+    isFetching,
+  } = useQuery({
+    queryKey: ["order", { page, status, query: queryValue }],
+    queryFn: () => orderAPI.getOrders({ page, status, query: queryValue }),
+    staleTime: 1000 * 60,
+    placeholderData: keepPreviousData,
+  });
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleUpdateOrder = (updatedOrder) => {
-    orderAPI
-      .manageOrder(updatedOrder)
-      .then((res) => {
-        toast.success("Update order successfully");
-        setOrderList((prevOrderList) => {
-          return prevOrderList.map((item) =>
-            item.orderId === res.orderId ? { ...item, ...res } : item
-          );
-        });
-      })
-      .catch((error) => {
-        toast.error(error.message || "Error updating order");
-      });
+  const orderStatus = {
+    0: {
+      value: "WAITING",
+      color: "#FF9800",
+    },
+    1: {
+      value: "PAID",
+      color: "#2196F3",
+    },
+    2: {
+      value: "DELIVERED",
+      color: "#4CAF50",
+    },
+    3: {
+      value: "CANCELED",
+      color: "#F44336",
+    },
   };
 
   return (
@@ -98,25 +65,57 @@ export default function OrderView() {
       <Paper sx={{ padding: "25px", width: "100%" }}>
         <Grid container spacing={{ md: 3 }}>
           <Grid item xs={12}>
-            <FormControl sx={{ mb: 2, width: "100px" }}>
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={status}
-                onChange={handleStatusChange}
-                label="Status"
-              >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="0">Waiting</MenuItem>
-                <MenuItem value="1">Paid</MenuItem>
-                <MenuItem value="2">Delivered</MenuItem>
-                <MenuItem value="3">Canceled</MenuItem>
-              </Select>
-            </FormControl>
+            <Grid
+              container
+              justifyContent={"space-between"}
+              sx={{ mb: 2 }}
+              gap={2}
+            >
+              <Grid item md={4} xs={12}>
+                <FormControl sx={{ minWidth: "200px", width: "100%" }}>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={status}
+                    onChange={(e) => {
+                      setStatus(e.target.value);
+                      setPage(1);
+                    }}
+                    label="Status"
+                  >
+                    <MenuItem value="-1">All</MenuItem>
+                    <MenuItem value="0">Waiting</MenuItem>
+                    <MenuItem value="1">Paid</MenuItem>
+                    <MenuItem value="2">Delivered</MenuItem>
+                    <MenuItem value="3">Canceled</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={4} xs={12} sx={{ display: "flex" }}>
+                <TextField
+                  label="Search"
+                  aria-label="search"
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setPage(1);
+                  }}
+                  placeholder="Search orders..."
+                  sx={{ width: "100%" }}
+                />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ height: "100%" }}
+                >
+                  Search
+                </Button>
+              </Grid>
+            </Grid>
             <Box sx={{ height: 667, width: "100%" }}>
               <DataGrid
-                rows={ordersWithId}
+                rows={orderPages?.response || []}
+                getRowId={(row) => row.orderId}
                 columns={[
-                  { field: "id", headerName: "STT", width: 10 },
                   { field: "orderCode", headerName: "Order code", width: 90 },
                   {
                     field: "imageUrl",
@@ -162,7 +161,31 @@ export default function OrderView() {
                     headerName: "Created Date ",
                     width: 170,
                   },
-                  { field: "status", headerName: "Status", width: 90 },
+                  {
+                    field: "createdBy",
+                    headerName: "Created by ",
+                    width: 200,
+                  },
+                  {
+                    field: "status",
+                    headerName: "Status",
+                    width: 100,
+                    renderCell: (param) => (
+                      <span
+                        style={{
+                          backgroundColor: orderStatus[param.row.status].color,
+                          color: "white",
+                          padding: "5px 5px",
+                          borderRadius: "5px",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          fontSize: "12px",
+                        }}
+                      >
+                        {orderStatus[param.row.status].value}
+                      </span>
+                    ),
+                  },
                   {
                     field: "totalMoney",
                     headerName: "Total",
@@ -170,17 +193,21 @@ export default function OrderView() {
                     type: "number",
                   },
                 ]}
-                onRowClick={handleClickRow}
-                disableTooltip
+                onRowClick={(row) => {
+                  setSelectedOrder(row.row);
+                  setOpenModal(true);
+                }}
                 pageSizeOptions={[0]}
+                hideFooter={true}
+                loading={!orderPages || isFetching}
                 disableRowSelectionOnClick
               />
             </Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Pagination
-                count={Math.ceil(filteredOrders.length / itemsPerPage)}
+                count={orderPages?.totalPages}
                 page={page}
-                onChange={handlePageChange}
+                onChange={(e, v) => setPage(v)}
                 color="primary"
                 sx={{ mt: 2 }}
               />
@@ -189,12 +216,14 @@ export default function OrderView() {
         </Grid>
       </Paper>
 
-      <UpdateModal
-        open={openModal}
-        handleClose={handleCloseModal}
-        order={selectedOrder}
-        updateOrder={handleUpdateOrder}
-      />
+      {selectedOrder && (
+        <UpdateModal
+          open={openModal}
+          handleClose={() => setOpenModal(false)}
+          order={selectedOrder}
+          refetch={refetch}
+        />
+      )}
     </Container>
   );
 }

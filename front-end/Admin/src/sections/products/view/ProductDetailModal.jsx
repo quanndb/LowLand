@@ -14,10 +14,20 @@ import ProductDetails from "../product-details";
 import LoadingComp from "src/components/loading/LoadingComp";
 import { toast } from "react-toastify";
 import SizeAndPrice from "../product-sizes-and-prices";
+import ProductRecipes from "../product-recipes";
 
 const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
+  const { data: product, isFetching } = useQuery({
+    queryKey: ["product", productId],
+    queryFn: () => productAPI.getById(productId),
+    enabled: open && productId !== "",
+  });
+
+  const [productData, setProductData] = useState(product || null);
+  const [details, setDetails] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
@@ -30,16 +40,6 @@ const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
     };
   }, [files]);
 
-  const { data: product, isFetching } = useQuery({
-    queryKey: ["product", productId],
-    queryFn: () => productAPI.getById(productId),
-    enabled: open && productId !== "",
-  });
-
-  const [productData, setProductData] = useState(product || null);
-  const [details, setDetails] = useState([]);
-  console.log(details);
-
   useEffect(() => {
     if (product) {
       setProductData({
@@ -49,6 +49,7 @@ const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
         },
       });
       setDetails(product.sizesAndPrices);
+      setRecipes(product.recipes);
     }
   }, [product]);
 
@@ -64,12 +65,17 @@ const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
     });
     newProductForm.append("productData", JSON.stringify(productData));
     newProductForm.append("details", JSON.stringify(details));
+    newProductForm.append("recipes", JSON.stringify(recipes));
 
     updateProduct(
       { productId: product.productId, params: newProductForm },
       {
         onSuccess: () => {
           setFiles([]);
+          setDetails([]);
+          setRecipes([]);
+          setProductData(null);
+          setCurrentTab(0);
           toast.success("Product updated successfully");
           refetch();
           onClose();
@@ -86,8 +92,7 @@ const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
         <Dialog
           open={open}
           sx={{
-            overflowY: "auto",
-            overflowX: "hidden",
+            overflow: "scroll",
           }}
           maxWidth="md"
           fullWidth
@@ -119,93 +124,12 @@ const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
               />
             )}
 
-            {/* {currentTab === 1 && (
-          <Box sx={{ overflowY: "auto", overflowX: "hidden", mt: 2 }}>
-            <Typography fontWeight={700} sx={{ ml: 2, mb: 1 }}>
-              Material list:
-            </Typography>
-            <Box sx={{ m: 2 }}>
-              {listRecipe.map((material) => (
-                <Box
-                  key={material.productRecipeId}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    marginBottom: 2,
-                  }}
-                >
-                  <TextField
-                    label="Material Name"
-                    value={
-                      recipes.find((r) => r.materialId === material.materialId)
-                        .materialName
-                    }
-                    onChange={(e) =>
-                      handleMaterialChange(index, "name", e.target.value)
-                    }
-                    fullWidth
-                  />
-                  <TextField
-                    label="Material Value"
-                    value={material.quantity}
-                    type="number"
-                    onChange={(e) =>
-                      handleMaterialChange(index, "value", e.target.value)
-                    }
-                    fullWidth
-                  />
-                  <TextField
-                    label="Material Value"
-                    value={
-                      recipes.find((r) => r.materialId === material.materialId)
-                        .unit
-                    }
-                    disabled
-                    type="text"
-                    fullWidth
-                  />
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeleteMaterial(index)}
-                  >
-                    Delete
-                  </Button>
-                </Box>
-              ))}
-
-              <Box sx={{ display: "flex", gap: 2, marginBottom: 2 }}>
-                <TextField
-                  label="New Material Name"
-                  value={newMaterialName}
-                  onChange={(e) => setNewMaterialName(e.target.value)}
-                  fullWidth
-                />
-                <TextField
-                  label="New Material Value"
-                  value={newMaterialValue}
-                  onChange={(e) => setNewMaterialValue(e.target.value)}
-                  fullWidth
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddMaterial}
-                >
-                  Add
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        )} */}
-
             {currentTab === 1 && productData && (
-              <SizeAndPrice
-                productData={productData}
-                details={details}
-                setDetails={setDetails}
-              />
+              <SizeAndPrice details={details} setDetails={setDetails} />
+            )}
+
+            {currentTab === 2 && (
+              <ProductRecipes recipes={recipes} setRecipes={setRecipes} />
             )}
 
             <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
@@ -215,6 +139,9 @@ const ProductDetailModal = ({ productId, open, onClose, refetch }) => {
                 onClick={() => {
                   onClose();
                   setFiles([]);
+                  setDetails([]);
+                  setRecipes([]);
+                  setProductData(null);
                   setCurrentTab(0);
                 }}
                 sx={{ mr: 1 }}

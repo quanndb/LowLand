@@ -121,20 +121,20 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
 
   const orderStatus = {
     0: {
-      name: "Waiting",
-      color: "#f1c40f",
+      name: "WAITING",
+      color: "#FF9800",
     },
     1: {
-      name: "Paid",
-      color: "#2ecc71",
+      name: "PAID",
+      color: "#2196F3",
     },
     2: {
-      name: "Delivered",
-      color: "#3498db",
+      name: "DELIVERED",
+      color: "#4CAF50",
     },
     3: {
-      name: "Cancelled",
-      color: "#e74c3c",
+      name: "CANCELED",
+      color: "#F44336",
     },
   };
 
@@ -179,7 +179,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
               name="customerName"
               label="Customer Name"
               fullWidth
-              value={updatedOrder.customerName}
+              value={updatedOrder.customerName || ""}
               disabled={order.status !== 0}
               onChange={handleChange}
               sx={{ mr: 2 }}
@@ -191,7 +191,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
               name="phoneNumber"
               label="Phone Number"
               fullWidth
-              value={updatedOrder.phoneNumber}
+              value={updatedOrder.phoneNumber || ""}
               disabled={order.status !== 0}
               onChange={handleChange}
             />
@@ -202,7 +202,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
           name="address"
           label="Address"
           fullWidth
-          value={updatedOrder.address}
+          value={updatedOrder.address || ""}
           disabled={order.status !== 0}
           onChange={handleChange}
         />
@@ -211,7 +211,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
           name="message"
           label="Message"
           fullWidth
-          value={updatedOrder.message}
+          value={updatedOrder.message || ""}
           disabled={order.status !== 0}
           onChange={handleChange}
         />
@@ -223,7 +223,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
               name="createdDate"
               label="Created Date"
               fullWidth
-              value={order.createdDate}
+              value={order.createdDate || ""}
               onChange={handleChange}
               disabled
               sx={{ mr: 2 }}
@@ -235,7 +235,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
               name="createdBy"
               label="Created By"
               fullWidth
-              value={order.createdBy}
+              value={order.createdBy || ""}
               onChange={handleChange}
               disabled
               sx={{ mr: 2 }}
@@ -249,10 +249,12 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
                   padding: "8px 40px",
                   color: "white",
                   fontWeight: "600",
-                  backgroundColor: `${orderStatus[order.status].color}`,
+                  backgroundColor: `${
+                    orderStatus[order.status]?.color || "none"
+                  }`,
                 }}
               >
-                {orderStatus[order.status].name}
+                {orderStatus[order.status]?.name || ""}
               </Typography>
             </Box>
           </Grid>
@@ -264,7 +266,7 @@ const ModalContent = ({ handleClose, order, userId, refetch }) => {
           name="note"
           label="Note"
           fullWidth
-          value={order.note}
+          value={order.note || ""}
           disabled
           onChange={handleChange}
         />

@@ -2,12 +2,12 @@ import axios from "src/services";
 
 const payAPI = {
   createPaymentLink: (params) => {
-    const url = "/pay/create-payment-link?orderId=" + params;
+    const url = "payments?orderId=" + params;
     return axios.post(url);
   },
-  cancel: (params) => {
-    const url = "/pay/cancel-payment";
-    return axios.post(url, params);
+  cancel: (accountId, orderId) => {
+    const url = `/accounts/${accountId}/orders/${orderId}`;
+    return axios.delete(url, params);
   },
 };
 

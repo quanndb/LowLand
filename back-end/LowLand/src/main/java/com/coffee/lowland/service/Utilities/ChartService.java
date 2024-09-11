@@ -33,6 +33,7 @@ public class ChartService {
                     ChartTotalMoney.builder()
                             .dayInMonth((Integer) item[0])
                             .totalMoney((BigDecimal) item[1])
+                            .totalOrders((Long) item[2])
                             .build()
             );
         }

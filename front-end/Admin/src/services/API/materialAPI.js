@@ -2,9 +2,9 @@ import { update } from "lodash";
 import axios from "src/services";
 
 const materialAPI = {
-  getAll: () => {
-    const url = "/Material/GetAll?keyWords=";
-    return axios.get(url);
+  getMaterials: (params) => {
+    const url = "/materials";
+    return axios.get(url, { params });
   },
   update: (params) => {
     const url = "/Material/CreateOrUpdate";

@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 
 import Image from "./Image";
 
@@ -7,83 +7,105 @@ import { useRouter } from "src/routes/hooks";
 const LineBlog = ({ url, imageURL, title, description, date, sx }) => {
   const router = useRouter();
   return (
-    <Grid
-      container
+    <Card
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        textDecoration: "none",
-        color: "var(--primary-color)",
-        padding: "15px 10px",
+        boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px;",
         mb: "20px",
+        padding: "15px 10px",
         "&:hover": {
-          boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px;",
+          opacity: "0.8",
+          transform: "scale(1.01) translateY(-10px)",
         },
         transition: "all 0.5s ease",
-        ...sx,
-      }}
-      component={"a"}
-      href={url ? "/" : url}
-      onClick={(e) => {
-        e.preventDefault();
-        router.push(url);
       }}
     >
       <Grid
-        item
-        md={6}
+        container
         sx={{
-          margin: "10px 0px",
-          padding: {
-            md: "0px 30px",
-          },
-          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          textDecoration: "none",
+          color: "var(--primary-color)",
+          ...sx,
+        }}
+        component={"a"}
+        href={url}
+        onClick={(e) => {
+          e.preventDefault();
+          router.push(url);
         }}
       >
-        <Image
-          imageURL={imageURL}
+        <Grid
+          item
+          md={6}
           sx={{
-            height: "200px",
+            margin: "10px 0px",
+            padding: {
+              md: "0px 30px",
+            },
             width: "100%",
           }}
-        />
-      </Grid>
-      <Grid
-        item
-        md={6}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography
+        >
+          <Image
+            imageURL={imageURL}
+            sx={{
+              height: "200px",
+              width: "100%",
+            }}
+            overlayContent={"Read More"}
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
           sx={{
-            marginBottom: "10px",
-            fontWeight: "600",
-            fontSize: "18px",
-            "&:hover": {
-              color: "var(--secondary-color)",
-              transition: "all 0.2s linear ",
-            },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          {title}
-        </Typography>
-        <Typography sx={{ marginBottom: "20px", opacity: "0.6" }}>
-          {description}
-        </Typography>
-        <Typography
-          sx={{
-            marginBottom: "20px",
-            opacity: "0.6",
-            textTransform: "uppercase",
-          }}
-        >
-          {date}
-        </Typography>
+          <Typography
+            sx={{
+              marginBottom: "10px",
+              fontWeight: "600",
+              fontSize: "18px",
+              textAlign: "left",
+              overflow: "hidden",
+              display: "-webkit-box",
+              WebkitLineClamp: "4",
+              WebkitBoxOrient: "vertical",
+              "&:hover": {
+                color: "var(--secondary-color)",
+                transition: "all 0.2s linear ",
+              },
+            }}
+          >
+            {title}
+          </Typography>
+          <Typography
+            sx={{
+              marginBottom: "20px",
+              opacity: "0.6",
+              overflow: "hidden",
+              display: "-webkit-box",
+              WebkitLineClamp: "4",
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {description}
+          </Typography>
+          <Typography
+            sx={{
+              marginBottom: "20px",
+              opacity: "0.6",
+              textTransform: "uppercase",
+            }}
+          >
+            {new Date(date).toDateString()}
+          </Typography>
+        </Grid>
       </Grid>
-    </Grid>
+    </Card>
   );
 };
 

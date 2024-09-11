@@ -17,7 +17,7 @@ const navConfig = [
   },
   {
     title: "user",
-    path: "/user",
+    path: "/users",
     icon: icon("ic_user"),
   },
   {
@@ -27,7 +27,7 @@ const navConfig = [
   },
   {
     title: "blog",
-    path: "/blog",
+    path: "/blogs",
     icon: icon("ic_blog"),
   },
   // {
@@ -37,22 +37,22 @@ const navConfig = [
   // },
   {
     title: "size",
-    path: "/size",
+    path: "/sizes",
     icon: icon("ic_analytics"),
   },
   {
     title: "order",
-    path: "/order",
+    path: "/orders",
     icon: icon("ic_order"),
   },
   {
     title: "material",
-    path: "/material",
+    path: "/materials",
     icon: icon("ic_import"),
   },
   {
     title: "importStock",
-    path: "/importStock",
+    path: "/importStocks",
     icon: icon("ic_import"),
   },
   // {

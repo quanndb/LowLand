@@ -8,6 +8,7 @@ import TimeLine from "../TimeLine";
 import DecoComp from "src/components/DecoComp";
 import Image from "src/components/Image";
 import ShowCase from "src/components/ShowCase";
+import FloatInOnScroll from "src/components/FloatIn";
 
 const AboutView = () => {
   return (
@@ -25,13 +26,26 @@ const AboutView = () => {
             sx={{ width: "100%", height: "320px", mb: "100px" }}
             unShowOverlay={true}
           />
-          <Introduction />
-          <AboutIntroductions />
-          <AuthorsIntro />
+
+          <FloatInOnScroll>
+            <Introduction />
+          </FloatInOnScroll>
+
+          <FloatInOnScroll>
+            <AboutIntroductions />
+          </FloatInOnScroll>
+
+          <FloatInOnScroll>
+            <AuthorsIntro />
+          </FloatInOnScroll>
         </Container>
       </DecoComp>
+
       <ShowCase imageURL={"/static/images/showcase2.jpg"} />
-      <TimeLine />
+
+      <FloatInOnScroll>
+        <TimeLine />
+      </FloatInOnScroll>
     </>
   );
 };

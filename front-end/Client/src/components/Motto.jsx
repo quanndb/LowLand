@@ -2,7 +2,12 @@ import { Box, Container, Typography } from "@mui/material";
 
 const Motto = ({ sx, children, author }) => {
   return (
-    <Container sx={{ ...sx, my: "30px" }}>
+    <Container
+      sx={{
+        ...sx,
+        my: "50px",
+      }}
+    >
       <Box
         sx={{
           borderLeft: "2px solid #a25f4b39",

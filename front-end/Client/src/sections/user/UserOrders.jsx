@@ -48,14 +48,10 @@ const UserOrders = () => {
       color: "#2196F3",
     },
     2: {
-      value: "SHIPPING",
+      value: "DELIVERED",
       color: "#4CAF50",
     },
     3: {
-      value: "COMPLETED",
-      color: "#9C27B0",
-    },
-    4: {
       value: "CANCELED",
       color: "#F44336",
     },
@@ -73,6 +69,7 @@ const UserOrders = () => {
         status,
         query: debounceValue,
       }),
+    staleTime: 1000 * 60,
     placeholderData: keepPreviousData,
   });
 
@@ -119,7 +116,7 @@ const UserOrders = () => {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              setCurrentPage(1);
+              setPage(1);
             }}
           />
           <Button
@@ -143,7 +140,12 @@ const UserOrders = () => {
               headerName: "Items",
               width: 90,
               renderCell: (params) => {
-                return <Avatar sx={{ mt: 1 }} src={params.value} />;
+                return (
+                  <Avatar
+                    sx={{ mt: 1 }}
+                    src={params.value || "/static/images/logo.jpg"}
+                  />
+                );
               },
             },
             {
@@ -179,7 +181,7 @@ const UserOrders = () => {
             {
               field: "status",
               headerName: "Status",
-              width: 90,
+              width: 100,
               renderCell: (param) => (
                 <span
                   style={{

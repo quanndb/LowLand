@@ -64,7 +64,8 @@ app.post("/create-payment-link", async (req, res) => {
 });
 
 app.post("/receive-payment", async (req, res) => {
-  console.log(req.body);
+  console.log(CLIENT_ID, API_KEY, CHECKSUM_KEY, CLIENT_HOST, BACK_END);
+
   axios
     .post(BACK_END, req.body)
     .then((response) => {

@@ -5,25 +5,21 @@ const orderAPI = {
     const url = "/orders/new-order";
     return axios.post(url, params);
   },
-  cancelOrder: (params) => {
-    const url = "/orders/cancel-order";
+  cancelOrder: (userId, orderId) => {
+    const url = `/accounts/${userId}/orders/${orderId}`;
+    return axios.delete(url);
+  },
+  updateOrder: (orderId, params) => {
+    const url = `/orders/${orderId}`;
     return axios.put(url, params);
   },
-  updateOrder: (params) => {
-    const url = "/orders/my-orders";
-    return axios.put(url, params);
-  },
-  getAll: () => {
+  getOrders: (params) => {
     const url = "/orders";
+    return axios.get(url, { params });
+  },
+  getOrderDetails: (userId, orderId) => {
+    const url = `/accounts/${userId}/orders/${orderId}`;
     return axios.get(url);
-  },
-  getOrderDetails: (params) => {
-    const url = "/orders/" + params;
-    return axios.get(url, params);
-  },
-  manageOrder: (params) => {
-    const url = "/orders/customer-order";
-    return axios.put(url, params);
   },
 };
 

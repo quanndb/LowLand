@@ -5,6 +5,10 @@ const accountAPI = {
     const url = "/accounts";
     return axios.get(url, { params });
   },
+  getDetails: (accountId) => {
+    const url = `/accounts/${accountId}`;
+    return axios.get(url);
+  },
   createAccount: (params) => {
     const url = "/accounts";
     return axios.post(url, params);

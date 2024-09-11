@@ -247,10 +247,12 @@ export default function ProfileView() {
           setEditData={setEditData}
           onSubmit={handleSubmit}
           disable={
-            editData.fullName === userData.fullName &&
-            editData.phoneNumber === userData.phoneNumber &&
-            editData.address === userData.address &&
-            editData.gender === userData.gender &&
+            editData?.fullName === userData?.fullName &&
+            editData?.phoneNumber === userData?.phoneNumber &&
+            editData?.address === userData?.address &&
+            editData?.gender === userData?.gender &&
+            editData?.position === userData?.position &&
+            editData?.description === userData?.description &&
             !file
           }
         />

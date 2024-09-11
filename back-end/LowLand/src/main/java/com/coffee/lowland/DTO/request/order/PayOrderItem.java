@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PayOrderItem {
     @Id

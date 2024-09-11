@@ -9,6 +9,14 @@ const productAPI = {
     const url = "/products/" + params;
     return axios.get(url);
   },
+  add: (params) => {
+    const url = "/products";
+    return axios.post(url, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
   update: (productId, params) => {
     const url = `/products/${productId}`;
     return axios.put(url, params, {
@@ -16,10 +24,6 @@ const productAPI = {
         "Content-Type": "multipart/form-data",
       },
     });
-  },
-  delete: (params) => {
-    const url = "/Product/Delete?id=" + params;
-    return axios.get(url, params);
   },
   getDetails: (params) => {
     const url = "/ProductDetail/GetAllByProductId?ProductId=" + params;

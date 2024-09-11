@@ -57,7 +57,6 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
-    console.log(error);
     if (error.code === "ERR_NETWORK") {
       toast.error("Network error. Please check your internet connection.");
     } else if (error.response.data.code === 4002) {

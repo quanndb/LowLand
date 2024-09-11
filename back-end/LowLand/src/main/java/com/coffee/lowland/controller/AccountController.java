@@ -125,7 +125,7 @@ public class AccountController {
                 .build();
     }
 
-    @PutMapping("/{accountId}/{orderId}/cancel")
+    @DeleteMapping("/{accountId}/orders/{orderId}")
     public APIResponse<String> cancelOrder(@PathVariable String accountId,
                                            @PathVariable String orderId,
                                            @RequestBody(required = false) String note) {

@@ -22,6 +22,7 @@ import ListProducts from "../ListProducts";
 
 import ProductSkeleton from "src/components/ProductSkeleton";
 import { useDebounce } from "src/hooks/use-debounce";
+import FloatInOnScroll from "src/components/FloatIn";
 
 const ProductsView = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,93 +111,95 @@ const ProductsView = () => {
           </Box>
           <Productswiper />
 
-          <Container
-            sx={{
-              display: "flex",
-              mb: " 30px",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-            }}
-          >
-            <FormControl
-              sx={{ width: { xs: "100%", sm: "200px" }, mb: "15px" }}
+          <FloatInOnScroll>
+            <Container
+              sx={{
+                display: "flex",
+                mb: " 30px",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+              }}
             >
-              <InputLabel id="demo-simple-select-label">Menu</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={isFetching ? 0 : menu.value}
-                label="Menu"
-                onChange={(e) => {
-                  const selectedItem = productTypes.find(
-                    (item, index) => index + 1 === Number(e.target.value)
-                  );
-                  handleMenuChange(
-                    selectedItem?.productTypeId || "",
-                    e.target.value
-                  );
+              <FormControl
+                sx={{ width: { xs: "100%", sm: "200px" }, mb: "15px" }}
+              >
+                <InputLabel id="demo-simple-select-label">Menu</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={isFetching ? 0 : menu.value}
+                  label="Menu"
+                  onChange={(e) => {
+                    const selectedItem = productTypes.find(
+                      (item, index) => index + 1 === Number(e.target.value)
+                    );
+                    handleMenuChange(
+                      selectedItem?.productTypeId || "",
+                      e.target.value
+                    );
+                  }}
+                >
+                  <MenuItem value={0}>All products</MenuItem>
+                  {!isFetching &&
+                    productTypes &&
+                    productTypes.map((item, index) => (
+                      <MenuItem value={index + 1} key={item.productTypeId}>
+                        {item.typeName}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  height: "fit-content",
+                  width: { xs: "100%", sm: "350px" },
                 }}
               >
-                <MenuItem value={0}>All products</MenuItem>
-                {!isFetching &&
-                  productTypes &&
-                  productTypes.map((item, index) => (
-                    <MenuItem value={index + 1} key={item.productTypeId}>
-                      {item.typeName}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
+                <TextField
+                  label="Search your favorite coffee..."
+                  variant="outlined"
+                  sx={{ width: "100%", mr: "10px" }}
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                />
+                <Button
+                  startIcon={<SearchIcon />}
+                  variant="contained"
+                  sx={{ px: "20px" }}
+                >
+                  Search
+                </Button>
+              </Box>
+            </Container>
 
+            {/* search + select option */}
+            {isFetching || !pageData ? (
+              <ProductSkeleton />
+            ) : (
+              <ListProducts products={pageData?.response} />
+            )}
+
+            {/* Pagination Controls */}
             <Box
               sx={{
                 display: "flex",
-                height: "fit-content",
-                width: { xs: "100%", sm: "350px" },
+                justifyContent: "center",
+                marginTop: "30px",
+                mb: "150px",
               }}
             >
-              <TextField
-                label="Search your favorite coffee..."
-                variant="outlined"
-                sx={{ width: "100%", mr: "10px" }}
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setCurrentPage(1);
-                }}
+              <Pagination
+                count={pageData?.totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
               />
-              <Button
-                startIcon={<SearchIcon />}
-                variant="contained"
-                sx={{ px: "20px" }}
-              >
-                Search
-              </Button>
             </Box>
-          </Container>
-
-          {/* search + select option */}
-          {isFetching || !pageData ? (
-            <ProductSkeleton />
-          ) : (
-            <ListProducts products={pageData?.response} />
-          )}
-
-          {/* Pagination Controls */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "30px",
-              mb: "30px",
-            }}
-          >
-            <Pagination
-              count={pageData?.totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-            />
-          </Box>
+          </FloatInOnScroll>
         </Container>
       }
     </>

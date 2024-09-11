@@ -28,4 +28,6 @@ public class UserResponse {
     String cloudId;
     Boolean isActive;
     String role;
+    String position;
+    String description;
 }

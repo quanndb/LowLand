@@ -48,7 +48,8 @@ public class ProductDetailsService {
                     .getSizeOrCreateSizeBySizeName(item.getSizeName());
              _repo.save(ProductDetails.builder()
                      .price(item.getPrice())
-                     .salePrice(item.getSalePrice() ==0 ? null : item.getSalePrice())
+                     .salePrice(item.getSalePrice() == null
+                             ? null : item.getSalePrice() == 0d ? null : item.getSalePrice())
                      .productId(productId)
                      .isActive(true)
                      .productSizeId(size.getProductSizeId())

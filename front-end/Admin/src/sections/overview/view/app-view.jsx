@@ -135,6 +135,12 @@ export default function AppView() {
                   fill: "solid",
                   data: totalMoneyInMonth?.map((item) => item.totalMoney || 0),
                 },
+                {
+                  name: "Orders",
+                  type: "column",
+                  fill: "solid",
+                  data: totalMoneyInMonth?.map((item) => item.totalOrders || 0),
+                },
               ],
             }}
           />

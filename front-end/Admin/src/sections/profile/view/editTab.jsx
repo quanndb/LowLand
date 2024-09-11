@@ -83,6 +83,29 @@ const EditTab = ({ editData, setEditData, onSubmit, disable }) => {
               sx={{ mt: 2 }}
             />
 
+            <TextField
+              fullWidth
+              label="Position"
+              value={editData?.position || ""}
+              onChange={(e) =>
+                setEditData((prev) => ({ ...prev, position: e.target.value }))
+              }
+              sx={{ mt: 2 }}
+            />
+
+            <TextField
+              fullWidth
+              label="Description"
+              value={editData?.description || ""}
+              onChange={(e) =>
+                setEditData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
+              sx={{ mt: 2 }}
+            />
+
             <Button
               type="submit"
               variant="contained"

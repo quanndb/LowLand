@@ -332,13 +332,14 @@ export default function ProductsView() {
         }}
         refetch={refetch}
       />
-      {/*
+
       <AddProductModal
-        setSp={setSp}
-        open={addModalOpen}
-        onClose={handleCloseAddModal}
-        onAddProduct={handleAddProduct}
-      /> */}
+        open={openAddModal}
+        onClose={() => {
+          setOpenAddModal(false);
+        }}
+        refetch={refetch}
+      />
     </Container>
   );
 }

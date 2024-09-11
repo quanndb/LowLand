@@ -13,9 +13,10 @@ import { useDebounce } from "src/hooks/use-debounce";
 export const CustomAutocomplete = ({
   current,
   label,
-  queryFn,
   labelKey,
+  queryFn,
   onInputChange,
+  sx,
 }) => {
   const [value, setValue] = useState(current);
   const [focused, setFocused] = useState(false);
@@ -27,35 +28,34 @@ export const CustomAutocomplete = ({
   const { data: options = [], isLoading: loading } = useQuery({
     queryKey: ["getOptions", { query: queryDebounced }],
     queryFn: () => queryFn({ query: queryDebounced, size: 5 }),
-    enabled: !!queryDebounced || focused, // Only run query if there's a value or the field is focused
+    enabled: focused, // Only run query if there's a value or the field is focused
   });
 
-  const handleFocus = () => {
-    setFocused(true);
+  const handleInputChange = (value) => {
+    setValue(value);
+    onInputChange({
+      value: value,
+      option: options.find((o) => o[labelKey] === value),
+    }); // Call the callback with the new value
   };
 
   const handleBlur = () => {
-    setTimeout(() => setFocused(false), 100); // Delay to allow click events
-  };
-
-  const handleInputChange = (event) => {
-    setValue(event.target.value);
-    if (onInputChange) {
-      onInputChange(event.target.value); // Call the callback with the new value
-    }
+    setTimeout(() => {
+      setFocused(false);
+    }, 100);
   };
 
   return (
-    <Box sx={{ position: "relative", display: "inline-block" }}>
+    <Box sx={{ position: "relative" }}>
       <TextField
         value={value || ""}
         name={label}
         label={label}
         autoComplete={"off"}
-        sx={{ minWidth: 150 }}
-        onFocus={handleFocus} // Show buttons when input is focused
-        onBlur={handleBlur} // Hide buttons after a delay when focus is lost
-        onChange={handleInputChange} // Update options as user types
+        sx={{ minWidth: 150, ...sx }}
+        onFocus={() => setFocused(true)} // Show buttons when input is focused
+        onBlur={handleBlur} // Hide buttons when input is blurred
+        onChange={(e) => handleInputChange(e.target.value)} // Update options as user types
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -72,14 +72,13 @@ export const CustomAutocomplete = ({
         <Box
           sx={{
             position: "absolute",
-            top: "100%", // Position below the TextField
+            top: "100%",
             left: 0,
             width: "100%",
-            backgroundColor: "#fff",
-            border: "1px solid #ccc",
             borderRadius: "4px",
             boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-            zIndex: 1000, // Ensure it floats above other elements
+            backgroundColor: "white",
+            zIndex: 1000,
             mt: 1,
             display: "flex",
             flexDirection: "column",
@@ -93,8 +92,8 @@ export const CustomAutocomplete = ({
               variant="contained"
               sx={{ width: "100%" }}
               onClick={() => {
-                setValue(option[labelKey] || value);
-                setFocused(false); // Hide buttons after selection
+                handleInputChange(option[labelKey] || value);
+                setFocused(false);
               }}
             >
               {option[labelKey]}

@@ -28,7 +28,7 @@ const ConfirmDelete = ({ open, onClose, onDelete }) => {
           >
             No
           </Button>
-          <Button variant="contained" color="primary" onClick={onDelete}>
+          <Button variant="contained" color="error" onClick={onDelete}>
             Yes
           </Button>
         </Box>

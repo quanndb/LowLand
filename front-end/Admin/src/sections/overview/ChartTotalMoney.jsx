@@ -6,13 +6,10 @@ import CardHeader from "@mui/material/CardHeader";
 
 import Chart, { useChart } from "src/components/chart";
 
-export default function ChartTotalMoney({
-  title,
-  subheader,
-  chart,
-  ...other
-}) {
+export default function ChartTotalMoney({ title, subheader, chart, ...other }) {
   const { labels, colors, series, options } = chart;
+
+  const units = ["VNĐ", "orders"]; // Adjust units for each series as needed
 
   const chartOptions = useChart({
     colors,
@@ -32,9 +29,10 @@ export default function ChartTotalMoney({
       shared: true,
       intersect: false,
       y: {
-        formatter: (value) => {
+        formatter: (value, { seriesIndex }) => {
           if (typeof value !== "undefined") {
-            return `${value.toLocaleString()} VNĐ`;
+            // Apply the correct unit for each series based on the seriesIndex
+            return `${value.toLocaleString()} ${units[seriesIndex]}`;
           }
           return value;
         },

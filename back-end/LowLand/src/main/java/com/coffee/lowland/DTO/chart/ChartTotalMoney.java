@@ -15,4 +15,5 @@ import java.math.BigDecimal;
 public class ChartTotalMoney {
     Integer dayInMonth;
     BigDecimal totalMoney;
+    Long totalOrders;
 }

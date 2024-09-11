@@ -1,7 +1,6 @@
 package com.coffee.lowland.DTO.request.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,6 +19,8 @@ public class UpdateAccountRequest {
     String phoneNumber;
     String address;
     String imageURL;
+    String position;
+    String description;
     String imageName;
     String cloudId;
     Boolean isActive;

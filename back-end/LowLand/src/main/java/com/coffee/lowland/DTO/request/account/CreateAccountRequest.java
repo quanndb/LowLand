@@ -1,8 +1,5 @@
 package com.coffee.lowland.DTO.request.account;
 
-import com.coffee.lowland.model.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,4 +21,6 @@ public class CreateAccountRequest {
     String address;
     @NotBlank(message = "USER_FIELDS_NOT_BLANK")
     String role;
+    String position;
+    String description;
 }

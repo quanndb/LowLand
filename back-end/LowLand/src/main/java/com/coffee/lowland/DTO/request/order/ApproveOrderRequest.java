@@ -22,5 +22,6 @@ public class ApproveOrderRequest {
     @Min(value = 0, message = "INVALID_ORDER_STATUS")
     @Max(value = 3, message = "INVALID_ORDER_STATUS")
     int status;
+    String message;
     String note;
 }

@@ -125,7 +125,7 @@ const CheckoutView = () => {
                 </Typography>
                 <TextField
                   color={"secondary"}
-                  value={customerName}
+                  value={customerName || ""}
                   onChange={(e) => setCustomerName(e.target.value)}
                   error={attempt && !customerName}
                   helperText={
@@ -142,7 +142,7 @@ const CheckoutView = () => {
                 </Typography>
                 <TextField
                   color={"secondary"}
-                  value={phoneNumber}
+                  value={phoneNumber || ""}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   error={attempt && !phoneNumber}
                   helperText={
@@ -157,7 +157,7 @@ const CheckoutView = () => {
                 <Typography sx={{ fontWeight: "600" }}>Address: </Typography>
                 <TextField
                   color={"secondary"}
-                  value={address}
+                  value={address || ""}
                   onChange={(e) => setAddress(e.target.value)}
                   error={attempt && !address}
                   helperText={

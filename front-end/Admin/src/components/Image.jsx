@@ -44,6 +44,7 @@ const Overlay = ({ hovered, overlayContent }) => {
 
 const Image = ({ sx, imageURL, unShowOverlay, overlayContent, children }) => {
   const [hovered, setHovered] = useState(false);
+  const [error, setError] = useState(false);
 
   return (
     <Box
@@ -53,7 +54,9 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent, children }) => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        backgroundImage: `url(${imageURL})`,
+        backgroundImage: error
+          ? "urk(/static/images/logo.jpg)"
+          : `url(${imageURL || "/static/images/logo.jpg"})`,
         ...sx,
       }}
     >
@@ -66,6 +69,12 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent, children }) => {
         />
       )}
       {children}
+      <img
+        alt=""
+        src={imageURL}
+        style={{ display: "none" }}
+        onError={() => setError(true)}
+      />
     </Box>
   );
 };

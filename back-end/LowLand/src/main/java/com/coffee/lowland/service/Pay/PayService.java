@@ -37,9 +37,14 @@ public class PayService {
             amount += (item.getPrice()*item.getQuantity());
         }
 
-        amount += amount * 0.1;
+        double tax = amount * 0.1;
+        response.add(PayOrderItem.builder()
+                        .name("Tax 10%")
+                        .quantity(1)
+                        .price((int) tax)
+                .build());
         CreatePayRequest req = CreatePayRequest.builder()
-                .amount((int) amount)
+                .amount((int) (amount + tax))
                 .orderCode(foundOrder.getOrderCode())
                 .items(response)
                 .build();

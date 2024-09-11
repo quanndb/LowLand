@@ -27,7 +27,7 @@ const UserInfo = () => {
   const user = useSelector(UserSelector);
   const dispatch = useDispatch();
 
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState("1");
   const [file, setFile] = useState(null);
   const [fullName, setFullName] = useState(user.fullName || "");
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || null);
@@ -123,33 +123,31 @@ const UserInfo = () => {
             />
           </IconButton>
         </Box>
+
         <TabContext value={tab}>
-          <TabList onChange={(e, v) => setTab(v)} aria-label="user tabs">
-            <Tab label={"User info"} value={0}>
-              User info
-            </Tab>
-            <Tab label={"Change password"} value={1}>
-              Change password
-            </Tab>
-          </TabList>
+          <Box>
+            <TabList onChange={(e, v) => setTab(v)} aria-label="user tabs">
+              <Tab label="User info" value={"1"} />
+              <Tab label="Change password" value={"2"} />
+            </TabList>
+          </Box>
           <TabPanel
-            value={0}
+            value={"1"}
             sx={{
-              display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              display: tab === 0 ? "flex" : "none",
+              display: tab === "1" ? "flex" : "none",
             }}
           >
             <TextField
               sx={{ m: 2, width: "100%" }}
-              value={user.email}
+              value={user.email || ""}
               label="Email"
               disabled
             ></TextField>
             <TextField
               sx={{ m: 2, width: "100%" }}
-              value={fullName}
+              value={fullName || ""}
               label="Full Name"
               onChange={(e) => setFullName(e.target.value)}
             ></TextField>
@@ -157,7 +155,7 @@ const UserInfo = () => {
               <InputLabel id="demo-simple-select-label2">Gender</InputLabel>
               <Select
                 labelId="demo-simple-select-label2"
-                value={gender}
+                value={gender || 1}
                 name="gender"
                 label="Gender"
                 onChange={(e) => {
@@ -171,39 +169,38 @@ const UserInfo = () => {
             <TextField
               sx={{ m: 2, width: "100%" }}
               label="Phone Number"
-              value={phoneNumber}
+              value={phoneNumber || ""}
               onChange={(e) => setPhoneNumber(e.target.value)}
             ></TextField>
             <TextField
               sx={{ m: 2, width: "100%" }}
               label="Address"
-              value={address}
+              value={address || ""}
               onChange={(e) => setAddress(e.target.value)}
             ></TextField>
           </TabPanel>
           <TabPanel
-            value={1}
+            value={"2"}
             sx={{
-              display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              display: tab === 1 ? "flex" : "none",
+              display: tab === "2" ? "flex" : "none",
             }}
           >
             <TextField
               sx={{ m: 2, width: "100%" }}
               label="New password"
-              value={password}
+              value={password || ""}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
             />
             <TextField
               sx={{ m: 2, width: "100%" }}
               label="Confirm password"
-              value={confirmPassword}
+              value={confirmPassword || ""}
               onChange={(e) => setConfirmPassword(e.target.value)}
               type="password"
-              error={password && password !== confirmPassword}
+              error={Boolean(password) && password !== confirmPassword}
               helperText={
                 password && password !== confirmPassword
                   ? "Passwords do not match"
@@ -212,20 +209,23 @@ const UserInfo = () => {
             />
           </TabPanel>
         </TabContext>
-        <Button
-          variant="contained"
-          onClick={handleUpdate}
-          disabled={
-            fullName === user.fullName &&
-            phoneNumber === user.phoneNumber &&
-            address === user.address &&
-            gender === user.gender &&
-            !file &&
-            !password
-          }
-        >
-          Update profile
-        </Button>
+
+        {!isPending && (
+          <Button
+            variant="contained"
+            onClick={handleUpdate}
+            disabled={
+              fullName === user.fullName &&
+              phoneNumber === user.phoneNumber &&
+              address === user.address &&
+              gender === user.gender &&
+              !file &&
+              !password
+            }
+          >
+            Update profile
+          </Button>
+        )}
       </Box>
     </Box>
   );

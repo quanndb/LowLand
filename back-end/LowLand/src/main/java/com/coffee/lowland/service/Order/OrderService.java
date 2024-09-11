@@ -88,9 +88,9 @@ public class OrderService {
         // Process order details
         request.getItems().forEach(item -> {
             item.setOrderId(savedOrder.getOrderId());
-            Double price = productDetailsRepository.findById(item.getProductDetailsId())
-                    .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND))
-                    .getPrice();
+            ProductDetails found = productDetailsRepository.findById(item.getProductDetailsId())
+                    .orElseThrow(() -> new AppExceptions(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+            Double price = found.getSalePrice() != null && found.getSalePrice() != 0d ? found.getSalePrice() : found.getPrice();
             item.setTotalMoney(price * item.getQuantity());
             orderDetailsRepository.save(item);
         });
@@ -140,8 +140,8 @@ public class OrderService {
     public Order approveOrder(String orderId, ApproveOrderRequest request){
         Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
-        if(request.getStatus()==1 ||
-                foundOrder.getStatus()==3){
+        if(request.getStatus()==0 ||
+                foundOrder.getStatus()==3 || foundOrder.getStatus()==2){
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
         materialService.updateQuantityMaterialAfterApproveOrder(orderId);

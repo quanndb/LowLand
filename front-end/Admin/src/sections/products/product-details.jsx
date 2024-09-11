@@ -200,11 +200,11 @@ const ProductDetails = ({ productData, setProductData, files, setFiles }) => {
         component={"a"}
         target="_blank"
         href={`${import.meta.env.VITE_CLIENT}/products/${
-          productData.productId
+          productData?.productId || ""
         }`}
         sx={{ mt: 3, fontWeight: 700, fontSize: "1.5rem" }}
       >
-        {productData.productName}
+        {productData?.productName || ""}
       </Link>
 
       <Box>
@@ -236,7 +236,7 @@ const ProductDetails = ({ productData, setProductData, files, setFiles }) => {
             },
           }}
         >
-          {productData.images.map((image) => (
+          {productData?.images?.map((image) => (
             <SwiperSlide key={image.productImageId}>
               <Image
                 unShowOverlay={true}
@@ -345,7 +345,7 @@ const ProductDetails = ({ productData, setProductData, files, setFiles }) => {
         />
 
         <ProductTypeAutocomplete
-          currentType={productData.typeName}
+          currentType={productData?.typeName}
           setProductData={setProductData}
         />
 
@@ -353,7 +353,7 @@ const ProductDetails = ({ productData, setProductData, files, setFiles }) => {
           <InputLabel id="demo-simple-select-label">Active</InputLabel>
           <Select
             labelId="demo-simple-select-label"
-            value={productData.isActive ? 1 : 0}
+            value={productData?.isActive ? 1 : 0}
             name="isActive"
             label="Active"
             autoComplete="isActive"
@@ -387,7 +387,7 @@ const ProductDetails = ({ productData, setProductData, files, setFiles }) => {
 
         <TextField
           label="Description"
-          value={productData.description || ""}
+          value={productData?.description || ""}
           onChange={(e) =>
             setProductData({ ...productData, description: e.target.value })
           }

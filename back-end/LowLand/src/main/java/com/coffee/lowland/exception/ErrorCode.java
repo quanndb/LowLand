@@ -32,7 +32,9 @@ public enum ErrorCode {
     ACCOUNT_NOT_ACTIVE(4015,"Your account is not active", HttpStatus.BAD_REQUEST),
 
     // blog
-    BLOG_NOT_EXISTED(4020,"Your blogID is not existed", HttpStatus.BAD_REQUEST),
+    BLOG_NOT_FOUND(4020,"Your blogID is not found", HttpStatus.NOT_FOUND),
+    // author
+    AUTHOR_NOT_FOUND(4080,"Not found author!",HttpStatus.NOT_FOUND),
     // order
     ORDER_NOT_EXISTED(4030,"Your order is not existed", HttpStatus.BAD_REQUEST),
     QUANTITY_AT_LEAST(4031, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),

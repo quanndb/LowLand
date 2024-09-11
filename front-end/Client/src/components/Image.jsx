@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { Box, Button } from "@mui/material";
 
@@ -59,12 +59,12 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        backgroundImage: `url(${imageSrc})`,
+        backgroundImage: `url(${imageURL || "/static/images/logo.jpg"})`,
         ...sx,
       }}
     >
       <img
-        src={imageSrc}
+        src={imageSrc || "/static/images/logo.jpg"}
         alt="lowland"
         style={{ display: "none" }}
         onError={handleImageError}
@@ -81,4 +81,4 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
   );
 };
 
-export default Image;
+export default memo(Image);

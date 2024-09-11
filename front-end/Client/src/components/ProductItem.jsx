@@ -31,9 +31,10 @@ const ProductItem = ({
         overflow: "hidden",
         "&:hover": {
           boxShadow: "0 2px 14px 0 rgb(32 54 70 / 8%)",
-          transform: "translateY(-4px)",
+          transform: "translateY(-10px)",
           scale: "1.01",
         },
+        transition: "all 0.5s ease",
       }}
       component={"a"}
       href={`/products/${id}`}
@@ -47,9 +48,9 @@ const ProductItem = ({
         imageURL={imageURL}
         sx={{
           width: "100%",
-          height: "400px",
+          height: "300px",
           position: "relative",
-          backgroundColor: "rgba(162, 95, 75, 0.05)",
+          backgroundColor: "rgba(162, 95, 75, 0.02)",
         }}
       />
       <Typography

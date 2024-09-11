@@ -35,7 +35,10 @@ const HeaderTab = ({ isMobile, showNav, setShowNav }) => {
   return (
     <Tabs
       id="navBar"
-      value={location.split("/")[1]}
+      value={
+        location.split("/")[1] !== "authors" ? location.split("/")[1] : "blogs"
+      }
+      onClick={() => window.scrollTo(0, 0)}
       onChange={handleChange}
       variant="scrollable"
       scrollButtons="auto"
