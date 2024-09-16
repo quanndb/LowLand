@@ -23,7 +23,7 @@ public enum ErrorCode {
     EMAIL_NOT_EXIST(4006, "Email is not exist", HttpStatus.BAD_REQUEST),
     EMAIL_PASSWORD_INVALID(4007, "Invalid email or password", HttpStatus.BAD_REQUEST),
     EMAIL_PASSWORD_BLANK(4008,"Email and password can not be null", HttpStatus.BAD_REQUEST),
-    ACCOUNT_NOT_EXIST(4009,"Account not exist",HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_EXIST(4009,"Account not exist",HttpStatus.NOT_FOUND),
     ACCOUNT_EXISTED(4010,"Email existed", HttpStatus.BAD_REQUEST),
     FIELD_NOT_BLANK(4011,"These fields can't not be blank", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(4012,"Invalid email type", HttpStatus.BAD_REQUEST),
@@ -35,6 +35,11 @@ public enum ErrorCode {
     BLOG_NOT_FOUND(4020,"Your blogID is not found", HttpStatus.NOT_FOUND),
     // author
     AUTHOR_NOT_FOUND(4080,"Not found author!",HttpStatus.NOT_FOUND),
+    // like
+    LIKE_NOT_FOUND(4090,"Not found like!",HttpStatus.NOT_FOUND),
+    // comment
+    COMMENT_NOT_FOUND(4100,"Not found comment!",HttpStatus.NOT_FOUND),
+    INVALID_COMMENT(4101,"In valid comment!",HttpStatus.BAD_REQUEST),
     // order
     ORDER_NOT_EXISTED(4030,"Your order is not existed", HttpStatus.BAD_REQUEST),
     QUANTITY_AT_LEAST(4031, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),
@@ -63,7 +68,6 @@ public enum ErrorCode {
     INVALID_MATERIAL_IN_PRODUCT(4067, "Invalid quantity of material in product", HttpStatus.BAD_REQUEST),
     //import stock
     IMPORT_NOTFOUND(4070,"Not found import stock", HttpStatus.NOT_FOUND);
-    ;
 
     int code;
     String message;

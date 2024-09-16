@@ -24,6 +24,7 @@ const IntroText = ({ title, desciption, sx, variant, children }) => {
           marginBottom: "40px",
           fontWeight: "600",
           fontSize: config[variant ? variant : "h1"].title,
+          textWrap: "wrap",
         }}
       >
         {title}
@@ -32,8 +33,8 @@ const IntroText = ({ title, desciption, sx, variant, children }) => {
       <Typography
         sx={{
           opacity: "0.7",
-          marginBottom: "50px",
           fontSize: config[variant ? variant : "h1"].desciption,
+          textWrap: "wrap",
         }}
       >
         {desciption}

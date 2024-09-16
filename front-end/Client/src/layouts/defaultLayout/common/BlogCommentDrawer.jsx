@@ -1,195 +1,92 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
-import {
-  Avatar,
-  Badge,
-  Box,
-  Divider,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import SendIcon from "@mui/icons-material/Send";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { Box, Divider, Skeleton, Typography } from "@mui/material";
 
 import SideDrawer from "src/components/navigation/SideDrawer";
 import { blogCommentDrawer } from "src/redux/selectors/DrawerSelector";
-import { user } from "src/redux/selectors/UserSelector";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import blogAPI from "src/services/API/blogAPI";
+import { useInView } from "react-intersection-observer";
+import Image from "src/components/Image";
+import FormComment from "./FormComment";
+import CommentItem from "./CommentItem";
 
-const CommentItem = ({ avatarURL, name, date, like, comment }) => {
-  const [isLiked, setIsLiked] = useState(like);
+const CommentSkeleton = memo(() => {
   return (
-    <Box sx={{ my: "20px", pr: "20px" }}>
-      <Box sx={{ display: "flex" }}>
-        <Avatar
-          sx={{ mr: "10px", border: "2px solid var(--primary-color)" }}
-          src={avatarURL ? avatarURL : null}
-        />
-        <Box>
-          <Box
-            sx={{
-              backgroundColor: "#f2f3f5",
-              p: "8px 15px",
-              borderRadius: "15px",
-              width: "fit-content",
-              wordBreak: "break-word", // Ensures long comments wrap
-            }}
-          >
-            <Typography sx={{ fontWeight: "600", mb: "2px" }} noWrap={false}>
-              {name}
-            </Typography>
-            <Typography>{comment}</Typography>
+    <>
+      {[...Array(6)].map((_, index) => (
+        <Box key={index}>
+          <Box sx={{ mt: "20px", display: "flex", alignItems: "center" }}>
+            <Skeleton variant="circular" width={40} height={40} />
+            <Skeleton
+              variant="rounded"
+              sx={{
+                ml: "10px",
+                height: "60px",
+                // random width between 50% and 90%
+                width: Math.random() * (90 - 50) + 50 + "%",
+              }}
+            />
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", mt: "5px" }}>
-            <IconButton onClick={() => setIsLiked(!isLiked)} sx={{ mr: "5px" }}>
-              <Badge badgeContent={isLiked ? 1 : 0} color="primary">
-                {isLiked ? (
-                  <FavoriteIcon color="error" />
-                ) : (
-                  <FavoriteBorderIcon />
-                )}
-              </Badge>
-            </IconButton>
-            <IconButton sx={{ mr: "5px" }}>
-              <ContentCopyIcon />
-            </IconButton>
-            <IconButton sx={{ mr: "5px" }}>
-              <MoreHorizIcon />
-            </IconButton>
-            <Typography color={"secondary"} sx={{ opacity: "0.7" }}>
-              {date}
-            </Typography>
-          </Box>
+          <Skeleton variant="text" sx={{ ml: "10px", width: "50%" }} />
         </Box>
-      </Box>
-    </Box>
+      ))}
+    </>
   );
-};
+});
 
-const FormComment = ({ comments, setComments }) => {
-  const userdata = useSelector(user);
-  const [newComment, setNewComment] = useState("");
-  const handleAddComment = () => {
-    if (newComment !== "") {
-      setComments((comments) => [
-        {
-          id: comments.length + 1,
-          name: userdata?.email,
-          avatarURL: userdata?.imageURL,
-          date: "20:48 22/5/2024",
-          comment: newComment,
-          like: false,
-        },
-        ...comments,
-      ]);
-      setNewComment("");
-    }
-  };
-  return (
-    <Box sx={{ display: "flex", mb: "20px" }}>
-      <Avatar sx={{ mr: "10px" }} src={userdata?.imageURL} />
-      <TextField
-        label="Comment"
-        placeholder="Share your comment to author..."
-        autoComplete={"none"}
-        multiline
-        value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
-        sx={{
-          flex: 1,
-        }}
-      ></TextField>
-      <IconButton
-        sx={{ height: "fit-content", alignSelf: "end" }}
-        onClick={handleAddComment}
-      >
-        <SendIcon />
-      </IconButton>
-    </Box>
-  );
-};
+const BlogCommentDrawer = () => {
+  const state = useSelector(blogCommentDrawer);
+  const [replyTo, setReplyTo] = useState(null);
+  const {
+    data: commentsPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["comments", { blogId: state.blogId }],
+    queryFn: ({ pageParam }) =>
+      blogAPI.getComments(state.blogId, {
+        page: pageParam,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.isLast ? undefined : lastPage.page + 1;
+    },
+    enabled: !!state.blogId,
+    refetchOnWindowFocus: false,
+  });
 
-const BlogCommentDrawer = ({ children }) => {
-  const open = useSelector(blogCommentDrawer);
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      name: "quanndb",
-      avatarURL: "/static/images/logo.jpg",
-      date: "20:48 22/5/2024",
-      comment: "That was a good stuff!",
-      like: true,
-    },
-    {
-      id: 2,
-      name: "vuminh",
-      avatarURL: "/static/images/blog1.jpg",
-      date: "20:48 22/5/2024",
-      comment: "I love it",
-      like: true,
-    },
-    {
-      id: 3,
-      name: "anhquan",
-      avatarURL: "/static/images/product1.jpg",
-      comment:
-        "Lorem ipsum dolor sit amet consectetur adipiscing elit. Suspendisse varius enim in bibendum. ",
-      like: false,
-      date: "20:48 22/5/2024",
-    },
-    {
-      id: 4,
-      name: "khoile",
-      avatarURL: "/static/images/product2.jpg",
-      comment: "Nice!",
-      like: true,
-      date: "20:48 22/5/2024",
-    },
-    {
-      id: 5,
-      name: "sangha",
-      avatarURL: "/static/images/product3.jpg",
-      comment: "I can do it better",
-      like: false,
-      date: "20:48 22/5/2024",
-    },
-    {
-      id: 6,
-      name: "tankim",
-      avatarURL: "/static/images/logo.jpg",
-      comment: "Haha",
-      like: false,
-      date: "20:48 22/5/2024",
-    },
-    {
-      id: 7,
-      name: "quanndb",
-      avatarURL: "/static/images/product4.jpg",
-      comment: "I dont like it",
-      like: false,
-      date: "20:48 22/5/2024",
-    },
-    {
-      id: 8,
-      name: "tienmanh",
-      avatarURL: "/static/images/product5.jpg",
-      comment: "I love it again",
-      like: false,
-      date: "20:48 22/5/2024",
-    },
-  ]);
+  const { data: isLikedAndTotal, refetch: reFetchTotal } = useQuery({
+    queryKey: ["isLikedAndTotal", { blogId: state.blogId }],
+    queryFn: () => blogAPI.getIsLikedAndTotal(state.blogId),
+    enabled: !!state.blogId,
+    refetchOnWindowFocus: false,
+  });
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (inView && hasNextPage) {
+        fetchNextPage();
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [inView, fetchNextPage, hasNextPage]);
+
   return (
-    <SideDrawer open={open} drawer="blogComment">
+    <SideDrawer open={state.open} drawer="blogComment">
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           maxWidth: "800px",
-          width: "92%",
+          minWidth: { sm: "600px", xs: "100vw" },
+          width: "100%",
+          pl: { sm: "40px", xs: "10px" },
         }}
       >
         <Box
@@ -197,27 +94,72 @@ const BlogCommentDrawer = ({ children }) => {
             mt: "80px",
           }}
         >
-          <Typography sx={{ fontSize: "20px", fontWeight: "600", mb: "20px" }}>
-            {comments.length} Comments
+          <Typography
+            sx={{ fontSize: "20px", fontWeight: "600", mb: "20px", ml: "20px" }}
+          >
+            {JSON.parse(isLikedAndTotal || "{}")?.totalComments || 0} Comments
           </Typography>
           <Divider sx={{ m: "20px" }} />
-          <FormComment setComments={setComments} />
+          <FormComment
+            replyTo={replyTo}
+            setReplyTo={setReplyTo}
+            blogId={state.blogId}
+            reFetchTotal={reFetchTotal}
+          />
         </Box>
         <Box
           sx={{
             overflowY: "scroll", // Enable vertical scrolling
           }}
         >
-          {comments.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              name={comment.name}
-              avatarURL={comment.avatarURL}
-              comment={comment.comment}
-              date={comment.date}
-              like={comment.like}
-            />
-          ))}
+          {commentsPage ? (
+            commentsPage.pages.map((page, _) => (
+              <React.Fragment key={_}>
+                {page.response.length === 0 ? (
+                  <Box>
+                    <Image
+                      imageURL="/static/images/no-comment.gif"
+                      unShowOverlay={true}
+                      sx={{
+                        width: "100%",
+                        height: "450px",
+                        borderRadius: "50px",
+                        objectFit: "contain",
+                        opacity: ".7",
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        fontWeight: "600",
+                        textAlign: "center",
+                      }}
+                    >
+                      Oops! There's nothing here.
+                    </Typography>
+                  </Box>
+                ) : (
+                  page.response.map((comment, index) => {
+                    const isLastItem =
+                      commentsPage.pages[0].response.length === index + 1;
+                    return (
+                      <CommentItem
+                        innerRef={isLastItem ? ref : undefined}
+                        key={comment._id}
+                        blogId={state.blogId}
+                        parentsId={comment._id}
+                        comment={comment}
+                        setReplyTo={setReplyTo}
+                      />
+                    );
+                  })
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <CommentSkeleton />
+          )}
+          {hasNextPage && <CommentSkeleton />}
         </Box>
       </Box>
     </SideDrawer>

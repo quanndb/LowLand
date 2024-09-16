@@ -50,7 +50,7 @@ public class ProductService {
         return productPageService.pageResponse(sp);
     }
 
-    public ProductDetailsResponse getProductDetails(String productId) throws IOException {
+    public ProductDetailsResponse getProductDetails(String productId) {
         Product foundProduct = _repo.findById(productId)
                 .orElseThrow(()-> new AppExceptions(ErrorCode.PRODUCT_NOT_FOUND));
 

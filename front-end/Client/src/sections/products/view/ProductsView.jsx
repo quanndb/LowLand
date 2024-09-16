@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Pagination,
@@ -23,6 +24,8 @@ import ListProducts from "../ListProducts";
 import ProductSkeleton from "src/components/ProductSkeleton";
 import { useDebounce } from "src/hooks/use-debounce";
 import FloatInOnScroll from "src/components/FloatIn";
+import ProductItem from "src/components/ProductItem";
+import { formatPrice } from "src/utils/format-number";
 
 const ProductsView = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,10 +80,6 @@ const ProductsView = () => {
   const handleMenuChange = (id, value) => {
     setMenu({ id, value });
     setCurrentPage(1);
-  };
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
   };
 
   return (
@@ -177,14 +176,44 @@ const ProductsView = () => {
               </Box>
             </Container>
 
-            {/* search + select option */}
-            {isFetching || !pageData ? (
-              <ProductSkeleton />
-            ) : (
-              <ListProducts products={pageData?.response} />
-            )}
+            <>
+              {pageData ? (
+                <Container maxWidth={"lg"}>
+                  <Box>
+                    <Grid
+                      container
+                      sx={{
+                        justifyContent: "center",
+                        width: "100%",
+                        margin: "auto",
+                      }}
+                      spacing={{ sm: 4, xs: 0 }}
+                    >
+                      {pageData.response.map((item) => {
+                        return (
+                          <Grid item md={4} sm={6} xs={12} key={item.productId}>
+                            <ProductItem
+                              id={item.productId}
+                              imageURL={item?.imageUrl}
+                              isSale={Boolean(item?.salePrice)}
+                              name={item.productName}
+                              salePrices={formatPrice(item?.salePrice)}
+                              originalPrices={formatPrice(item?.price)}
+                            />
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  </Box>
+                </Container>
+              ) : (
+                <>
+                  <ProductSkeleton />
+                  <ProductSkeleton />
+                </>
+              )}
+            </>
 
-            {/* Pagination Controls */}
             <Box
               sx={{
                 display: "flex",
@@ -196,7 +225,7 @@ const ProductsView = () => {
               <Pagination
                 count={pageData?.totalPages}
                 page={currentPage}
-                onChange={handlePageChange}
+                onChange={(_, value) => setCurrentPage(value)}
               />
             </Box>
           </FloatInOnScroll>

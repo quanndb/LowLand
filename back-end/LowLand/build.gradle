@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.coffee'
-version = '0.0.1'
+version = '1.0.0'
 
 java {
 	sourceCompatibility = '17'
@@ -28,15 +28,18 @@ dependencies {
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-	implementation 'org.springframework:spring-web'
+	implementation 'vn.payos:payos-java:1.0.1'
 	//spring
+	implementation 'org.springframework:spring-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
 	testImplementation 'org.springframework:spring-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//spring security
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security'

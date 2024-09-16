@@ -5,7 +5,6 @@ import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
 import com.coffee.lowland.DTO.request.order.CreateOrderRequest;
 import com.coffee.lowland.DTO.request.order.UpdateOrderRequest;
 import com.coffee.lowland.DTO.response.utilities.APIResponse;
-import com.coffee.lowland.model.Account;
 import com.coffee.lowland.service.Account.AccountService;
 import com.coffee.lowland.service.Order.OrderService;
 import com.coffee.lowland.service.Utilities.JSONMapper;
@@ -128,7 +127,7 @@ public class AccountController {
     @DeleteMapping("/{accountId}/orders/{orderId}")
     public APIResponse<String> cancelOrder(@PathVariable String accountId,
                                            @PathVariable String orderId,
-                                           @RequestBody(required = false) String note) {
+                                           @RequestBody(required = false) String note) throws Exception {
         return APIResponse.<String>builder()
                 .code(2000)
                 .result(orderService.cancelOrder(accountId, orderId, note))

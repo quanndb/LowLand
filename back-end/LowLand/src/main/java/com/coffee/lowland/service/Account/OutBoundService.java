@@ -16,16 +16,16 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class OutBoundService {
     @NonFinal
-    @Value("${CLIENT_ID}")
+    @Value("${google.client-id}")
     String CLIENT_ID;
     @NonFinal
-    @Value("${CLIENT_SECRET}")
+    @Value("${google.client-secret}")
     String CLIENT_SECRET;
     @NonFinal
-    @Value("${REDIRECT_URI}")
+    @Value("${google.redirect-url}")
     String REDIRECT_URI;
     @NonFinal
-    @Value("${GRANT_TYPE}")
+    @Value("${google.grant-type}")
     String GRANT_TYPE;
 
 

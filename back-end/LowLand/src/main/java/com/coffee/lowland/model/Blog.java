@@ -1,16 +1,15 @@
 package com.coffee.lowland.model;
 
-
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,10 +17,10 @@ import java.util.UUID;
 @Document(collection = "blog")
 public class Blog {
     @Id
-    String _id;
+    ObjectId _id;
     String blogId;
     String accountId;
-    String categoryId;
+    ObjectId categoryId;
     String imageURL;
     Boolean isActive;
     String title;

@@ -5,14 +5,22 @@ import { Container } from "@mui/material";
 import { CustomSwiper } from "src/components/CustomSwiper";
 import ProductItem from "src/components/ProductItem";
 import { formatPrice } from "src/utils/format-number";
+import { useQuery } from "@tanstack/react-query";
+import productAPI from "src/services/API/productAPI";
+import ProductSkeleton from "src/components/ProductSkeleton";
 
-export const SwiperProducts = ({ list }) => {
+export const SwiperProducts = () => {
+  const { data: productsPage } = useQuery({
+    queryKey: ["products", { size: 12, isActive: true }],
+    queryFn: () => productAPI.getProducts({ size: 12, isActive: true }),
+  });
+
   return (
     <>
-      {list && (
+      {productsPage ? (
         <Container maxWidth={"lg"} sx={{ mb: "50px", display: "flex" }}>
           <CustomSwiper sx={{ mb: "20px" }}>
-            {list.map((item) => {
+            {productsPage.response.map((item) => {
               return (
                 <SwiperSlide key={item?.productId}>
                   <ProductItem
@@ -28,6 +36,8 @@ export const SwiperProducts = ({ list }) => {
             })}
           </CustomSwiper>
         </Container>
+      ) : (
+        <ProductSkeleton />
       )}
     </>
   );

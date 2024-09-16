@@ -3,7 +3,6 @@ package com.coffee.lowland.service.Utilities;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.atomic.AtomicLong;
 

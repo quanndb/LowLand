@@ -25,35 +25,16 @@ const AuthorsIntro = () => {
   return (
     <Box>
       <SectionTitle>authors introduction</SectionTitle>
-      <Grid container justifyContent={"center"} spacing={2}>
-        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
-          <Author
-            name={"Vu Minh Quan"}
-            position={"BRAND OWNER"}
-            imageURL={"/static/images/logo.jpg"}
-          />
-        </Grid>
-        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
-          <Author
-            name={"Vu Minh Quan"}
-            position={"BRAND OWNER"}
-            imageURL={"/static/images/logo.jpg"}
-          />
-        </Grid>
-        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
-          <Author
-            name={"Vu Minh Quan"}
-            position={"BRAND OWNER"}
-            imageURL={"/static/images/logo.jpg"}
-          />
-        </Grid>
-        <Grid item xm={12} sm={4} sx={{ width: "100%" }}>
-          <Author
-            name={"Vu Minh Quan"}
-            position={"BRAND OWNER"}
-            imageURL={"/static/images/logo.jpg"}
-          />
-        </Grid>
+      <Grid container justifyContent={"center"} spacing={5}>
+        {[...Array(5)].map((_, index) => (
+          <Grid item xm={12} sm={4} sx={{ width: "100%" }} key={index}>
+            <Author
+              name={"Vu Minh Quan"}
+              position={"BRAND OWNER"}
+              imageURL={"/static/images/logo.jpg"}
+            />
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );

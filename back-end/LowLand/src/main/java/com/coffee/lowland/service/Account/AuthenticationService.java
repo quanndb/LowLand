@@ -7,7 +7,6 @@ import com.coffee.lowland.DTO.response.auth.GoogleUserResponse;
 import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
-import com.coffee.lowland.mapper.AccountMapper;
 import com.coffee.lowland.model.Account;
 import com.coffee.lowland.model.Role;
 import com.coffee.lowland.JPA.repository.AccountRepository;
@@ -60,6 +59,7 @@ public class AuthenticationService {
                     Account newAccount = Account.builder()
                             .email(res.getEmail())
                             .password(generatedPassword)
+                            .isActive(true)
                             .role(Role.CUSTOMER)
                             .fullName(res.getName())
                             .imageURL(res.getPicture())

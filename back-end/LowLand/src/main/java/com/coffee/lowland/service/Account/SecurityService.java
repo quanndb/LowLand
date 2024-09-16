@@ -1,15 +1,10 @@
 package com.coffee.lowland.service.Account;
 
-import com.coffee.lowland.exception.AppExceptions;
-import com.coffee.lowland.exception.ErrorCode;
-import com.coffee.lowland.service.Utilities.AUService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

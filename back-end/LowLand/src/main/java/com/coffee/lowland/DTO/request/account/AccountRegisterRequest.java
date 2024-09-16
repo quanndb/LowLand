@@ -1,9 +1,7 @@
 package com.coffee.lowland.DTO.request.account;
 
-import com.coffee.lowland.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,5 @@
 package com.coffee.lowland.DTO.response.importStock;
 
-import com.coffee.lowland.model.Material;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,7 +8,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter

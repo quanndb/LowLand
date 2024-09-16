@@ -1,6 +1,5 @@
 package com.coffee.lowland.JPA.repository;
 
-import com.coffee.lowland.model.ProductSize;
 import com.coffee.lowland.model.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

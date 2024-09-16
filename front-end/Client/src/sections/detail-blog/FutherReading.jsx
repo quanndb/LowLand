@@ -20,6 +20,7 @@ const FutherReading = () => {
         size: 4,
         isActive: true,
       }),
+    refetchOnWindowFocus: false,
   });
   return (
     <Box

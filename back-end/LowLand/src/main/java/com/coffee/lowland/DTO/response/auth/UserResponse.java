@@ -1,9 +1,6 @@
 package com.coffee.lowland.DTO.response.auth;
 
-import com.coffee.lowland.model.Role;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

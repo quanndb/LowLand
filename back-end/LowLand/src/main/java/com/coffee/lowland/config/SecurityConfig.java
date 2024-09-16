@@ -33,7 +33,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     @NonFinal
-    @Value("${SECRET_KEY}")
+    @Value("${app.secret-key}")
     String SECRET_KEY;
     String[] PUBLIC_ENDPOINTS = {
             "auth/**",
@@ -41,8 +41,12 @@ public class SecurityConfig {
             "orders/payment-result",
             "products", "products/{product_id}",
             "productTypes",
-            "blogs","blogs/{blogId}",
-            "authors/**"
+            "blogs/**",
+            "comments/**",
+            "authors/**",
+            "swagger-ui/**",
+            "api-docs/**",
+            "v3/api-docs/**"
     };
 
     JWTDecoder jwtDecoder;

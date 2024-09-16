@@ -23,7 +23,7 @@ import java.text.ParseException;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JWTDecoder implements JwtDecoder {
     @NonFinal
-    @Value("${SECRET_KEY}")
+    @Value("${app.secret-key}")
     String SECRET_KEY;
 
     TokenService tokenService;

@@ -99,13 +99,14 @@ const DetailStore = () => {
   );
 };
 
-const BlogMenu = () => {
+export const BlogMenu = ({ authorId }) => {
   const { data: blogsPage } = useQuery({
-    queryKey: ["blogs", { size: 4 }],
+    queryKey: ["blogs", { size: 4, authorId }],
     queryFn: () =>
       blogAPI.getBlogs({
         size: 4,
         isActive: true,
+        accountId: authorId,
       }),
   });
 

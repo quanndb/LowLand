@@ -2,13 +2,13 @@ package com.coffee.lowland.controller;
 
 import com.coffee.lowland.DTO.request.order.*;
 import com.coffee.lowland.DTO.response.utilities.APIResponse;
-import com.coffee.lowland.model.Order;
 import com.coffee.lowland.service.Order.OrderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import vn.payos.type.Webhook;
 
 @RestController
 @RequestMapping("/orders")
@@ -41,7 +41,7 @@ public class OrderController {
     }
 
     @PostMapping("/payment-result")
-    public APIResponse<String> handlePaymentResult(@RequestBody Object request) {
+    public APIResponse<String> handlePaymentResult(@RequestBody Webhook request) throws Exception {
         return APIResponse.<String>builder()
                 .code(2000)
                 .result(orderService.payResult(request))

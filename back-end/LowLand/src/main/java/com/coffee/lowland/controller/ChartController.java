@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChartController {
     ChartService _service;
     @GetMapping("/totalMoneyInMonth")
-    public APIResponse<Object> getTotalMoneyInMonth(@RequestParam int monthInput,@RequestParam int yearInput){
-        return APIResponse.<Object>builder()
+    public APIResponse<?> getTotalMoneyInMonth(@RequestParam int monthInput,@RequestParam int yearInput){
+        return APIResponse.builder()
                 .code(2000)
                 .result(_service.getTotalMoneyInMonth(monthInput, yearInput))
                 .build();
@@ -33,20 +33,20 @@ public class ChartController {
     }
 
     @GetMapping("/topSale")
-    public APIResponse<Object> getTopSale(@RequestParam int topProduct){
-        return APIResponse.<Object>builder()
+    public APIResponse<?> getTopSale(@RequestParam int topProduct){
+        return APIResponse.builder()
                 .code(2000)
                 .result(_service.GetTopProduct(topProduct))
                 .build();
     }
 
     @GetMapping("/materialsChart")
-    public APIResponse<Object> getMaterialChart(@RequestParam(required = false, defaultValue = "1") int page,
+    public APIResponse<?> getMaterialChart(@RequestParam(required = false, defaultValue = "1") int page,
                                           @RequestParam(required = false, defaultValue = "10") int size,
                                           @RequestParam(required = false, defaultValue = "") String query,
                                           @RequestParam(required = false, defaultValue = "material_name") String sortedBy,
                                           @RequestParam(required = false, defaultValue = "DESC") String sortDirection){
-        return APIResponse.<Object>builder()
+        return APIResponse.builder()
                 .code(2000)
                 .result(_service.getMaterialChart(page,size,query, sortedBy, sortDirection))
                 .build();

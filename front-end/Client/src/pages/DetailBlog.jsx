@@ -11,6 +11,7 @@ const DetailBlogPage = () => {
   const { data: blogData } = useQuery({
     queryKey: ["blog", { blogId: param.blogId }],
     queryFn: () => blogAPI.getDetails(param.blogId),
+    refetchOnWindowFocus: false,
   });
 
   return (

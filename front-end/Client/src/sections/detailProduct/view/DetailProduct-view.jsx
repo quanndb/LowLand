@@ -38,7 +38,6 @@ import {
 import { formatPrice } from "src/utils/format-number";
 import { CustomSwiper } from "src/components/CustomSwiper";
 import ButtonLink from "src/components/ButtonLink";
-import ProductSkeleton from "src/components/ProductSkeleton";
 
 const MaterialItem = ({ displayName, value, unit }) => {
   return (
@@ -530,11 +529,7 @@ const DetailProductView = ({ productData, list, isFetching }) => {
       <SectionTitle>YOU MIGHT ALSO LIKE THESE</SectionTitle>
 
       <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
-        {isFetching || !list ? (
-          <ProductSkeleton />
-        ) : (
-          <SwiperProducts maxWidth={"lg"} list={list} />
-        )}
+        <SwiperProducts maxWidth={"lg"} list={list} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <ButtonLink variant={"contained"} href={"/products"}>
             VIEW ALL PRODUCTS

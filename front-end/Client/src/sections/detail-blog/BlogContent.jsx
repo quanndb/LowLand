@@ -33,6 +33,8 @@ import Motto from "src/components/Motto";
 import SectionTitle from "src/components/SectionTitle";
 import { usePathname } from "src/routes/hooks";
 import ButtonLink from "src/components/ButtonLink";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import blogAPI from "src/services/API/blogAPI";
 
 const AuthorInfo = memo(({ author }) => {
   return (
@@ -40,7 +42,11 @@ const AuthorInfo = memo(({ author }) => {
       <Typography>WRITTEN BY</Typography>
       <Image
         imageURL={author?.imageURL || "/static/images/logo.jpg"}
-        sx={{ height: "140px", width: "100%", my: "10px" }}
+        sx={{
+          height: { xs: "300px", lg: "200px" },
+          width: "100%",
+          my: "10px",
+        }}
         unShowOverlay={true}
       />
       {author ? (
@@ -140,7 +146,7 @@ const ShareDialog = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
       <DialogTitle>Share this blog with everyone!</DialogTitle>
       <DialogContent>
         <TextField
@@ -213,15 +219,83 @@ const ShareDialog = ({ open, onClose }) => {
   );
 };
 
-const BLogContent = memo(({ data }) => {
-  const [isLiked, setIsLiked] = useState(false);
+const Interact = ({ blogId }) => {
   const dispatch = useDispatch();
+
   const [openShare, setOpenShare] = useState(false);
 
-  const handeOpenBlogComment = () => {
-    dispatch(DrawerManagerSlice.actions.setOpenBlogCommentDrawer(true));
+  const { data: isLikedAndTotal, refetch } = useQuery({
+    queryKey: ["isLikedAndTotal", { blogId }],
+    queryFn: () => blogAPI.getIsLikedAndTotal(blogId),
+    enabled: !!blogId,
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutate: likeBlog } = useMutation({
+    mutationKey: ["likeBlog", { blogId }],
+    mutationFn: (blogId) => blogAPI.likeBlog(blogId),
+  });
+
+  const handleChangeLike = () => {
+    likeBlog(blogId, {
+      onSuccess: () => {
+        refetch();
+      },
+    });
   };
 
+  const handeOpenBlogComment = () => {
+    dispatch(
+      DrawerManagerSlice.actions.setOpenBlogCommentDrawer({
+        open: true,
+        blogId: blogId,
+      })
+    );
+  };
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        px: "10px",
+        mt: "20px",
+      }}
+    >
+      <div>
+        <IconButton onClick={handleChangeLike} sx={{ mr: "20px" }}>
+          <Badge
+            badgeContent={JSON.parse(isLikedAndTotal || "{}")?.totalLikes || 0}
+            color="primary"
+          >
+            {JSON.parse(isLikedAndTotal || "{}")?.isLiked ? (
+              <FavoriteIcon color="error" />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+          </Badge>
+        </IconButton>
+        <IconButton onClick={handeOpenBlogComment}>
+          <Badge
+            badgeContent={
+              JSON.parse(isLikedAndTotal || "{}")?.totalComments || 0
+            }
+            color="primary"
+          >
+            <ChatBubbleOutlineIcon />
+          </Badge>
+        </IconButton>
+        <BlogCommentDrawer />
+      </div>
+      <IconButton onClick={() => setOpenShare(true)} title="Copy link">
+        <ShareIcon />
+      </IconButton>
+
+      <ShareDialog open={openShare} onClose={() => setOpenShare(false)} />
+    </Box>
+  );
+};
+
+const BLogContent = memo(({ data }) => {
   return (
     <Paper sx={{ p: "20px", mb: "100px" }}>
       <Grid
@@ -280,38 +354,10 @@ const BLogContent = memo(({ data }) => {
           )}
         </Grid>
       </Grid>
-      <Divider sx={{ mt: "50px" }} />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          px: "10px",
-          mt: "20px",
-        }}
-      >
-        <div>
-          <IconButton onClick={() => setIsLiked(!isLiked)} sx={{ mr: "20px" }}>
-            <Badge badgeContent={isLiked ? 11 : 10} color="primary">
-              {isLiked ? (
-                <FavoriteIcon color="error" />
-              ) : (
-                <FavoriteBorderIcon />
-              )}
-            </Badge>
-          </IconButton>
-          <IconButton onClick={handeOpenBlogComment}>
-            <Badge badgeContent={8} color="primary">
-              <ChatBubbleOutlineIcon />
-            </Badge>
-          </IconButton>
-          <BlogCommentDrawer />
-        </div>
-        <IconButton onClick={() => setOpenShare(true)} title="Copy link">
-          <ShareIcon />
-        </IconButton>
-      </Box>
 
-      <ShareDialog open={openShare} onClose={() => setOpenShare(false)} />
+      <Divider sx={{ mt: "50px" }} />
+
+      <Interact blogId={data?.blogId} />
     </Paper>
   );
 });

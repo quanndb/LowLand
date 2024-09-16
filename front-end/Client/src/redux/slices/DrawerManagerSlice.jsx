@@ -4,7 +4,10 @@ const DrawerManagerSlice = createSlice({
   name: "DrawerManager",
   initialState: {
     cartDrawerOpen: false,
-    blogCommentDrawerOpen: false,
+    blogCommentDrawerOpen: {
+      open: false,
+      blogId: null,
+    },
     userDrawerOpen: false,
   },
   reducers: {

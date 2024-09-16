@@ -41,49 +41,23 @@ services:
       - SPRING_DATASOURCE_PASSWORD=Quandz@@2083
       #Mongo
       - SPRING_DATA_MONGO_DATABASE=lowland
-      - SPRING_DATA_MONGO_URL=mongodb://root:Quandz%40%402083@mongo:27017/
+      - SPRING_DATA_MONGO_URL=mongodb://root:Quandz%40%402083@mongo:27017
 
-      #External origin
-      - HOST_CLIENT=
-      - HOST_ADMIN=
-      - HOST_PAY_SERVER=
     depends_on:
       - mongo
       - mysql
     networks:
       - quanndb_network
 
-  lowland-payos:
-    image: lowland/payos:latest
-    build: 
-      context: ./back-end/PayOS
-    restart: always
-    ports: 
-      - 3000:3000
-    environment:
-      - CLIENT_ID=
-      - API_KEY=
-      - CHECKSUM_KEY=
-      - CLIENT_HOST=
-      - BACK_END=
-    depends_on:
-      - lowland-backend
-    networks:
-     - quanndb_network
-
   lowland-admin:
     image: lowland/admin:latest
     build: 
       context: ./front-end/Admin
-      args:
-        VITE_SERVER_BASE_URL: 
-        VITE_CLIENT:
     restart: always
     ports: 
       - 5173:80
     depends_on:
       - lowland-backend
-      - lowland-payos
     networks:
       - quanndb_network
   
@@ -91,15 +65,11 @@ services:
     image: lowland/client:latest
     build: 
       context: ./front-end/Client
-      args:
-        VITE_SERVER_BASE_URL: 
-        VITE_CLIENT_ID: 
     restart: always
     ports: 
       - 5174:80
     depends_on:
       - lowland-backend
-      - lowland-payos
     networks:
       - quanndb_network
 

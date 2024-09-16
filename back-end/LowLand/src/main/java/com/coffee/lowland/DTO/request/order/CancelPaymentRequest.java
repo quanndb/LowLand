@@ -13,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class CancelPaymentRequest {
     @NotNull(message = "ORDER_FIELD_NOT_BE_BLANK")
-    int orderCode;
+    long orderCode;
     String reason;
 }

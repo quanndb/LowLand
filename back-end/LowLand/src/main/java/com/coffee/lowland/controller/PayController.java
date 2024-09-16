@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import vn.payos.type.Webhook;
 
 @RestController
 @RequestMapping("/payments")
@@ -15,7 +16,7 @@ public class PayController {
     PayService payService;
 
     @PostMapping
-    public APIResponse<String> createPayment(@RequestParam String orderId){
+    public APIResponse<String> createPayment(@RequestParam String orderId) throws Exception {
         return APIResponse.<String>builder()
                 .code(2000)
                 .result(payService.createPaymentLink(orderId))
@@ -23,7 +24,9 @@ public class PayController {
     }
 
     @GetMapping("/verified-payment")
-    public APIResponse<?> verifyPayment(@RequestBody Object request){
-        return payService.verifyPayment(request);
+    public APIResponse<?> verifyPayment(@RequestBody Webhook request) throws Exception {
+        return APIResponse.builder()
+                .result(payService.verifyPayment(request))
+                .build();
     }
 }

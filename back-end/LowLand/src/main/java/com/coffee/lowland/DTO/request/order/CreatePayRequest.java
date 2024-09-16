@@ -1,6 +1,5 @@
 package com.coffee.lowland.DTO.request.order;
 
-import com.coffee.lowland.model.OrderDetails;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +14,6 @@ import java.util.List;
 @Builder
 public class CreatePayRequest {
     int amount;
-    int orderCode;
+    long orderCode;
     List<PayOrderItem> items;
 }

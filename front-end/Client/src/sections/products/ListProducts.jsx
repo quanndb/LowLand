@@ -1,12 +1,19 @@
 import { Box, Container, Grid } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 import ProductItem from "src/components/ProductItem";
+import ProductSkeleton from "src/components/ProductSkeleton";
 import { formatPrice } from "src/utils/format-number";
 
-const ListProducts = ({ products }) => {
+const ListProducts = () => {
+  const { data: productsPage } = useQuery({
+    queryKey: ["products", { size: 12, isActive: true }],
+    queryFn: () => productAPI.getProducts({ size: 12, isActive: true }),
+  });
+
   return (
     <>
-      {products && (
+      {productsPage ? (
         <Container maxWidth={"lg"}>
           <Box>
             <Grid
@@ -18,7 +25,7 @@ const ListProducts = ({ products }) => {
               }}
               spacing={{ sm: 4, xs: 0 }}
             >
-              {products.map((item) => {
+              {productsPage.response.map((item) => {
                 return (
                   <Grid item md={4} sm={6} xs={12} key={item.productId}>
                     <ProductItem
@@ -35,6 +42,11 @@ const ListProducts = ({ products }) => {
             </Grid>
           </Box>
         </Container>
+      ) : (
+        <>
+          <ProductSkeleton />
+          <ProductSkeleton />
+        </>
       )}
     </>
   );

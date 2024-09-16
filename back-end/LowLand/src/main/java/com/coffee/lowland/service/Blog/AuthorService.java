@@ -1,18 +1,11 @@
 package com.coffee.lowland.service.Blog;
 
-import com.coffee.lowland.DTO.response.auth.UserResponse;
-import com.coffee.lowland.DTO.response.blog.AuthorBlogs;
-import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.Mongo.repository.AuthorRepository;
 import com.coffee.lowland.model.Author;
-import com.coffee.lowland.model.Blog;
-import com.coffee.lowland.service.Account.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

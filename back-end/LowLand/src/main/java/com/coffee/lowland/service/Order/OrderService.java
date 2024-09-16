@@ -2,12 +2,10 @@ package com.coffee.lowland.service.Order;
 
 import com.coffee.lowland.DTO.request.order.*;
 
-import com.coffee.lowland.DTO.response.utilities.APIResponse;
 import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.DTO.response.order.GetOrderDetailsResponse;
 import com.coffee.lowland.DTO.response.order.GetOrderResponse;
 import com.coffee.lowland.DTO.response.order.GetOrdersResponse;
-import com.coffee.lowland.DTO.response.order.PayResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.mapper.OrderMapper;
@@ -29,6 +27,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.payos.type.Webhook;
+import vn.payos.type.WebhookData;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -100,7 +100,7 @@ public class OrderService {
     @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
             "or @securityService.isOwner(authentication, #userId)")
     @SuppressWarnings("unused")
-    public String cancelOrder(String userId, String orderId, String request){
+    public String cancelOrder(String userId, String orderId, String request) throws Exception {
         Order foundOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         if(foundOrder.getStatus()!=0){
@@ -152,10 +152,10 @@ public class OrderService {
         return orderRepository.save(foundOrder);
     }
 
-    public String payResult(Object request) {
-        APIResponse<PayResponse> res= payService.verifyPayment(request);
+    public String payResult(Webhook request) throws Exception {
+        WebhookData res= payService.verifyPayment(request);
 
-        Optional<Order> foundOrder = orderRepository.findByOrderCode(res.getResult().getOrderCode());
+        Optional<Order> foundOrder = orderRepository.findByOrderCode(Math.toIntExact(res.getOrderCode()));
 
         Order order = foundOrder.orElseThrow(() -> new AppExceptions(ErrorCode.ORDER_NOT_EXISTED));
         order.setStatus(1);

@@ -1,6 +1,5 @@
 package com.coffee.lowland.DTO.response.importStock;
 
-import com.coffee.lowland.model.Material;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

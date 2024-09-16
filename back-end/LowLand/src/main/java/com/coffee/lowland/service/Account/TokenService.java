@@ -21,7 +21,6 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ import java.util.Optional;
 public class TokenService {
 
     @NonFinal
-    @Value("${SECRET_KEY}")
+    @Value("${app.secret-key}")
     String SECRET_KEY;
 
     TokenRepository tokenRepository;

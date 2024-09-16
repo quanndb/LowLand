@@ -10,9 +10,9 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-    @Value("${ORIGIN_CLIENT}")
+    @Value("${app.origin-client}")
     private String ORIGIN_CLIENT;
-    @Value("${ORIGIN_ADMIN}")
+    @Value("${app.origin-admin}")
     private String ORIGIN_ADMIN;
 
     @Bean

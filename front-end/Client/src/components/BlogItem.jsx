@@ -38,7 +38,7 @@ const BlogItem = ({
       href={url}
       onClick={(e) => {
         e.preventDefault();
-        router.replace(url);
+        router.push(url);
       }}
     >
       <Image

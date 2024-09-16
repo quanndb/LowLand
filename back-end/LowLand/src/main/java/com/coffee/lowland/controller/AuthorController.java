@@ -20,7 +20,7 @@ public class AuthorController {
     public APIResponse<?> getAuthorInfo(@PathVariable String authorId){
         return APIResponse.builder()
                 .code(2000)
-                .result(accountService.getInfoAfterAuthenticated(authorId))
+                .result(accountService.getAuthorInfo(authorId))
                 .build();
     }
 

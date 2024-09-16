@@ -1,12 +1,12 @@
 package com.coffee.lowland.DTO.response.blog;
 
-import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.model.BlogContent;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,8 +17,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BlogDetails {
     String blogId;
-    UserResponse author;
-    String categoryId;
+    DetailsAuthor author;
+    ObjectId categoryId;
     String imageURL;
     String title;
     LocalDateTime date;

@@ -1,9 +1,9 @@
 package com.coffee.lowland.service.Blog;
 
 import com.coffee.lowland.DTO.request.blog.CreateBlogRequest;
-import com.coffee.lowland.DTO.response.auth.UserResponse;
-import com.coffee.lowland.DTO.response.blog.AuthorBlogs;
 import com.coffee.lowland.DTO.response.blog.BlogDetails;
+import com.coffee.lowland.DTO.response.blog.Blogs;
+import com.coffee.lowland.DTO.response.blog.DetailsAuthor;
 import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.Mongo.repository.BlogRepository;
 import com.coffee.lowland.exception.AppExceptions;
@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,7 +50,7 @@ public class BlogService {
         return blogRepository.save(request);
     }
 
-    public PageServiceResponse<Blog> getBlogs(Integer page, Integer size, String query,
+    public PageServiceResponse<Blogs> getBlogs(Integer page, Integer size, String query,
                                               String sortedBy, String sortDirection,
                                               String accountId, String categoryId, Boolean isActive) {
         List<Criteria> criteriaList = new ArrayList<>();
@@ -77,29 +78,30 @@ public class BlogService {
             criteriaList.add(Criteria.where("isActive").is(isActive));
         }
 
+        ProjectionOperation project = Aggregation.project()
+                .andExpression("date").dateAsFormattedString().as("dateString")
+                .andExpression("lastUpdate").dateAsFormattedString().as("lastUpdateString")
+                .and("blogId").as("blogId")
+                .and("accountId").as("accountId")
+                .and("categoryId").as("categoryId")
+                .and("imageURL").as("imageURL")
+                .and("title").as("title")
+                .and("date").as("date")
+                .and("lastUpdate").as("lastUpdate")
+                .and("updatedBy").as("updatedBy")
+                .and("description").as("description")
+                .and("content").as("content")
+                .and("isActive").as("isActive");
 
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.project()
-                        .andExpression("date").dateAsFormattedString().as("dateString")
-                        .andExpression("lastUpdate").dateAsFormattedString().as("lastUpdateString")
-                        .and("blogId").as("blogId")
-                        .and("accountId").as("accountId")
-                        .and("categoryId").as("categoryId")
-                        .and("imageURL").as("imageURL")
-                        .and("title").as("title")
-                        .and("date").as("date")
-                        .and("lastUpdate").as("lastUpdate")
-                        .and("updatedBy").as("updatedBy")
-                        .and("description").as("description")
-                        .and("content").as("content")
-                        .and("isActive").as("isActive"),
-        Aggregation.match(new Criteria().andOperator(criteriaList.toArray(new Criteria[0]))),
-                Aggregation.sort(Sort.by(Sort.Direction.fromString(sortDirection != null ? sortDirection : "ASC"), sortedBy != null ? sortedBy : "date")),
+                project,
+                Aggregation.match(new Criteria().andOperator(criteriaList.toArray(new Criteria[0]))),
+                Aggregation.sort(Sort.by(Sort.Direction.fromString(sortDirection),sortedBy)),
                 Aggregation.skip((long) (page - 1) * size),
                 Aggregation.limit(size)
         );
 
-        List<Blog> res = mongoTemplate.aggregate(aggregation, Blog.class, Blog.class)
+        List<Blogs> res = mongoTemplate.aggregate(aggregation, Blog.class, Blogs.class)
                                             .getMappedResults();
 
         Query mongoQuery = new Query(new Criteria()
@@ -110,7 +112,7 @@ public class BlogService {
         Boolean isFirst = page == 1;
         Boolean isLast =  ((long) page * size) >= count;
 
-        return PageServiceResponse.<Blog>builder()
+        return PageServiceResponse.<Blogs>builder()
                 .totalRecords((int)count)
                 .totalPages((int) Math.ceil((double) count / size))
                 .page(page)
@@ -136,17 +138,21 @@ public class BlogService {
         Blog found =  blogRepository.findBlogByBlogId(blogId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.BLOG_NOT_FOUND));
         if(!found.getIsActive()) throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
-        UserResponse foundAuthor = accountService.getInfoAfterAuthenticated(found.getAccountId());
+        DetailsAuthor foundAuthor = accountService.getAuthorInfo(found.getAccountId());
         var res = BlogDetails.builder().author(foundAuthor).build();
         blogMapper.getDetails(res, found);
         return res;
     }
 
-    public PageServiceResponse<Blog> getAuthorBlogs(String authorId,
+    public PageServiceResponse<Blogs> getAuthorBlogs(String authorId,
                                       Integer page, Integer size, String query,
                                       String sortedBy, String sortDirection,
                                       String categoryId, Boolean isActive) {
         return getBlogs(page, size, query,
                 sortedBy, sortDirection, authorId, categoryId, isActive);
+    }
+
+    public boolean isExitsBlog(String blogId){
+        return blogRepository.existsByBlogId(blogId);
     }
 }

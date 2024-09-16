@@ -4,6 +4,7 @@ import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.account.CreateAccountRequest;
 import com.coffee.lowland.DTO.request.account.UpdateAccountRequest;
 import com.coffee.lowland.DTO.response.auth.UserPage;
+import com.coffee.lowland.DTO.response.blog.DetailsAuthor;
 import com.coffee.lowland.DTO.response.utilities.CloudResponse;
 import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.DTO.response.auth.UserResponse;
@@ -143,6 +144,16 @@ public class AccountService {
         Author foundAuthor = authorService.getOrCreateAuthorByAccountId(foundAccount.getAccountId());
 
         UserResponse res = accountMapper.toUserResponse(foundAccount);
+        res.setPosition(foundAuthor.getPosition());
+        res.setDescription(foundAuthor.getDescription());
+        return res;
+    }
+
+    public DetailsAuthor getAuthorInfo(String accountId){
+        Account foundAccount = findAccountById(accountId);
+        Author foundAuthor = authorService.getOrCreateAuthorByAccountId(foundAccount.getAccountId());
+
+        DetailsAuthor res = accountMapper.toDetailsAuthor(foundAccount);
         res.setPosition(foundAuthor.getPosition());
         res.setDescription(foundAuthor.getDescription());
         return res;

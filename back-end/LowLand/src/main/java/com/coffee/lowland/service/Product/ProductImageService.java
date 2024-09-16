@@ -47,7 +47,7 @@ public class ProductImageService {
         return images;
     }
 
-    public List<ProductImageResponse> getProductImages(String ProductId) throws IOException {
+    public List<ProductImageResponse> getProductImages(String ProductId){
         return productImageMapper.toListProductImageResponse(_repo.findAllByProductId(ProductId));
     }
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")

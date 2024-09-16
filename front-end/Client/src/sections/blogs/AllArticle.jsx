@@ -1,7 +1,7 @@
 import { Masonry } from "@mui/lab";
-import { Card, Skeleton } from "@mui/material";
+import { Box, Card, Skeleton } from "@mui/material";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import BlogItem from "src/components/BlogItem";
 import SectionTitleB from "src/components/SectionTitleB";
@@ -31,15 +31,19 @@ const AllArticleSkeleton = () => {
   );
 };
 
-const AllArticle = () => {
+export const AllArticle = ({ authorId }) => {
   const {
     data: blogPage,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ["blogs"],
+    queryKey: ["blogs", { authorId }],
     queryFn: ({ pageParam }) =>
-      blogAPI.getBlogs({ page: pageParam, isActive: true }),
+      blogAPI.getBlogs({
+        page: pageParam,
+        isActive: true,
+        accountId: authorId,
+      }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       return lastPage.isLast ? undefined : lastPage.page + 1;
@@ -55,7 +59,7 @@ const AllArticle = () => {
       if (inView && hasNextPage) {
         fetchNextPage();
       }
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [inView, fetchNextPage, hasNextPage]);
@@ -65,24 +69,26 @@ const AllArticle = () => {
       <SectionTitleB>All Articles</SectionTitleB>
       <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={4}>
         {blogPage ? (
-          blogPage.pages.map((page) => {
-            return page.response.map((blog, index) => {
-              const isLastItem =
-                blogPage.pages[0].response.length === index + 1;
-              return (
-                <BlogItem
-                  key={blog.blogId}
-                  innerRef={isLastItem ? ref : undefined}
-                  url={`/blogs/${blog?.blogId}`}
-                  imageURL={blog.imageURL}
-                  title={blog.title}
-                  description={blog.description}
-                  date={blog.date}
-                  sx={{ borderRadius: "10px" }}
-                />
-              );
-            });
-          })
+          blogPage.pages.map((page, _) => (
+            <React.Fragment key={_}>
+              {page.response.map((blog, index) => {
+                const isLastItem =
+                  blogPage.pages[0].response.length === index + 1;
+                return (
+                  <BlogItem
+                    key={blog.blogId}
+                    innerRef={isLastItem ? ref : undefined}
+                    url={`/blogs/${blog?.blogId}`}
+                    imageURL={blog.imageURL}
+                    title={blog.title}
+                    description={blog.description}
+                    date={blog.date}
+                    sx={{ borderRadius: "10px" }}
+                  />
+                );
+              })}
+            </React.Fragment>
+          ))
         ) : (
           <AllArticleSkeleton />
         )}

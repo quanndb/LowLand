@@ -6,6 +6,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 
 const HomeBlog = () => {
   const isMobile = useResponsive("down", 900);
+
   return (
     <Container sx={{ marginBottom: "100px" }}>
       <SectionTitle>BEHIND THE MUGS, LIFESTYLE STORIES</SectionTitle>

@@ -19,10 +19,12 @@ const DetailProductPage = () => {
       {
         queryKey: ["products", { productId: productId }],
         queryFn: () => productAPI.getProductDetails(productId),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["products", { type: "Page" }],
         queryFn: () => productAPI.getProducts({ size: 12, isActive: true }),
+        refetchOnWindowFocus: false,
       },
     ],
     combine: (results) => {
