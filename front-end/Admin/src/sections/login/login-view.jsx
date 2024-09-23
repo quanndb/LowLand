@@ -55,7 +55,10 @@ export default function LoginView() {
       {
         onSuccess: (res) => {
           const accessToken = res.accessToken;
-          if (jwtDecode(accessToken).scope !== "ADMIN") {
+          if (
+            jwtDecode(accessToken).scope !== "ADMIN" &&
+            jwtDecode(accessToken).scope !== "EMPLOYEE"
+          ) {
             toast.error("You are not able to login with this account");
             return;
           }

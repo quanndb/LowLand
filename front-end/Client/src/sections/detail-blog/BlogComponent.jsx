@@ -35,11 +35,33 @@ export const BlogHeader = ({ children, variant }) => {
 
 export const BlogImage = ({ imageURL, alt }) => {
   return (
-    <img
-      src={imageURL}
-      alt={alt}
-      style={{ width: "100%", marginTop: "25px", marginBottom: "25px" }}
-    />
+    <>
+      <img
+        src={imageURL}
+        alt={alt}
+        loading="lazy"
+        title={alt}
+        style={{
+          width: "100%",
+          maxHeight: "600px",
+          objectFit: "cover",
+          marginTop: "25px",
+          marginBottom: "25px",
+        }}
+      />
+      {alt && (
+        <Typography
+          sx={{
+            textAlign: "center",
+            fontStyle: "italic",
+            fontWeight: "600",
+            mb: "25px",
+          }}
+        >
+          {alt}
+        </Typography>
+      )}
+    </>
   );
 };
 

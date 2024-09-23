@@ -40,11 +40,12 @@ const FeaturedPostsSkeleton = () => {
 
 const FeaturedPosts = () => {
   const { data: blogsPage } = useQuery({
-    queryKey: ["blogs", { size: 2 }],
+    queryKey: ["blogs", { size: 2, categoryName: "Store stories" }],
     queryFn: () =>
       blogAPI.getBlogs({
         size: 2,
         isActive: true,
+        categoryName: "Store stories",
       }),
   });
 

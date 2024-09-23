@@ -10,15 +10,32 @@ import { useRouter } from "src/routes/hooks";
 import { useQuery } from "@tanstack/react-query";
 import blogAPI from "src/services/API/blogAPI";
 
+export const BlogItemSkeleton = () => {
+  return (
+    <Card sx={{ p: 3 }}>
+      <Skeleton sx={{ height: "200px", width: "100%" }} variant="rounded" />
+      <Skeleton
+        sx={{ height: "20px", width: "100%", mt: "10px" }}
+        variant="rounded"
+      />
+      <Skeleton
+        sx={{ height: "80px", width: "100%", mt: "10px" }}
+        variant="rounded"
+      />
+    </Card>
+  );
+};
+
 const FutherReading = () => {
   const router = useRouter();
 
   const { data: blogsPage } = useQuery({
-    queryKey: ["blogs", { size: 4 }],
+    queryKey: ["blogs", { size: 4, isActive: true, sortedBy: "views" }],
     queryFn: () =>
       blogAPI.getBlogs({
         size: 4,
         isActive: true,
+        sortedBy: "views",
       }),
     refetchOnWindowFocus: false,
   });
@@ -67,20 +84,7 @@ const FutherReading = () => {
             ))
           : [...Array(4)].map((_, index) => (
               <SwiperSlide key={index}>
-                <Card sx={{ p: 3 }}>
-                  <Skeleton
-                    sx={{ height: "200px", width: "100%" }}
-                    variant="rounded"
-                  />
-                  <Skeleton
-                    sx={{ height: "20px", width: "100%", mt: "10px" }}
-                    variant="rounded"
-                  />
-                  <Skeleton
-                    sx={{ height: "80px", width: "100%", mt: "10px" }}
-                    variant="rounded"
-                  />
-                </Card>
+                <BlogItemSkeleton />
               </SwiperSlide>
             ))}
       </Swiper>

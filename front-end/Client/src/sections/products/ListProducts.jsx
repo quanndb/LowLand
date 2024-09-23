@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import ProductItem from "src/components/ProductItem";
 import ProductSkeleton from "src/components/ProductSkeleton";
+import productAPI from "src/services/API/productAPI";
 import { formatPrice } from "src/utils/format-number";
 
 const ListProducts = () => {

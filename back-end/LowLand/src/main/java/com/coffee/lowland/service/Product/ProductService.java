@@ -41,7 +41,9 @@ public class ProductService {
     ProductMapper productMapper;
 
     @Transactional
-    public PageServiceResponse<ProductResponse> getProductPage(int page, int size, String query, Boolean isActive, String productTypeId, String sortedBy, String sortDirection) {
+    public PageServiceResponse<ProductResponse> getProductPage(int page, int size, String query,
+                                                               Boolean isActive, String productTypeId,
+                                                               String sortedBy, String sortDirection) {
         StoredProcedureQuery sp = productPageService.prepareStatement("spGetProductsByPage",ProductResponse.class,
                 page,size,query,
                 sortedBy,sortDirection);
@@ -96,7 +98,7 @@ public class ProductService {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Object updateProduct(String productId,
+    public ProductDetailsResponse updateProduct(String productId,
                                 CreateProductData data,
                                 CreateProductDetails[] details,
                                 CreateProductRecipe[] recipes,

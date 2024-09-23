@@ -14,4 +14,8 @@ public interface LikeRepository extends MongoRepository<Like, String> {
 
     Optional<Like> findByCommentIdAndAccountId(ObjectId blogId, String accountId);
     long countByBlogId(String blogId);
+
+    void deleteAllByCommentId(ObjectId commentId);
+    void deleteAllByParentsId(ObjectId parentsId);
+    void deleteAllByBlogId(String blogId);
 }

@@ -20,7 +20,8 @@ public class Blog {
     ObjectId _id;
     String blogId;
     String accountId;
-    ObjectId categoryId;
+    String categoryName;
+    long views;
     String imageURL;
     Boolean isActive;
     String title;

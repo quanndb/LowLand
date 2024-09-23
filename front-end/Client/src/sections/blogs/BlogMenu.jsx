@@ -1,23 +1,19 @@
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Skeleton,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import BlogMenuSkeleton from "src/components/BlogMenuSkeleton";
+import ButtonLink from "src/components/ButtonLink";
 
 import LineBlog from "src/components/LineBlog";
 import SectionTitleB from "src/components/SectionTitleB";
 import blogAPI from "src/services/API/blogAPI";
+import cagetoryAPI from "src/services/API/cagetoryAPI";
 
-const Category = ({ children, imgURL }) => {
+const Category = ({ children, imgURL, onClick, sx, active }) => {
   return (
     <Button
       color="secondary"
+      variant={active ? "contained" : "text"}
       sx={{
         width: "100%",
         borderLeft: "1px solid var(--secondary-color)",
@@ -26,7 +22,9 @@ const Category = ({ children, imgURL }) => {
         py: "10px",
         justifyContent: "left",
         my: "10px",
+        ...sx,
       }}
+      onClick={onClick}
     >
       {imgURL ? (
         <Box
@@ -43,7 +41,11 @@ const Category = ({ children, imgURL }) => {
         <></>
       )}
       <Typography
-        sx={{ ml: "20px", color: "var(--primary-color)", opacity: "0.7" }}
+        sx={{
+          ml: "20px",
+          opacity: "0.7",
+          color: active ? "white" : "var(--primary-color)",
+        }}
       >
         {children}
       </Typography>
@@ -51,15 +53,42 @@ const Category = ({ children, imgURL }) => {
   );
 };
 
-const BlogCategories = () => {
+const BlogCategories = ({ categoryName, setCategoryName }) => {
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () =>
+      cagetoryAPI.getCagetories({
+        size: 10,
+      }),
+  });
+
   return (
     <Box>
       <SectionTitleB>Categories</SectionTitleB>
-      <Category>Barista</Category>
-      <Category>Coffee</Category>
-      <Category>Lifestyle</Category>
-      <Category>Mugs</Category>
-      <Category>Tea</Category>
+      <Category
+        key={"All"}
+        onClick={() => {
+          setCategoryName("All");
+        }}
+        active={categoryName === "All"}
+      >
+        All
+      </Category>
+      {categories ? (
+        categories.map((category) => (
+          <Category
+            key={JSON.stringify(category._id)}
+            onClick={() => {
+              setCategoryName(category.name);
+            }}
+            active={categoryName === category.name}
+          >
+            {category.name}
+          </Category>
+        ))
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };
@@ -84,28 +113,43 @@ const DetailStore = () => {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
         varius enim in eros elementum tristique.
       </Typography>
-      <Button
+      <ButtonLink
         color={"secondary"}
+        ariaLabel={"read the full story"}
         sx={{
           textDecoration: "underline",
           "&:hover": {
             textDecoration: "underline",
           },
         }}
+        href={"/blogs/b5bc4125-535b-4c37-b441-a15e05c405a7"}
       >
         Read the full story
-      </Button>
+      </ButtonLink>
     </Box>
   );
 };
 
 export const BlogMenu = ({ authorId }) => {
+  const [categoryName, setCategoryName] = useState("All");
+
   const { data: blogsPage } = useQuery({
-    queryKey: ["blogs", { size: 4, authorId }],
+    queryKey: [
+      "blogs",
+      {
+        size: 4,
+        authorId,
+        isActive: true,
+        sortedBy: "views",
+        categoryName: categoryName !== "All" ? categoryName : null,
+      },
+    ],
     queryFn: () =>
       blogAPI.getBlogs({
         size: 4,
         isActive: true,
+        sortedBy: "views",
+        categoryName: categoryName !== "All" ? categoryName : null,
         accountId: authorId,
       }),
   });
@@ -121,7 +165,7 @@ export const BlogMenu = ({ authorId }) => {
         sx={{ width: "100%" }}
       >
         <Grid item md={8} xs={12}>
-          <SectionTitleB>Lastest Blogs</SectionTitleB>
+          <SectionTitleB>Related Blogs</SectionTitleB>
           {blogsPage ? (
             blogsPage.response.map((blog) => (
               <LineBlog
@@ -140,7 +184,10 @@ export const BlogMenu = ({ authorId }) => {
         <Grid item md={4}>
           <SectionTitleB>About Us</SectionTitleB>
           <DetailStore />
-          <BlogCategories />
+          <BlogCategories
+            categoryName={categoryName}
+            setCategoryName={setCategoryName}
+          />
           <Authors />
         </Grid>
       </Grid>

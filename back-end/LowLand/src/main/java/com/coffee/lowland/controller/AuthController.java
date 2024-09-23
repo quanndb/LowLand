@@ -4,6 +4,7 @@ package com.coffee.lowland.controller;
 import com.coffee.lowland.DTO.request.account.AccountRegisterRequest;
 import com.coffee.lowland.DTO.request.auth.AuthenticationRequest;
 import com.coffee.lowland.DTO.request.auth.DetailsLogin;
+import com.coffee.lowland.DTO.response.auth.AuthenticationResponse;
 import com.coffee.lowland.DTO.response.utilities.APIResponse;
 
 import com.coffee.lowland.service.Account.AccountService;
@@ -25,42 +26,42 @@ public class AuthController {
     AccountService accountService;
 
     @PostMapping("/login")
-    public APIResponse<?> login(@RequestBody @Valid AuthenticationRequest request,
-                                HttpServletRequest details) {
+    public APIResponse<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request,
+                                                     HttpServletRequest details) {
         DetailsLogin detailsLogin = DetailsLogin.builder()
                 .IP(details.getRemoteAddr())
                 .userAgent(details.getHeader("User-Agent"))
                 .build();
-        return APIResponse.builder()
+        return APIResponse.<AuthenticationResponse>builder()
                 .code(2000)
                 .result(authenticationService.authenticate(request,detailsLogin))
                 .build();
     }
 
     @PostMapping ("/google")
-    public APIResponse<?> loginWithGoogle(@RequestParam String code
+    public APIResponse<AuthenticationResponse> loginWithGoogle(@RequestParam String code
                 ,HttpServletRequest details) {
        DetailsLogin detailsLogin = DetailsLogin.builder()
                 .IP(details.getRemoteAddr())
                 .userAgent(details.getHeader("User-Agent"))
                 .build();
-        return APIResponse.builder()
+        return APIResponse.<AuthenticationResponse>builder()
                 .code(2000)
                 .result(authenticationService.loginWithGoogle(code, detailsLogin))
                 .build();
     }
 
     @PostMapping("/logout")
-    public APIResponse<?> logout() {
-        return APIResponse.builder()
+    public APIResponse<String> logout() {
+        return APIResponse.<String>builder()
                 .code(2000)
                 .result(authenticationService.logout())
                 .build();
     }
 
     @PostMapping("/register")
-    public APIResponse<?> register(@RequestBody @Valid AccountRegisterRequest request){
-        return APIResponse.builder()
+    public APIResponse<String> register(@RequestBody @Valid AccountRegisterRequest request){
+        return APIResponse.<String>builder()
                 .code(2000)
                 .result(accountService.registerUser(request))
                 .build();

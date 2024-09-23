@@ -3,7 +3,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper } from "swiper/react";
 
-import { Pagination, Navigation } from "swiper/modules";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
 
 export const CustomSwiper = ({ children, sx, isProductSwipper }) => {
   return (
@@ -12,8 +12,17 @@ export const CustomSwiper = ({ children, sx, isProductSwipper }) => {
         clickable: true,
       }}
       navigation={isProductSwipper ? true : false}
-      modules={isProductSwipper ? [Pagination, Navigation] : [Pagination]}
+      modules={
+        isProductSwipper
+          ? [Pagination, Navigation, Autoplay]
+          : [Pagination, Autoplay]
+      }
       spaceBetween={32}
+      loop={true}
+      autoplay={{
+        delay: 2000,
+        disableOnInteraction: false,
+      }}
       breakpoints={
         isProductSwipper
           ? {

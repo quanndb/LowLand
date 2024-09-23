@@ -49,8 +49,8 @@ public class OrderService {
     PageService<GetOrdersResponse> pageService;
 
     @Transactional
-    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
-            "or @securityService.isOwner(authentication, #userId)")
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#userId, 'ADMIN', 'EMPLOYEE')")
     public PageServiceResponse<GetOrdersResponse> getOrders(Integer page, Integer size, String query,
                                                             String sortedBy, String sortDirection,
                                                             Integer status, String userId) {
@@ -62,8 +62,8 @@ public class OrderService {
         return pageService.pageResponse(store);
     }
 
-    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
-            "or @securityService.isOwner(authentication, #accountId)")
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#accountId, 'ADMIN', 'EMPLOYEE')")
     @SuppressWarnings("unused")
     public String createOrder(String accountId, CreateOrderRequest request){
         // pre check product
@@ -97,8 +97,8 @@ public class OrderService {
         return newOrder.getOrderId();
     }
 
-    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
-            "or @securityService.isOwner(authentication, #userId)")
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#userId, 'ADMIN', 'EMPLOYEE')")
     @SuppressWarnings("unused")
     public String cancelOrder(String userId, String orderId, String request) throws Exception {
         Order foundOrder = orderRepository.findById(orderId)
@@ -119,8 +119,8 @@ public class OrderService {
         return "Your order has been cancelled successfully!";
     }
 
-    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
-            "or @securityService.isOwner(authentication, #userId)")
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#userId, 'ADMIN', 'EMPLOYEE')")
     @SuppressWarnings("unused")
     public Order updateOrder(String userId, String orderId, UpdateOrderRequest request){
         Order foundOrder = orderRepository.findById(orderId)
@@ -164,8 +164,8 @@ public class OrderService {
     }
 
 
-    @PreAuthorize("@securityService.hasRole(authentication, 'ADMIN') " +
-            "or @securityService.isOwner(authentication, #userId)")
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#userId, 'ADMIN', 'EMPLOYEE')")
     @SuppressWarnings("unused")
     public GetOrderResponse getOrderDetails(String userId, String orderId) {
          Order foundOrder = orderRepository.findById(orderId)

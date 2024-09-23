@@ -22,6 +22,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Email, Facebook, Twitter, Link } from "@mui/icons-material";
 
 import { BlogHeader, BlogImage, BlogLink } from "./BlogComponent";
@@ -219,7 +220,7 @@ const ShareDialog = ({ open, onClose }) => {
   );
 };
 
-const Interact = ({ blogId }) => {
+const Interact = ({ blogId, views }) => {
   const dispatch = useDispatch();
 
   const [openShare, setOpenShare] = useState(false);
@@ -262,6 +263,11 @@ const Interact = ({ blogId }) => {
       }}
     >
       <div>
+        <IconButton sx={{ mr: "20px" }}>
+          <Badge badgeContent={views || 0} color="primary">
+            <VisibilityIcon />
+          </Badge>
+        </IconButton>
         <IconButton onClick={handleChangeLike} sx={{ mr: "20px" }}>
           <Badge
             badgeContent={JSON.parse(isLikedAndTotal || "{}")?.totalLikes || 0}
@@ -357,7 +363,7 @@ const BLogContent = memo(({ data }) => {
 
       <Divider sx={{ mt: "50px" }} />
 
-      <Interact blogId={data?.blogId} />
+      <Interact blogId={data?.blogId} views={data?.views} />
     </Paper>
   );
 });

@@ -3,7 +3,12 @@ package com.coffee.lowland.controller;
 import com.coffee.lowland.DTO.request.product.CreateProductData;
 import com.coffee.lowland.DTO.request.product.CreateProductDetails;
 import com.coffee.lowland.DTO.request.product.CreateProductRecipe;
+import com.coffee.lowland.DTO.response.product.ProductDetailsResponse;
+import com.coffee.lowland.DTO.response.product.ProductImageResponse;
+import com.coffee.lowland.DTO.response.product.ProductResponse;
 import com.coffee.lowland.DTO.response.utilities.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
+import com.coffee.lowland.model.ProductImage;
 import com.coffee.lowland.service.Product.ProductDetailsService;
 import com.coffee.lowland.service.Product.ProductImageService;
 import com.coffee.lowland.service.Product.ProductService;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -29,7 +35,7 @@ public class ProductController {
     ObjectValidator objectValidator;
 
     @GetMapping
-    public APIResponse<?> getProductPage(
+    public APIResponse<PageServiceResponse<ProductResponse>> getProductPage(
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false, defaultValue = "") String query,
@@ -37,7 +43,7 @@ public class ProductController {
             @RequestParam(required = false, defaultValue = "") String productTypeId,
             @RequestParam(required = false, defaultValue = "product_id") String sortedBy,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection){
-        return APIResponse.builder()
+        return APIResponse.<PageServiceResponse<ProductResponse>>builder()
                 .code(2000)
                 .result(_service.getProductPage(page,size,query,
                         isActive,productTypeId, sortedBy,sortDirection))
@@ -45,15 +51,15 @@ public class ProductController {
     }
 
     @GetMapping("/{product_id}")
-    public APIResponse<?> getProductDetails(@PathVariable String product_id) throws IOException {
-        return APIResponse.builder()
+    public APIResponse<ProductDetailsResponse> getProductDetails(@PathVariable String product_id) {
+        return APIResponse.<ProductDetailsResponse>builder()
                 .code(2000)
                 .result(_service.getProductDetails(product_id))
                 .build();
     }
 
     @PostMapping
-    public APIResponse<?> createNewProduct(@RequestParam MultipartFile[] images
+    public APIResponse<ProductDetailsResponse> createNewProduct(@RequestParam MultipartFile[] images
             ,@RequestParam String recipes
             ,@RequestParam String details
             ,@RequestParam String productData) throws IOException {
@@ -65,14 +71,14 @@ public class ProductController {
         objectValidator.validateObject(data);
         for(CreateProductDetails item : productDetails) objectValidator.validateObject(item);
         for(CreateProductRecipe item : productRecipe) objectValidator.validateObject(item);
-        return APIResponse.builder()
+        return APIResponse.<ProductDetailsResponse>builder()
                 .code(2000)
                 .result(_service.createProduct(data, productDetails, productRecipe, images))
                 .build();
     }
 
     @PutMapping("/{productId}")
-    public APIResponse<?> updateProduct(
+    public APIResponse<ProductDetailsResponse> updateProduct(
             @RequestParam(required = false) MultipartFile[] images,
             @RequestParam(required = false) String recipes,
             @RequestParam(required = false) String details,
@@ -93,7 +99,7 @@ public class ProductController {
             productRecipe = jsonMapper.JSONToObject(recipes, CreateProductRecipe[].class);
             for (CreateProductRecipe item : productRecipe) objectValidator.validateObject(item);
         }
-        return APIResponse.builder()
+        return APIResponse.<ProductDetailsResponse>builder()
                 .code(2000)
                 .result(_service.updateProduct(productId, data, productDetails, productRecipe, images))
                 .build();
@@ -101,9 +107,9 @@ public class ProductController {
 
     // product sizes and prices
     @DeleteMapping("/{productId}/sizesAndPrices/{detailsId}")
-    public APIResponse<?> deleteSizeAndPrice(@PathVariable String productId
+    public APIResponse<Boolean> deleteSizeAndPrice(@PathVariable String productId
             , @PathVariable String detailsId) {
-        return APIResponse.builder()
+        return APIResponse.<Boolean>builder()
                 .code(2000)
                 .result(productDetailsService.deleteDetailsById(productId,detailsId))
                 .build();
@@ -111,17 +117,17 @@ public class ProductController {
 
     // product images
     @GetMapping("/{productId}/images")
-    public APIResponse<?> getProductImagesByProductId(@PathVariable String productId) throws IOException {
-        return APIResponse.builder()
+    public APIResponse<List<ProductImageResponse>> getProductImagesByProductId(@PathVariable String productId) {
+        return APIResponse.<List<ProductImageResponse>>builder()
                 .code(2000)
                 .result(productImageService.getProductImages(productId))
                 .build();
     }
 
     @PostMapping("/{productId}/images")
-    public APIResponse<?> uploadProductImage(@RequestParam MultipartFile[] images,
-                                             @PathVariable String productId) throws IOException {
-        return APIResponse.builder()
+    public APIResponse<List<ProductImage>> uploadProductImage(@RequestParam MultipartFile[] images,
+                                                              @PathVariable String productId) throws IOException {
+        return APIResponse.<List<ProductImage>>builder()
                 .code(2000)
                 .result(productImageService.createProductImages(images,productId))
                 .build();

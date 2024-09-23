@@ -44,9 +44,12 @@ public class SecurityConfig {
             "blogs/**",
             "comments/**",
             "authors/**",
+            "charts/accessHistories",
+            "categories",
             "swagger-ui/**",
             "api-docs/**",
-            "v3/api-docs/**"
+            "v3/api-docs/**",
+            "ws/**",
     };
 
     JWTDecoder jwtDecoder;

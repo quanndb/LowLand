@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import { BLOGS } from "src/mock/itemPlog";
+import { BLOGS } from "src/mock/itemBlog";
 
 export async function fetchBlogById({ params }) {
   // const response = await fetch(`/api/users/${params.userId}`);

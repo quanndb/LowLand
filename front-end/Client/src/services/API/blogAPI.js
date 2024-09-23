@@ -17,8 +17,14 @@ const blogAPI = {
     const url = "/blogs/" + blogId + "/likes";
     return axios.post(url);
   },
-  likeComment(blogId, commentId) {
-    const url = "/blogs/" + blogId + "/comments/" + commentId + "/likes";
+  likeComment(blogId, commentId, parentsId) {
+    const url =
+      "/blogs/" +
+      blogId +
+      "/comments/" +
+      commentId +
+      "/likes?parentsId=" +
+      parentsId;
     return axios.post(url);
   },
   getComments(blogId, params) {
@@ -37,6 +43,15 @@ const blogAPI = {
     const url =
       "/blogs/" + blogId + "/comments/" + parentsId + "/replies/" + commentId;
     return axios.post(url, comment);
+  },
+
+  deleteComment(blogId, commentId) {
+    const url = "/blogs/" + blogId + "/comments/" + commentId;
+    return axios.delete(url);
+  },
+  updateComment(blogId, commentId, comment) {
+    const url = "/blogs/" + blogId + "/comments/" + commentId;
+    return axios.put(url, comment);
   },
 };
 

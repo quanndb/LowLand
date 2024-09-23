@@ -111,55 +111,54 @@ const ProductsView = () => {
           <Productswiper />
 
           <FloatInOnScroll>
-            <Container
-              sx={{
-                display: "flex",
-                mb: " 30px",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-              }}
+            <Grid
+              container
+              sx={{ mb: "50px", justifyContent: "space-between" }}
             >
-              <FormControl
-                sx={{ width: { xs: "100%", sm: "200px" }, mb: "15px" }}
-              >
-                <InputLabel id="demo-simple-select-label">Menu</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={isFetching ? 0 : menu.value}
-                  label="Menu"
-                  onChange={(e) => {
-                    const selectedItem = productTypes.find(
-                      (item, index) => index + 1 === Number(e.target.value)
-                    );
-                    handleMenuChange(
-                      selectedItem?.productTypeId || "",
-                      e.target.value
-                    );
-                  }}
-                >
-                  <MenuItem value={0}>All products</MenuItem>
-                  {!isFetching &&
-                    productTypes &&
-                    productTypes.map((item, index) => (
-                      <MenuItem value={index + 1} key={item.productTypeId}>
-                        {item.typeName}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
+              <Grid item xs={12} sm={3}>
+                <FormControl sx={{ mb: "15px", width: "100%" }}>
+                  <InputLabel id="demo-simple-select-label">Menu</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={isFetching ? 0 : menu.value}
+                    label="Menu"
+                    onChange={(e) => {
+                      const selectedItem = productTypes.find(
+                        (item, index) => index + 1 === Number(e.target.value)
+                      );
+                      handleMenuChange(
+                        selectedItem?.productTypeId || "",
+                        e.target.value
+                      );
+                    }}
+                  >
+                    <MenuItem value={0}>All products</MenuItem>
+                    {!isFetching &&
+                      productTypes &&
+                      productTypes.map((item, index) => (
+                        <MenuItem value={index + 1} key={item.productTypeId}>
+                          {item.typeName}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-              <Box
+              <Grid
+                item
+                xs={12}
+                sm={7}
                 sx={{
                   display: "flex",
+                  justifyContent: "flex-end",
                   height: "fit-content",
-                  width: { xs: "100%", sm: "350px" },
                 }}
               >
                 <TextField
                   label="Search your favorite coffee..."
                   variant="outlined"
-                  sx={{ width: "100%", mr: "10px" }}
+                  sx={{ width: "80%", mr: "10px" }}
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -173,8 +172,8 @@ const ProductsView = () => {
                 >
                   Search
                 </Button>
-              </Box>
-            </Container>
+              </Grid>
+            </Grid>
 
             <>
               {pageData ? (
@@ -187,7 +186,7 @@ const ProductsView = () => {
                         width: "100%",
                         margin: "auto",
                       }}
-                      spacing={{ sm: 4, xs: 0 }}
+                      spacing={{ sm: 4, xs: 3 }}
                     >
                       {pageData.response.map((item) => {
                         return (

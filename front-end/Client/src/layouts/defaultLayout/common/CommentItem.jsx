@@ -7,12 +7,19 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FlagIcon from "@mui/icons-material/Flag";
 
 import {
   useInfiniteQuery,
@@ -20,10 +27,141 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import blogAPI from "src/services/API/blogAPI";
+import { useSelector } from "react-redux";
+import { user } from "src/redux/selectors/UserSelector";
+import { toast } from "react-toastify";
+
+const CommentMenu = ({
+  anchorEl,
+  open,
+  handleClose,
+  isOwner,
+  blogId,
+  commentId,
+  parentsId,
+  type,
+  reFetchTotal,
+  setReplyTo,
+}) => {
+  const { mutate: deleteComment } = useMutation({
+    mutationKey: ({ blogId, commentId }) => [
+      "deleteComment",
+      { blogId: blogId, commentId: commentId },
+    ],
+    mutationFn: ({ blogId, commentId }) =>
+      blogAPI.deleteComment(blogId, commentId),
+  });
+
+  const queryClient = useQueryClient();
+
+  const handleDelete = () => {
+    handleClose();
+    deleteComment(
+      { blogId, commentId },
+      {
+        onSuccess: () => {
+          if (type === "reply") {
+            queryClient.setQueryData(["comments", { blogId }], (data) => {
+              return {
+                ...data,
+                pages: data.pages.map((page) => {
+                  return {
+                    ...page,
+                    response: page.response.map((comment) => {
+                      if (comment._id === parentsId) {
+                        return {
+                          ...comment,
+                          totalComments: comment.totalComments - 1,
+                        };
+                      }
+                      return comment;
+                    }),
+                  };
+                }),
+              };
+            });
+          }
+          queryClient.setQueryData(
+            [
+              `${type === "reply" ? "replies" : "comments"}`,
+              type === "reply" ? { blogId, commentId: parentsId } : { blogId },
+            ],
+            (data) => {
+              return {
+                ...data,
+                pages: data.pages.map((page) => {
+                  return {
+                    ...page,
+                    response: page.response.filter(
+                      (comment) => comment._id !== commentId
+                    ),
+                  };
+                }),
+              };
+            }
+          );
+          reFetchTotal();
+          toast.success("Delete comment successfully");
+        },
+      }
+    );
+  };
+
+  const handleUpdate = () => {
+    handleClose();
+    setReplyTo();
+  };
+  return (
+    <Menu
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleClose}
+      MenuListProps={{
+        "aria-labelledby": "basic-button",
+      }}
+    >
+      {isOwner && [
+        <MenuItem onClick={handleUpdate} key={1}>
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>,
+        <MenuItem onClick={handleDelete} key={2}>
+          <ListItemIcon>
+            <DeleteIcon color="error" />
+          </ListItemIcon>
+          <ListItemText sx={{ color: "error.main" }}>Delete</ListItemText>
+        </MenuItem>,
+      ]}
+      {!isOwner && (
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <FlagIcon />
+          </ListItemIcon>
+          <ListItemText>Report</ListItemText>
+        </MenuItem>
+      )}
+    </Menu>
+  );
+};
 
 const CommentItem = memo(
-  ({ innerRef, blogId, parentsId, comment, type, setReplyTo }) => {
+  ({
+    innerRef,
+    blogId,
+    parentsId,
+    comment,
+    type,
+    setReplyTo,
+    formRef,
+    reFetchTotal,
+  }) => {
+    const userdata = useSelector(user);
+
     const [isShowReplies, setIsShowReplies] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
     const queryClient = useQueryClient();
 
@@ -50,8 +188,8 @@ const CommentItem = memo(
         "likeComment",
         { blogId: blogId, commentId: commentId },
       ],
-      mutationFn: ({ blogId, commentId }) =>
-        blogAPI.likeComment(blogId, commentId),
+      mutationFn: ({ blogId, commentId, parentsId }) =>
+        blogAPI.likeComment(blogId, commentId, parentsId),
     });
 
     const handleGetReplies = () => {
@@ -67,7 +205,7 @@ const CommentItem = memo(
 
     const handleLikeComment = (blogId, commentId, parentsId) => {
       likeComment(
-        { blogId, commentId },
+        { blogId, commentId, parentsId },
         {
           onSuccess: () => {
             queryClient.setQueryData(
@@ -106,14 +244,17 @@ const CommentItem = memo(
       );
     };
 
-    const handleSetReply = (commentId, email) => {
+    const handleSetReply = (commentId, email, content, type) => {
       setReplyTo({
         email,
         blogId,
         parentsId,
         commentId,
+        content,
+        type,
         handleGetReplies,
       });
+      formRef.current?.focus();
     };
 
     return (
@@ -161,10 +302,17 @@ const CommentItem = memo(
                 {comment.content}
               </Typography>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", mt: "5px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mt: "5px",
+                flexWrap: "wrap",
+              }}
+            >
               <IconButton
                 onClick={() =>
-                  handleLikeComment(blogId, comment._id, comment.parentsId)
+                  handleLikeComment(blogId, comment._id, parentsId)
                 }
                 sx={{ mr: "5px" }}
               >
@@ -178,17 +326,50 @@ const CommentItem = memo(
               </IconButton>
               <IconButton
                 sx={{ mr: "5px" }}
-                onClick={() => handleSetReply(comment._id, comment.email)}
+                onClick={() =>
+                  handleSetReply(
+                    comment._id,
+                    comment.email,
+                    comment.content,
+                    null
+                  )
+                }
               >
                 <Badge badgeContent={comment.totalComments} color="primary">
                   <ChatBubbleOutlineOutlinedIcon />
                 </Badge>
               </IconButton>
-              <IconButton sx={{ mr: "5px" }}>
+              <IconButton
+                sx={{ mr: "5px" }}
+                onClick={(e) => setAnchorEl(e.currentTarget)}
+              >
                 <MoreHorizIcon />
               </IconButton>
+              <CommentMenu
+                anchorEl={anchorEl}
+                open={open}
+                handleClose={() => setAnchorEl(null)}
+                isOwner={comment.accountId === userdata?.accountId}
+                blogId={blogId}
+                commentId={comment._id}
+                parentsId={parentsId}
+                type={type}
+                reFetchTotal={reFetchTotal}
+                setReplyTo={() =>
+                  handleSetReply(
+                    comment._id,
+                    comment.email,
+                    comment.content,
+                    "edit"
+                  )
+                }
+              />
               <Typography color={"secondary"} sx={{ opacity: "0.7" }}>
                 {new Date(comment.commentedDate).toLocaleString()}
+              </Typography>
+              {/* itallic */}
+              <Typography sx={{ opacity: "0.4", fontStyle: "italic" }}>
+                {comment?.updatedDate ? "(Updated)" : null}
               </Typography>
             </Box>
           </Box>
@@ -209,6 +390,8 @@ const CommentItem = memo(
                       setReplyTo={setReplyTo}
                       comment={reply}
                       type="reply"
+                      formRef={formRef}
+                      reFetchTotal={reFetchTotal}
                     />
                   ))}
                 </React.Fragment>
@@ -225,7 +408,8 @@ const CommentItem = memo(
             ml: "30px",
             display: `${
               comment.totalComments > 0 &&
-              (!replies || (!isShowReplies && type !== "reply"))
+              type !== "reply" &&
+              (!replies || !isShowReplies)
                 ? "block"
                 : "none"
             }`,

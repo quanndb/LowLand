@@ -4,7 +4,7 @@ const ProductSkeleton = () => {
   return (
     <Container maxWidth={"lg"} sx={{ mb: "50px" }}>
       <Grid container spacing={3} sx={{ justifyContent: "center" }}>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <Skeleton
             variant="rounded"
             width="100%"
@@ -19,7 +19,7 @@ const ProductSkeleton = () => {
           />
           <Skeleton variant="rectangular" width="100%" height={30} />
         </Grid>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <Skeleton
             variant="rounded"
             width="100%"
@@ -34,7 +34,7 @@ const ProductSkeleton = () => {
           />
           <Skeleton variant="rectangular" width="100%" height={30} />
         </Grid>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <Skeleton
             variant="rounded"
             width="100%"

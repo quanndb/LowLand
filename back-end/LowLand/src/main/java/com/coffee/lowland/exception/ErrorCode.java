@@ -33,6 +33,8 @@ public enum ErrorCode {
 
     // blog
     BLOG_NOT_FOUND(4020,"Your blogID is not found", HttpStatus.NOT_FOUND),
+    BLOG_FIELD_NOT_BLANK(4021,"Blog fields cannot be blank", HttpStatus.BAD_REQUEST),
+
     // author
     AUTHOR_NOT_FOUND(4080,"Not found author!",HttpStatus.NOT_FOUND),
     // like

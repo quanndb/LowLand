@@ -24,6 +24,8 @@ public class Comment {
     String blogId;
     ObjectId parentsId;
     ObjectId commentId;
+    LocalDateTime updatedDate;
+    String updatedBy;
     String replyTo;
     String content;
 }

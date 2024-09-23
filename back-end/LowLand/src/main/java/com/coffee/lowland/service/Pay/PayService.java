@@ -61,7 +61,6 @@ public class PayService {
                         .amount((int) amount)
                         .description("Lowland TT "+foundOrder.getOrderCode())
                         .buyerAddress(foundOrder.getAddress())
-                        .buyerEmail(foundOrder.getCreatedBy())
                         .buyerPhone(foundOrder.getPhoneNumber())
                         .buyerName(foundOrder.getCustomerName())
                         .returnUrl(originClient+"/user")

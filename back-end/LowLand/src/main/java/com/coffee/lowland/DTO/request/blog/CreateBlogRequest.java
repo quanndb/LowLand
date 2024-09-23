@@ -1,11 +1,12 @@
 package com.coffee.lowland.DTO.request.blog;
 
 import com.coffee.lowland.model.BlogContent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -13,9 +14,13 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateBlogRequest {
-    ObjectId categoryId;
-    String imageURL;
+    @NotBlank(message = "BLOG_FIELD_NOT_BLANK")
+    String categoryName;
+    @NotBlank(message = "BLOG_FIELD_NOT_BLANK")
+    String imageId;
+    @NotBlank(message = "BLOG_FIELD_NOT_BLANK")
     String title;
     String description;
+    @NotNull(message = "BLOG_FIELD_NOT_BLANK")
     List<BlogContent> content;
 }

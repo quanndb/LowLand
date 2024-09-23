@@ -1,18 +1,30 @@
 package com.coffee.lowland.controller;
 
-import com.coffee.lowland.DTO.request.blog.CommentAResponse;
-import com.coffee.lowland.DTO.request.blog.CommentBlog;
-import com.coffee.lowland.DTO.request.blog.CreateBlogRequest;
+import com.coffee.lowland.DTO.request.blog.*;
+import com.coffee.lowland.DTO.response.blog.BlogDetails;
+import com.coffee.lowland.DTO.response.blog.Blogs;
+import com.coffee.lowland.DTO.response.blog.CommentsResponse;
+import com.coffee.lowland.DTO.response.blog.PostCommentResponse;
 import com.coffee.lowland.DTO.response.utilities.APIResponse;
+import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
+import com.coffee.lowland.model.Blog;
+import com.coffee.lowland.model.Comment;
 import com.coffee.lowland.service.Blog.BlogService;
 import com.coffee.lowland.service.Blog.InteractService;
+import com.coffee.lowland.service.Utilities.JSONMapper;
+import com.coffee.lowland.service.Utilities.ObjectValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/blogs")
@@ -22,41 +34,56 @@ public class BlogController {
 
     BlogService blogService;
     InteractService interactService;
+    JSONMapper jsonMapper;
+    ObjectValidator objectValidator;
 
     @GetMapping
-    public APIResponse<?> getBlogs(@RequestParam(required = false, defaultValue = "1") int page,
-                                   @RequestParam(required = false, defaultValue = "10") int size,
-                                   @RequestParam(required = false, defaultValue = "date") String sortedBy,
-                                   @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
-                                   @RequestParam(required = false, defaultValue = "") String query,
-                                   @RequestParam(required = false, defaultValue = "") String accountId,
-                                   @RequestParam(required = false, defaultValue = "") String categoryId,
-                                   @RequestParam(required = false) Boolean isActive){
-        return APIResponse.builder()
+    public APIResponse<PageServiceResponse<Blogs>> getBlogs(@RequestParam(required = false, defaultValue = "1") int page,
+                                                            @RequestParam(required = false, defaultValue = "10") int size,
+                                                            @RequestParam(required = false, defaultValue = "date") String sortedBy,
+                                                            @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
+                                                            @RequestParam(required = false, defaultValue = "") String query,
+                                                            @RequestParam(required = false, defaultValue = "") String accountId,
+                                                            @RequestParam(required = false, defaultValue = "") String categoryName,
+                                                            @RequestParam(required = false) Boolean isActive){
+        return APIResponse.<PageServiceResponse<Blogs>> builder()
                 .code(2000)
-                .result(blogService.getBlogs(page,size,query,sortedBy,sortDirection,accountId,categoryId,isActive))
+                .result(blogService.getBlogs(page,size,query,sortedBy,sortDirection,accountId,categoryName,isActive))
                 .build();
     }
 
     @PostMapping
-    public APIResponse<?> createBlog(@RequestBody CreateBlogRequest req){
-        return APIResponse.builder()
+    public APIResponse<Blog> createBlog(@RequestParam(required = false) String request,
+                                        @RequestParam(required = false) MultipartFile[] images) throws IOException, NoSuchAlgorithmException {
+        CreateNewBlogRequest req = null;
+        if(request != null){
+            req = jsonMapper.JSONToObject(request, CreateNewBlogRequest.class);
+            objectValidator.validateObject(req);
+        }
+        return APIResponse.<Blog>builder()
                 .code(2000)
-                .result(blogService.createBlog(req))
+                .result(blogService.createBlog(req, images))
                 .build();
     }
 
     @PutMapping("/{blogId}")
-    public APIResponse<?> updateBlog(@RequestBody CreateBlogRequest req, @PathVariable String blogId){
-        return APIResponse.builder()
+    public APIResponse<Blog> updateBlog(@PathVariable String blogId,
+                                     @RequestParam String request,
+                                     @RequestParam MultipartFile[] images) throws JsonProcessingException {
+        CreateNewBlogRequest req = null;
+        if(request != null){
+            req = jsonMapper.JSONToObject(request, CreateNewBlogRequest.class);
+            objectValidator.validateObject(req);
+        }
+        return APIResponse.<Blog>builder()
                 .code(2000)
-                .result(blogService.updateBlog(blogId, req))
+                .result(blogService.updateBlog(blogId, req, images))
                 .build();
     }
 
     @GetMapping("/{blogId}")
-    public APIResponse<?> getDetails(@PathVariable String blogId){
-        return APIResponse.builder()
+    public APIResponse<BlogDetails> getDetails(@PathVariable String blogId){
+        return APIResponse.<BlogDetails>builder()
                 .code(2000)
                 .result(blogService.getDetails(blogId))
                 .build();
@@ -64,47 +91,48 @@ public class BlogController {
 
     //    interact
     @GetMapping("/{blogId}/interactions")
-    public APIResponse<?> getLikesAndTotal(@PathVariable String blogId){
+    public APIResponse<String> getLikesAndTotal(@PathVariable String blogId){
         if(!blogService.isExitsBlog(blogId))
             throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<String>builder()
             .code(2000)
             .result(interactService.getLikedAndTotalOfBlog(blogId))
             .build();
     }
     //    likes
     @PostMapping("/{blogId}/likes")
-    public APIResponse<?> changeLikeStatusOfBlog(@PathVariable String blogId){
+    public APIResponse<String> changeLikeStatusOfBlog(@PathVariable String blogId){
         if(!blogService.isExitsBlog(blogId))
             throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<String>builder()
                 .code(2000)
                 .result(interactService.changeLikeBlog(blogId))
                 .build();
     }
     @PostMapping("/{blogId}/comments/{commentId}/likes")
-    public APIResponse<?> changeLikeStatusOfComment(@PathVariable String blogId,
-                                                    @PathVariable String commentId){
+    public APIResponse<String>changeLikeStatusOfComment(@PathVariable String blogId,
+                                                    @PathVariable String commentId,
+                                                    @RequestParam(required = false) String parentsId){
         if(!blogService.isExitsBlog(blogId))
             throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<String>builder()
                 .code(2000)
-                .result(interactService.changeLikeComment(commentId))
+                .result(interactService.changeLikeComment(blogId, commentId,parentsId))
                 .build();
     }
 
     //    comments
     @GetMapping("/{blogId}/comments")
-    public APIResponse<?> getCommentsPage(@PathVariable String blogId,
-                                          @RequestParam(required = false, defaultValue = "1") int page,
-                                          @RequestParam(required = false, defaultValue = "10") int size,
-                                          @RequestParam(required = false, defaultValue = "") String query,
-                                          @RequestParam(required = false, defaultValue = "commentedDate") String sortedBy,
-                                          @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
-                                          @RequestParam(required = false, defaultValue = "") String accountId){
+    public APIResponse<PageServiceResponse<CommentsResponse>> getCommentsPage(@PathVariable String blogId,
+                                                                              @RequestParam(required = false, defaultValue = "1") int page,
+                                                                              @RequestParam(required = false, defaultValue = "10") int size,
+                                                                              @RequestParam(required = false, defaultValue = "") String query,
+                                                                              @RequestParam(required = false, defaultValue = "commentedDate") String sortedBy,
+                                                                              @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
+                                                                              @RequestParam(required = false, defaultValue = "") String accountId){
         if(!blogService.isExitsBlog(blogId))
             throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<PageServiceResponse<CommentsResponse>>builder()
             .code(2000)
             .result(interactService.getCommentsPage(blogId,null, page, size, query,
                                                 sortedBy, sortDirection, accountId))
@@ -112,17 +140,40 @@ public class BlogController {
     }
 
     @PostMapping("/{blogId}/comments")
-    public APIResponse<?> postComment(@PathVariable String blogId,@RequestBody @Valid CommentBlog content){
+    public APIResponse<PostCommentResponse> postComment(@PathVariable String blogId, @RequestBody @Valid CommentBlog content){
         if(!blogService.isExitsBlog(blogId))
             throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<PostCommentResponse>builder()
                 .code(2000)
                 .result(interactService.commentBlog(blogId, content))
                 .build();
     }
 
+    @PutMapping("/{blogId}/comments/{commentId}")
+    public APIResponse<Comment> updateComment(@PathVariable String blogId,
+                                              @PathVariable String commentId,
+                                              @RequestBody @Valid CommentAResponse content){
+        if(!blogService.isExitsBlog(blogId))
+            throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
+        return APIResponse.<Comment>builder()
+                .code(2000)
+                .result(interactService.updateComment(commentId, content))
+                .build();
+    }
+
+    @DeleteMapping("/{blogId}/comments/{commentId}")
+    public APIResponse<String> deleteComment(@PathVariable String blogId,
+                                        @PathVariable String commentId){
+        if(!blogService.isExitsBlog(blogId))
+            throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
+        return APIResponse.<String>builder()
+                .code(2000)
+                .result(interactService.deleteComment(commentId))
+                .build();
+    }
+
     @GetMapping("/{blogId}/comments/{parentsId}/replies")
-    public APIResponse<?> getCommentsPageOfResponse(@PathVariable String parentsId,
+    public APIResponse<PageServiceResponse<CommentsResponse>> getCommentsPageOfResponse(@PathVariable String parentsId,
                                                     @PathVariable String blogId,
                                                     @RequestParam(required = false, defaultValue = "1") int page,
                                                     @RequestParam(required = false, defaultValue = "10") int size,
@@ -134,7 +185,7 @@ public class BlogController {
             throw new AppExceptions(ErrorCode.BLOG_NOT_FOUND);
         if(!interactService.isExistsComment(parentsId))
             throw new AppExceptions(ErrorCode.COMMENT_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<PageServiceResponse<CommentsResponse>>builder()
                 .code(2000)
                 .result(interactService.getCommentsPage(blogId,parentsId, page, size, query,
                         sortedBy, sortDirection, accountId))
@@ -142,7 +193,7 @@ public class BlogController {
     }
 
     @PostMapping("/{blogId}/comments/{parentsId}/replies/{commentId}")
-    public APIResponse<?> postCommentResponse(@PathVariable String blogId,
+    public APIResponse<PostCommentResponse> postCommentResponse(@PathVariable String blogId,
                                               @PathVariable String parentsId,
                                               @PathVariable String commentId,
                                               @RequestBody @Valid CommentAResponse content){
@@ -150,7 +201,7 @@ public class BlogController {
             throw new AppExceptions(ErrorCode.COMMENT_NOT_FOUND);
         if(!interactService.isExistsComment(commentId))
             throw new AppExceptions(ErrorCode.COMMENT_NOT_FOUND);
-        return APIResponse.builder()
+        return APIResponse.<PostCommentResponse>builder()
                 .code(2000)
                 .result(interactService.commentResponse(blogId, parentsId, commentId, content))
                 .build();

@@ -2,6 +2,7 @@ package com.coffee.lowland.service.Blog;
 
 import com.coffee.lowland.DTO.request.blog.CommentAResponse;
 import com.coffee.lowland.DTO.request.blog.CommentBlog;
+import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.DTO.response.blog.CommentsResponse;
 import com.coffee.lowland.DTO.response.blog.PostCommentResponse;
 import com.coffee.lowland.DTO.response.utilities.PageServiceResponse;
@@ -14,6 +15,7 @@ import com.coffee.lowland.model.Comment;
 import com.coffee.lowland.model.Like;
 import com.coffee.lowland.service.Account.AccountService;
 import com.coffee.lowland.service.Account.AuthenticationService;
+import com.coffee.lowland.service.Account.SecurityService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,6 +40,7 @@ public class InteractService {
     LikeRepository likeRepository;
     AuthenticationService authenticationService;
     AccountService accountService;
+    SecurityService securityService;
     MongoTemplate mongoTemplate;
 
     public String getLikedAndTotalOfBlog(String blogId){
@@ -66,7 +69,7 @@ public class InteractService {
         return "Change success";
     }
 
-    public String changeLikeComment(String commentId) {
+    public String changeLikeComment(String blogId, String commentId,String parentsId) {
         String accountId = getCurrentAccountId();
         if(accountId == null) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
         Like existingLike = likeRepository.findByCommentIdAndAccountId(new ObjectId(commentId), accountId)
@@ -77,6 +80,8 @@ public class InteractService {
             Like newLike = Like.builder()
                     .likedDate(LocalDateTime.now())
                     .commentId(new ObjectId(commentId))
+                    .blogId(blogId)
+                    .parentsId(new ObjectId(parentsId!=null?parentsId:commentId))
                     .accountId(accountId)
                     .build();
             likeRepository.save(newLike);
@@ -117,6 +122,8 @@ public class InteractService {
                 .and("parentsId").as("parentsId")
                 .and("content").as("content")
                 .and("commentedDate").as("commentedDate")
+                .and("updatedDate").as("updatedDate")
+                .and("updatedBy").as("updatedBy")
                 .and("isLiked").as("isLiked")
                 .and("totalLikes").as("totalLikes")
                 .and("totalComments").as("totalComments");
@@ -142,7 +149,7 @@ public class InteractService {
                 lookupComment,
                 addLikesCountAndIsLiked,
                 Aggregation.match(new Criteria().andOperator(criteriaList.toArray(new Criteria[0]))),
-                Aggregation.sort(Sort.by(Sort.Direction.DESC, "commentId","totalLikes", "totalComments")
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "totalLikes", "totalComments","commentId")
                                 .and(Sort.by(Sort.Direction.fromString(sortDirection), sortedBy))),
                 Aggregation.skip((long) (page - 1) * size),
                 Aggregation.limit(size),
@@ -224,16 +231,55 @@ public class InteractService {
                 .build();
     }
 
+
+    public String deleteComment(String commentId){
+        Comment foundComment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new AppExceptions(ErrorCode.COMMENT_NOT_FOUND));
+        if(!securityService
+                .isIncludeRoleOrOwner(foundComment.getAccountId(), "ADMIN", "EMPLOYEE"))
+            throw new AppExceptions(ErrorCode.FORBIDDEN_EXCEPTION);
+        if(foundComment.getParentsId() == null){
+            commentRepository.deleteAllByParentsId(new ObjectId(commentId));
+            likeRepository.deleteAllByParentsId(new ObjectId(commentId));
+        }
+        commentRepository.deleteById(commentId);
+        likeRepository.deleteAllByCommentId(new ObjectId(commentId));
+        return "Delete success";
+    }
+
+    public void deleteBlogInteraction(String blogId){
+        likeRepository.deleteAllByBlogId(blogId);
+        commentRepository.deleteAllByBlogId(blogId);
+    }
+
+    public Comment updateComment(String commentId, CommentAResponse content){
+        Comment foundComment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new AppExceptions(ErrorCode.COMMENT_NOT_FOUND));
+        if(!securityService
+                .isIncludeRoleOrOwner(foundComment.getAccountId(), "ADMIN", "EMPLOYEE"))
+            throw new AppExceptions(ErrorCode.FORBIDDEN_EXCEPTION);
+        foundComment.setContent(content.getContent());
+        foundComment.setUpdatedDate(LocalDateTime.now());
+        foundComment.setUpdatedBy(getCurrentUser().getEmail());
+        return commentRepository.save(foundComment);
+    }
+
     public boolean isExistsComment(String commentId){
         return commentRepository.existsById(commentId);
     }
 
-    public String getCurrentAccountId(){
+    public UserResponse getCurrentUser(){
         try{
-            return authenticationService.getMyInfo().getAccountId();
+            return authenticationService.getMyInfo();
         }
         catch (Exception ignored){
         }
+        return null;
+    }
+
+    public String getCurrentAccountId(){
+        var current = getCurrentUser();
+        if(current != null) return current.getAccountId();
         return null;
     }
 }

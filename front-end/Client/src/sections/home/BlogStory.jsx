@@ -1,11 +1,25 @@
-import { Container, Grid } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 import BlogItem from "src/components/BlogItem";
 import SectionTitle from "src/components/SectionTitle";
 import { useResponsive } from "src/hooks/use-responsive";
+import { BlogItemSkeleton } from "../detail-blog/FutherReading";
+import blogAPI from "src/services/API/blogAPI";
+import ButtonLink from "src/components/ButtonLink";
 
 const HomeBlog = () => {
   const isMobile = useResponsive("down", 900);
+
+  const { data: blogsPage } = useQuery({
+    queryKey: ["blogs", { size: 3, isActive: true, sortedBy: "views" }],
+    queryFn: () =>
+      blogAPI.getBlogs({
+        size: 3,
+        isActive: true,
+        sortedBy: "views",
+      }),
+  });
 
   return (
     <Container sx={{ marginBottom: "100px" }}>
@@ -13,7 +27,7 @@ const HomeBlog = () => {
 
       <Grid
         container
-        spacing={1}
+        spacing={2}
         direction={"row"}
         justifyContent={"center"}
         wrap="wrap"
@@ -21,46 +35,34 @@ const HomeBlog = () => {
           textAlign: `${isMobile ? "center" : "left"}`,
         }}
       >
-        <Grid item lg={4} md={6} sm={12}>
-          <BlogItem
-            url={"/blogs/1"}
-            imageURL={"/static/images/blog1.jpg"}
-            title={
-              "Health Check: why do I get a headache when I haven’t had my coffee?"
-            }
-            description={
-              "It is a paradisematic country, in which roasted parts of sentences fly into your mouth."
-            }
-            date={"october 9, 2018"}
-          />
-        </Grid>
-        <Grid item lg={4} md={6} sm={12}>
-          <BlogItem
-            url={"/blogs/2"}
-            imageURL={"/static/images/blog2.jpg"}
-            title={
-              "Health Check: why do I get a headache when I haven’t had my coffee?"
-            }
-            description={
-              "It is a paradisematic country, in which roasted parts of sentences fly into your mouth."
-            }
-            date={"october 9, 2018"}
-          />
-        </Grid>
-        <Grid item lg={4} md={6} sm={12}>
-          <BlogItem
-            imageURL={"/static/images/blog3.jpg"}
-            title={
-              "Health Check: why do I get a headache when I haven’t had my coffee?"
-            }
-            description={
-              "It is a paradisematic country, in which roasted parts of sentences fly into your mouth."
-            }
-            date={"october 9, 2018"}
-            url={"/blogs/1"}
-          />
-        </Grid>
+        {blogsPage
+          ? blogsPage.response.map((blog) => (
+              <Grid item lg={4} md={6} xs={12} key={blog.blogId}>
+                <BlogItem
+                  key={blog.blogId}
+                  url={`/blogs/${blog?.blogId}`}
+                  imageURL={blog.imageURL}
+                  title={blog.title}
+                  description={blog.description}
+                  date={blog.date}
+                  sx={{ height: "100%" }}
+                />
+              </Grid>
+            ))
+          : [...Array(3)].map((_, i) => (
+              <Grid item lg={4} md={6} xs={12} key={i}>
+                <BlogItemSkeleton />
+              </Grid>
+            ))}
       </Grid>
+
+      <Box
+        sx={{ width: "100%", display: "flex", justifyContent: "center", mt: 3 }}
+      >
+        <ButtonLink href={"/blogs"} variant={"contained"} sx={{ width: "50%" }}>
+          Read more blogs
+        </ButtonLink>
+      </Box>
     </Container>
   );
 };

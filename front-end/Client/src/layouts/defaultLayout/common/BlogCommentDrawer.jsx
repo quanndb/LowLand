@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 
 import { Box, Divider, Skeleton, Typography } from "@mui/material";
 
@@ -39,6 +39,7 @@ const CommentSkeleton = memo(() => {
 const BlogCommentDrawer = () => {
   const state = useSelector(blogCommentDrawer);
   const [replyTo, setReplyTo] = useState(null);
+  const formRef = useRef();
   const {
     data: commentsPage,
     hasNextPage,
@@ -105,6 +106,7 @@ const BlogCommentDrawer = () => {
             setReplyTo={setReplyTo}
             blogId={state.blogId}
             reFetchTotal={reFetchTotal}
+            formRef={formRef}
           />
         </Box>
         <Box
@@ -150,6 +152,8 @@ const BlogCommentDrawer = () => {
                         parentsId={comment._id}
                         comment={comment}
                         setReplyTo={setReplyTo}
+                        formRef={formRef}
+                        reFetchTotal={reFetchTotal}
                       />
                     );
                   })

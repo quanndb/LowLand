@@ -93,8 +93,8 @@ public class AccountService {
         return getAccountById(saved.getAccountId());
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN') " +
-            "or @securityService.isOwner(authentication, #accountId)")
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#accountId, 'ADMIN', 'EMPLOYEE')")
     public UserResponse updateAccount(String accountId, UpdateAccountRequest request, MultipartFile image) throws IOException {
         Account foundAccount =  findAccountById(accountId);
         if(image != null){
@@ -128,8 +128,9 @@ public class AccountService {
        return true;
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN') " +
-            "or @securityService.isOwner(authentication, #accountId)")
+
+    @PreAuthorize("@securityService" +
+            ".isIncludeRoleOrOwner(#accountId, 'ADMIN', 'EMPLOYEE')")
     public UserResponse getAccountById(String accountId) {
         return getInfoAfterAuthenticated(accountId);
     }

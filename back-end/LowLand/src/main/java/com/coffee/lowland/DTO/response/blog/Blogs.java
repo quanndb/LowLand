@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 public class Blogs {
     String blogId;
     DetailsAuthor author;
-    ObjectId categoryId;
+    String categoryName;
     String imageURL;
     String title;
+    long views;
     LocalDateTime date;
     LocalDateTime lastUpdate;
     String updatedBy;

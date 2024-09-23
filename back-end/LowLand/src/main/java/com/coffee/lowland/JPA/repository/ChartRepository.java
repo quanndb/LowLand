@@ -15,4 +15,6 @@ public interface ChartRepository extends JpaRepository<Material, String> {
     List<Object[]> spGetTotalStuff();
     @Procedure
     List<Object[]> spGetTopProduct(int topProduct);
+
+
 }

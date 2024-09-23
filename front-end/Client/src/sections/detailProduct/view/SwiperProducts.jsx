@@ -11,8 +11,9 @@ import ProductSkeleton from "src/components/ProductSkeleton";
 
 export const SwiperProducts = () => {
   const { data: productsPage } = useQuery({
-    queryKey: ["products", { size: 12, isActive: true }],
-    queryFn: () => productAPI.getProducts({ size: 12, isActive: true }),
+    queryKey: ["products", { size: 12, isActive: true, sortedBy: "sold" }],
+    queryFn: () =>
+      productAPI.getProducts({ size: 12, isActive: true, sortedBy: "sold" }),
   });
 
   return (

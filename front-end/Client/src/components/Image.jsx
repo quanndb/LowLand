@@ -66,6 +66,7 @@ const Image = ({ sx, imageURL, unShowOverlay, overlayContent }) => {
       <img
         src={imageSrc || "/static/images/logo.jpg"}
         alt="lowland"
+        loading="lazy"
         style={{ display: "none" }}
         onError={handleImageError}
       />

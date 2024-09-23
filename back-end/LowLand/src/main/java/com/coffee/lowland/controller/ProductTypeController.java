@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/productTypes")
@@ -19,25 +21,25 @@ public class ProductTypeController {
     ProductTypeService _service;
 
     @GetMapping("")
-    public APIResponse<?> getTypes(@RequestParam(required = false, defaultValue = "") String query,
-                                   @RequestParam(required = false) Integer size){
-        return APIResponse.builder()
+    public APIResponse<List<ProductType>> getTypes(@RequestParam(required = false, defaultValue = "") String query,
+                                                   @RequestParam(required = false) Integer size){
+        return APIResponse.<List<ProductType>>builder()
                 .code(2000)
                 .result(_service.getAllProductType(query, size))
                 .build();
     }
 
     @GetMapping("/{typeId}")
-    public APIResponse<?> getByTypeId(@PathVariable String typeId){
-        return APIResponse.builder()
+    public APIResponse<ProductType> getByTypeId(@PathVariable String typeId){
+        return APIResponse.<ProductType>builder()
                 .code(2000)
                 .result(_service.getProductTypeById(typeId))
                 .build();
     }
 
     @PostMapping("")
-    public APIResponse<?> create(@RequestBody ProductTypeDto data) {
-        return APIResponse.builder()
+    public APIResponse<ProductType> create(@RequestBody ProductTypeDto data) {
+        return APIResponse.<ProductType>builder()
                 .code(2000)
                 .message("Change success!")
                 .result(_service.createNewType(data))
@@ -45,8 +47,8 @@ public class ProductTypeController {
     }
 
     @PutMapping("")
-    public APIResponse<?> update(@RequestBody ProductType data) {
-        return APIResponse.builder()
+    public APIResponse<ProductType> update(@RequestBody ProductType data) {
+        return APIResponse.<ProductType>builder()
                 .code(2000)
                 .message("Change success!")
                 .result(_service.updateType(data))

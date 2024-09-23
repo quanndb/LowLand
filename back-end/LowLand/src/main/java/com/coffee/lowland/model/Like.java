@@ -23,4 +23,6 @@ public class Like {
     LocalDateTime likedDate;
     String blogId;
     ObjectId commentId;
+    ObjectId parentsId;
+    ObjectId replyToId;
 }

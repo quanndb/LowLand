@@ -21,6 +21,7 @@ public class BlogDetails {
     ObjectId categoryId;
     String imageURL;
     String title;
+    long views;
     LocalDateTime date;
     LocalDateTime lastUpdate;
     String updatedBy;

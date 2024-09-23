@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/productSizes")
 @RequiredArgsConstructor
@@ -17,23 +19,23 @@ public class ProductSizeController {
     ProductSizeService _service;
 
     @GetMapping("")
-    public APIResponse<?> getSizes(@RequestParam(required = false, defaultValue = "") String query,
-                                   @RequestParam(required = false) Integer size){
-        return APIResponse.builder()
+    public APIResponse<List<ProductSize>> getSizes(@RequestParam(required = false, defaultValue = "") String query,
+                                                   @RequestParam(required = false) Integer size){
+        return APIResponse.<List<ProductSize>>builder()
                 .code(2000)
                 .result(_service.getSizes(query, size))
                 .build();
     }
     @GetMapping("/{sizeId}")
-    public APIResponse<?> getById(@PathVariable String sizeId){
-        return APIResponse.builder()
+    public APIResponse<ProductSize> getById(@PathVariable String sizeId){
+        return APIResponse.<ProductSize>builder()
                 .code(2000)
                 .result(_service.getById(sizeId))
                 .build();
     }
     @PostMapping("")
-    public APIResponse<?> createSize(@RequestBody ProductSizeDto data) {
-        return APIResponse.builder()
+    public APIResponse<ProductSize> createSize(@RequestBody ProductSizeDto data) {
+        return APIResponse.<ProductSize>builder()
                 .code(2000)
                 .message("Change success!")
                 .result(_service.createSize(data))
@@ -41,8 +43,8 @@ public class ProductSizeController {
     }
 
     @PutMapping("")
-    public APIResponse<?> updateSize(@RequestBody ProductSize data) {
-        return APIResponse.builder()
+    public APIResponse<ProductSize> updateSize(@RequestBody ProductSize data) {
+        return APIResponse.<ProductSize>builder()
                 .code(2000)
                 .message("Change success!")
                 .result(_service.updateSize(data))

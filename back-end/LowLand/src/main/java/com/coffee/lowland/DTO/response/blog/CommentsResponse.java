@@ -20,6 +20,8 @@ public class CommentsResponse {
     String email;
     String imageURL;
     LocalDateTime commentedDate;
+    LocalDateTime updatedDate;
+    String updatedBy;
     String blogId;
     String commentId;
     String replyTo;

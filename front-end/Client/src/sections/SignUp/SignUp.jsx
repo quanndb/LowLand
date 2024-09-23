@@ -120,7 +120,7 @@ const SignUpPageView = () => {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item sm={1} md={1}>
+            <Grid item sm={1} md={1} sx={{ width: "100%" }}>
               <Stack component={"form"} onSubmit={handleSignUp}>
                 <TextField
                   label="Email"

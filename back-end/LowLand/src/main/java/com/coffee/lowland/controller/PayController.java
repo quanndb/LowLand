@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import vn.payos.type.Webhook;
+import vn.payos.type.WebhookData;
 
 @RestController
 @RequestMapping("/payments")
@@ -24,8 +25,8 @@ public class PayController {
     }
 
     @GetMapping("/verified-payment")
-    public APIResponse<?> verifyPayment(@RequestBody Webhook request) throws Exception {
-        return APIResponse.builder()
+    public APIResponse<WebhookData> verifyPayment(@RequestBody Webhook request) throws Exception {
+        return APIResponse.<WebhookData>builder()
                 .result(payService.verifyPayment(request))
                 .build();
     }

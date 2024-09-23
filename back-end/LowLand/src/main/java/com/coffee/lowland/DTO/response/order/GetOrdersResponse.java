@@ -18,6 +18,7 @@ public class GetOrdersResponse {
     @Id
     String orderId;
     Integer orderCode;
+    String accountId;
     String customerName;
     String phoneNumber;
     String address;

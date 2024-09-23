@@ -381,7 +381,7 @@ const ModalContent = ({ onClose, orderDetails, refetch, refetchOrder }) => {
 const UpdateModal = ({ open, handleClose, order, refetch }) => {
   const { data: orderDetails, refetch: refetchOrder } = useQuery({
     queryKey: ["getOrderDetails", order.orderId],
-    queryFn: () => orderAPI.getOrderDetails(order.createdBy, order.orderId),
+    queryFn: () => orderAPI.getOrderDetails(order.accountId, order.orderId),
     enabled: !!order && open,
   });
 

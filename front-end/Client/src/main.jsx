@@ -21,21 +21,21 @@ const client = new QueryClient();
 root.render(
   <HelmetProvider>
     <AppThemeProvider>
-      <StoreProvider store={store}>
-        <ToastContainer
-          autoClose={2000}
-          pauseOnHover={false}
-          position="bottom-left"
-        />
-        <QueryClientProvider client={client}>
-          <ReactQueryDevtools initialIsOpen={false} />
+      <QueryClientProvider client={client}>
+        <StoreProvider store={store}>
           <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
-            <RouterProvider router={routes}>
-              <App />
-            </RouterProvider>
+            <App>
+              <ToastContainer
+                autoClose={2000}
+                pauseOnHover={false}
+                position="bottom-left"
+              />
+              <ReactQueryDevtools initialIsOpen={false} />
+              <RouterProvider router={routes}></RouterProvider>
+            </App>
           </GoogleOAuthProvider>
-        </QueryClientProvider>
-      </StoreProvider>
+        </StoreProvider>
+      </QueryClientProvider>
     </AppThemeProvider>
   </HelmetProvider>
 );
