@@ -14,7 +14,7 @@ const BlogMenuSkeleton = () => {
               <Grid item md={8} xs={12}>
                 <Skeleton
                   variant="rectangular"
-                  width={"100%"}
+                  width={Math.random() * (95 - 60) + 60 + "%"}
                   height={40}
                   sx={{ mb: "10px" }}
                 />

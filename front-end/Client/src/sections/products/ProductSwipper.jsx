@@ -59,7 +59,7 @@ const Productswiper = () => {
     queryKey: ["blogs", { size: 2, categoryName: "Store stories" }],
     queryFn: () =>
       blogAPI.getBlogs({
-        size: 2,
+        size: 4,
         isActive: true,
         categoryName: "Store stories",
       }),
@@ -67,20 +67,27 @@ const Productswiper = () => {
 
   return (
     <>
-      <Swiper
-        style={{ position: "relative", width: "100%", marginBottom: "100px" }}
-        pagination={{
-          clickable: true,
-        }}
-        loop={true}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
-        modules={[Pagination, Navigation, Autoplay]}
-        className="mySwiper"
-      >
-        {blogsPage ? (
+      {blogsPage ? (
+        <Swiper
+          modules={[Pagination, Navigation, Autoplay]}
+          pagination={{
+            clickable: true,
+          }}
+          slidesPerView={1}
+          slidesPerGroup={1}
+          loop={true}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          className="mySwiper"
+          style={{
+            position: "relative",
+            width: "100%",
+            paddingBottom: "5px",
+            marginBottom: "100px",
+          }}
+        >
           <>
             {blogsPage.response.map((blog) => (
               <SwiperSlide
@@ -110,7 +117,7 @@ const Productswiper = () => {
                   <Grid
                     item
                     sx={{
-                      marginBottom: "20px",
+                      marginBottom: "30px",
                       alignItems: `${isMobile ? "center" : "start"}`,
                     }}
                     md={1}
@@ -123,7 +130,9 @@ const Productswiper = () => {
                         alignItems: `${isMobile ? "center" : "start"}`,
                       }}
                     >
-                      <Typography sx={{ mb: "20px" }}>
+                      <Typography
+                        sx={{ mb: "20px", mt: { md: "0px", sm: "20px" } }}
+                      >
                         {blog.categoryName}
                       </Typography>
                       <Typography
@@ -146,68 +155,71 @@ const Productswiper = () => {
               </SwiperSlide>
             ))}
           </>
-        ) : (
-          <Grid
-            container
-            sx={{ width: "100%", padding: { md: "0px 40px", sm: "0px" } }}
-            columns={{ md: 2, sm: 1 }}
-          >
-            <Grid item md={1} width={"100%"} height={"300px"}>
-              <Skeleton
-                sx={{ width: "100%", height: "310px" }}
-                variant="rounded"
-              />
-            </Grid>
-            <Grid
-              item
-              sx={{
-                marginBottom: "20px",
-                alignItems: `${isMobile ? "center" : "start"}`,
-                width: "100%",
-              }}
-              md={1}
-            >
-              <Container
-                sx={{
-                  textAlign: `${isMobile ? "center" : "left"}`,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: `${isMobile ? "center" : "start"}`,
-                  mt: "20px",
-                  ml: {
-                    md: "20px",
-                    sm: "0px",
-                  },
-                }}
-                disableGutters
-              >
-                <Skeleton
-                  sx={{ mb: "20px" }}
-                  variant="text"
-                  width={"100%"}
-                  height={40}
-                />
-                <Skeleton
-                  sx={{ mb: "20px" }}
-                  variant="text"
-                  width={"100%"}
-                  height={60}
-                />
-                <Skeleton
-                  sx={{ mb: "20px" }}
-                  variant="text"
-                  width={"100%"}
-                  height={100}
-                />
-
-                <Skeleton variant="contained" sx={{ padding: "15px 50px" }} />
-              </Container>
-            </Grid>
+          {isMobile ? <></> : <SwiperBtn />}
+        </Swiper>
+      ) : (
+        <Grid
+          container
+          sx={{
+            width: "100%",
+            padding: { md: "0px 40px", sm: "0px" },
+            mb: "100px",
+          }}
+          columns={{ md: 2, sm: 1 }}
+        >
+          <Grid item md={1} width={"100%"} height={"300px"}>
+            <Skeleton
+              sx={{ width: "100%", height: "310px" }}
+              variant="rounded"
+            />
           </Grid>
-        )}
+          <Grid
+            item
+            sx={{
+              marginBottom: "20px",
+              alignItems: `${isMobile ? "center" : "start"}`,
+              width: "100%",
+            }}
+            md={1}
+          >
+            <Container
+              sx={{
+                textAlign: `${isMobile ? "center" : "left"}`,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: `${isMobile ? "center" : "start"}`,
+                mt: "20px",
+                ml: {
+                  md: "20px",
+                  sm: "0px",
+                },
+              }}
+              disableGutters
+            >
+              <Skeleton
+                sx={{ mb: "20px" }}
+                variant="text"
+                width={"100%"}
+                height={40}
+              />
+              <Skeleton
+                sx={{ mb: "20px" }}
+                variant="text"
+                width={"100%"}
+                height={60}
+              />
+              <Skeleton
+                sx={{ mb: "20px" }}
+                variant="text"
+                width={"100%"}
+                height={100}
+              />
 
-        {isMobile ? <></> : <SwiperBtn />}
-      </Swiper>
+              <Skeleton variant="contained" sx={{ padding: "15px 50px" }} />
+            </Container>
+          </Grid>
+        </Grid>
+      )}
     </>
   );
 };

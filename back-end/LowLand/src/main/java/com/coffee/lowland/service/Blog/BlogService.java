@@ -1,6 +1,8 @@
 package com.coffee.lowland.service.Blog;
 
+import com.coffee.lowland.DTO.request.blog.BlogContentDTO;
 import com.coffee.lowland.DTO.request.blog.CreateNewBlogRequest;
+import com.coffee.lowland.DTO.response.auth.UserResponse;
 import com.coffee.lowland.DTO.response.blog.BlogDetails;
 import com.coffee.lowland.DTO.response.blog.Blogs;
 import com.coffee.lowland.DTO.response.blog.DetailsAuthor;
@@ -10,6 +12,7 @@ import com.coffee.lowland.Mongo.repository.BlogImageRepository;
 import com.coffee.lowland.Mongo.repository.BlogRepository;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
+import com.coffee.lowland.mapper.AccountMapper;
 import com.coffee.lowland.mapper.BlogMapper;
 import com.coffee.lowland.mapper.CloudImageMapper;
 import com.coffee.lowland.model.Blog;
@@ -25,10 +28,12 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,62 +55,40 @@ public class BlogService {
     CloudImageMapper cloudImageMapper;
     AuthenticationService authenticationService;
     AccountService accountService;
+    AccountMapper accountMapper;
     MongoTemplate mongoTemplate;
     BlogMapper blogMapper;
     FileHashingService fileHashingService;
 
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
-    public Blog createBlog(CreateNewBlogRequest request, MultipartFile[] images) throws IOException, NoSuchAlgorithmException {
+    public Blog createBlog(CreateNewBlogRequest request, List<MultipartFile> images) throws IOException, NoSuchAlgorithmException {
         String blogId = UUID.randomUUID().toString();
-        Map<String, CloudResponse> imagesSaved = new HashMap<>();
-        for(MultipartFile item : images){
-            Map<?,?> res = cloudinaryService.upload(item);
-            CloudResponse mappedRes = cloudImageMapper.toCloudResponse(res);
-            String hashed = fileHashingService.hashFile(item);
-            imagesSaved.put(hashed,mappedRes);
-            blogImageRepository.save(BlogImage.builder()
-                            .imageURL(mappedRes.getUrl())
-                            .cloudId(mappedRes.getPublicId())
-                            .hexString(hashed)
-                            .blogId(blogId)
-                            .fileName(mappedRes.getOriginalFilename())
-                    .build());
-        }
-        categoryService.getOrCreate(request.getCategoryName());
         Blog req = blogMapper.createBlog(request);
+        categoryService.getOrCreate(request.getCategoryName());
+        Map<String, String> savedImages = uploadBlogImage(blogId, request, images);
         req.setBlogId(blogId);
         req.setIsActive(true);
         req.setViews(0);
         req.setAccountId(authenticationService.getMyInfo().getAccountId());
         req.setDate(LocalDateTime.now());
-        req.setImageURL(imagesSaved.get(req.getImageURL()).getUrl());
+        if(savedImages.get(req.getImageURL()) != null){
+            req.setImageURL(savedImages.get(req.getImageURL()));
+        }
         for(BlogContent item : req.getContent()){
             String data = item.getData();
-            if(Objects.equals(item.getType(), "img") && data != null){
-                String imageURL = imagesSaved.get(data).getUrl();
-                item.setData(imageURL);
+            if(Objects.equals(item.getType(), "img") && data != null
+                    && savedImages.get(data) != null){
+                item.setData(savedImages.get(data));
             }
         }
         return blogRepository.save(req);
     }
 
-  public PageServiceResponse<Blogs> getBlogs(Integer page, Integer size, String query,
+    public PageServiceResponse<Blogs> getBlogs(Integer page, Integer size, String query,
                                               String sortedBy, String sortDirection,
                                               String accountId, String categoryName, Boolean isActive) {
         List<Criteria> criteriaList = new ArrayList<>();
-        criteriaList.add(Criteria.where("blogId").exists(true));
-        if (query != null && !query.isEmpty()) {
-            criteriaList.add(Criteria.where("blogId").regex(query, "i"));
-            criteriaList.add(Criteria.where("title").regex(query, "i"));
-            criteriaList.add(Criteria.where("accountId").regex(query, "i"));
-            criteriaList.add(Criteria.where("categoryName").regex(query, "i"));
-            criteriaList.add(Criteria.where("description").regex(query, "i"));
-            criteriaList.add(Criteria.where("content.data").regex(query, "i"));
-            criteriaList.add(Criteria.where("content.title").regex(query, "i"));
-            criteriaList.add(Criteria.where("dateString").regex(query, "i"));
-            criteriaList.add(Criteria.where("lastUpdateString").regex(query, "i"));
-            criteriaList.add(Criteria.where("updatedBy").regex(query, "i"));
-        }
+        List<Criteria> queryCriteriaList = new ArrayList<>();
 
         if (accountId != null && !accountId.isEmpty()) {
             criteriaList.add(Criteria.where("accountId").is(accountId));
@@ -117,11 +100,28 @@ public class BlogService {
             criteriaList.add(Criteria.where("isActive").is(isActive));
         }
 
+         if (query != null && !query.isEmpty()) {
+           // Add query criteria to queryCriteriaList
+             String regex = ".*" + query + ".*"; // Adjust regex as needed
+             queryCriteriaList.add(Criteria.where("blogId").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("title").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("accountId").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("categoryName").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("description").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("content.data").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("content.title").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("dateString").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("lastUpdateString").regex(regex, "i"));
+             queryCriteriaList.add(Criteria.where("updatedBy").regex(regex, "i"));
+        }
+
+
         ProjectionOperation project = Aggregation.project()
                 .andExpression("date").dateAsFormattedString().as("dateString")
                 .andExpression("lastUpdate").dateAsFormattedString().as("lastUpdateString")
                 .and("blogId").as("blogId")
                 .and("accountId").as("accountId")
+                .and("author").as("author")
                 .and("categoryName").as("categoryName")
                 .and("imageURL").as("imageURL")
                 .and("title").as("title")
@@ -133,20 +133,34 @@ public class BlogService {
                 .and("isActive").as("isActive")
                 .and("views").as("views");
 
-        Aggregation aggregation = Aggregation.newAggregation(
-                project,
-                Aggregation.match(new Criteria().andOperator(criteriaList.toArray(new Criteria[0]))),
-                Aggregation.sort(Sort.by(Sort.Direction.fromString(sortDirection),sortedBy)),
-                Aggregation.skip((long) (page - 1) * size),
-                Aggregation.limit(size)
-        );
+        List<AggregationOperation> aggregationOperations = new ArrayList<>();
+        aggregationOperations.add(project);
+        if (!queryCriteriaList.isEmpty()) {
+            aggregationOperations.add(Aggregation.match(new Criteria().orOperator(queryCriteriaList)));
+        }
+        if (!criteriaList.isEmpty()) {
+             aggregationOperations.add(Aggregation.match(new Criteria().andOperator(criteriaList)));
+        }
+        aggregationOperations.add(Aggregation.sort(Sort.by(Sort.Direction.fromString(sortDirection), sortedBy)));
+        aggregationOperations.add(Aggregation.skip((long) (page - 1) * size));
+        aggregationOperations.add(Aggregation.limit(size));
 
+        Aggregation aggregation = Aggregation.newAggregation(aggregationOperations);
         List<Blogs> res = mongoTemplate.aggregate(aggregation, Blog.class, Blogs.class)
                                             .getMappedResults();
+        for(Blogs item : res){
+            item.setAuthor(getDetailAuthorByAccountId(item.getAccountId()));
+            item.setAccountId(null);
+        }
 
-        Query mongoQuery = new Query(new Criteria()
-                .andOperator(criteriaList.toArray(new Criteria[0])));
-
+        Criteria combinedCriteria = new Criteria();
+        if (!queryCriteriaList.isEmpty()) {
+            combinedCriteria = combinedCriteria.orOperator(queryCriteriaList);
+        }
+        if (!criteriaList.isEmpty()) {
+            combinedCriteria = combinedCriteria.andOperator(criteriaList);
+        }
+        Query mongoQuery = new Query(combinedCriteria);
         long count = mongoTemplate.count(mongoQuery, Blog.class);
 
         Boolean isFirst = page == 1;
@@ -165,16 +179,32 @@ public class BlogService {
                 .response(res)
                 .build();
     }
+
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
-    public Blog updateBlog(String blogId,CreateNewBlogRequest request, MultipartFile[] images){
+    public Blog updateBlog(String blogId,CreateNewBlogRequest request, List<MultipartFile> images) throws IOException, NoSuchAlgorithmException {
         Blog found = blogRepository.findBlogByBlogId(blogId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.BLOG_NOT_FOUND));
         blogMapper.update(found, request);
+        categoryService.getOrCreate(request.getCategoryName());
+        Map<String, String> savedImages = uploadBlogImage(blogId,request,images);
+        if(savedImages.get(found.getImageURL()) != null){
+            found.setImageURL(savedImages.get(found.getImageURL()));
+        }
+        for(BlogContent item : found.getContent()){
+            String data = item.getData();
+            if(Objects.equals(item.getType(), "img") && data != null
+                    && savedImages.get(data) != null){
+                 item.setData(savedImages.get(data));
+            }
+        }
+        found.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        found.setLastUpdate(LocalDateTime.now());
+        deleteAllUnusedImages(found);
         return blogRepository.save(found);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
-    public void deleteBLog(String blogId) throws IOException {
+    public String deleteBLog(String blogId) throws IOException {
         blogRepository.findBlogByBlogId(blogId)
                 .orElseThrow(()->new AppExceptions(ErrorCode.BLOG_NOT_FOUND));
         List<BlogImage> images = blogImageRepository.findAllByBlogId(blogId);
@@ -183,7 +213,8 @@ public class BlogService {
         }
         blogImageRepository.deleteAllByBlogId(blogId);
         interactService.deleteBlogInteraction(blogId);
-        blogRepository.deleteById(blogId);
+        blogRepository.deleteByBlogId(blogId);
+        return "Delete blog successfully!";
     }
 
     public BlogDetails getDetails(String blogId) {
@@ -198,28 +229,84 @@ public class BlogService {
         return res;
     }
 
-    public void deleteBlogImage(String blogId, String imageUrl) throws IOException {
-        Blog found =  blogRepository.findBlogByBlogId(blogId)
-                .orElseThrow(()->new AppExceptions(ErrorCode.BLOG_NOT_FOUND));
-        for(BlogContent item : found.getContent()){
-            if(Objects.equals(item.getType(), "img") && Objects.equals(item.getData(), imageUrl)){
-                BlogImage foundImage = blogImageRepository
-                        .findByImageURL(imageUrl);
-                cloudinaryService.delete(foundImage.getCloudId());
-                blogImageRepository.delete(foundImage);
+    public Map<String, String> uploadBlogImage(String blogId,
+                                               CreateNewBlogRequest request,
+                                               List<MultipartFile> images) throws IOException, NoSuchAlgorithmException {
+        Map<String, String> savedImage = new HashMap<>();
+        if(images != null){
+            Map<String, MultipartFile> hashedImage = new HashMap<>();
+//      step 1: get hashed image
+            for(MultipartFile item : images){
+                String hashed = fileHashingService.hashFile(item);
+                hashedImage.put(hashed, item);
+            }
+//      step 2: loop through content that contains images then upload them if it contains true hexString
+            MultipartFile banner = hashedImage.get(request.getImageURL());
+            if(banner != null){
+                uploader(savedImage,blogId,request.getImageURL(),banner);
+            }
+            for(BlogContentDTO item : request.getContent()){
+                if(Objects.equals(item.getType(), "img")){
+                    MultipartFile file = hashedImage.get(item.getData());
+                    if(file != null){
+                        uploader(savedImage,blogId,item.getData(),file);
+                    }
+                }
             }
         }
+        return savedImage;
+    }
+
+    public void uploader(Map<String, String> savedImage,
+                         String blogId, String hexString, MultipartFile file) throws IOException {
+        if(savedImage.get(hexString) == null){
+            Map<?,?> res = cloudinaryService.upload(file);
+            CloudResponse mappedRes = cloudImageMapper.toCloudResponse(res);
+            blogImageRepository.save(BlogImage.builder()
+                    .imageURL(mappedRes.getUrl())
+                    .cloudId(mappedRes.getPublicId())
+                    .hexString(hexString)
+                    .blogId(blogId)
+                    .fileName(mappedRes.getOriginalFilename())
+                    .build());
+            savedImage.put(hexString, mappedRes.getUrl());
+        }
+    }
+
+    public void deleteAllUnusedImages(Blog current) throws IOException {
+        List<String> allBlogImageURL = new ArrayList<>();
+        if(current.getImageURL() != null
+                && current.getImageURL().startsWith("http"))
+                    allBlogImageURL.add(current.getImageURL());
+        for(BlogContent item : current.getContent()){
+            if(Objects.equals(item.getType(), "img") && item.getData() != null
+                    && item.getData().startsWith("http")){
+                allBlogImageURL.add(item.getData());
+            }
+        }
+        List<BlogImage> allBlogImage = blogImageRepository
+                .findAllByBlogId(current.getBlogId());
+        allBlogImage.removeIf(item -> allBlogImageURL.contains(item.getImageURL()));
+        for(BlogImage item : allBlogImage){
+            cloudinaryService.delete(item.getCloudId());
+        }
+        blogImageRepository.deleteAll(allBlogImage);
     }
 
     public PageServiceResponse<Blogs> getAuthorBlogs(String authorId,
                                       Integer page, Integer size, String query,
                                       String sortedBy, String sortDirection,
-                                      String categoryId, Boolean isActive) {
+                                      String categoryName, Boolean isActive) {
         return getBlogs(page, size, query,
-                sortedBy, sortDirection, authorId, categoryId, isActive);
+                sortedBy, sortDirection, authorId, categoryName, isActive);
     }
 
     public boolean isExitsBlog(String blogId){
         return blogRepository.existsByBlogId(blogId);
+    }
+
+    public DetailsAuthor getDetailAuthorByAccountId(String accountId){
+        UserResponse found = accountService.getInfoAfterAuthenticated(accountId);
+        return accountMapper.UserResponseToAuthor(found);
     }
 }

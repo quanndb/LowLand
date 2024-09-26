@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface BlogRepository extends MongoRepository<Blog, String> {
     Optional<Blog> findBlogByBlogId(String blogId);
+    void deleteByBlogId(String blogId);
     boolean existsByBlogId(String blogId);
 }

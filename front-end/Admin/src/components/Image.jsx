@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Overlay = ({ hovered, overlayContent }) => {
   return (
@@ -53,6 +53,10 @@ const Image = ({
   const [hovered, setHovered] = useState(false);
   const [error, setError] = useState(false);
 
+  useEffect(() => {
+    setError(false);
+  }, [imageURL]);
+
   return (
     <Box
       onMouseEnter={() => setHovered(true)}
@@ -82,7 +86,6 @@ const Image = ({
         loading="lazy"
         style={{ display: "none" }}
         onError={() => setError(true)}
-        onLoad={() => setError(false)}
       />
     </Box>
   );

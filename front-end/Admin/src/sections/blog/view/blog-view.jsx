@@ -11,7 +11,19 @@ import PostEditor from "../post-editor";
 // ----------------------------------------------------------------------
 
 export default function BlogView() {
-  const [value, setValue] = useState("new-blog");
+  const [value, setValue] = useState("blogs");
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const handleSelectPost = (id) => {
+    setSelectedPost(id);
+    setValue("new-blog");
+  };
+
+  const handleCancel = () => {
+    setSelectedPost(null);
+    setValue("blogs");
+  };
+
   return (
     <Container>
       <TabContext value={value}>
@@ -39,10 +51,10 @@ export default function BlogView() {
         </Stack>
 
         <TabPanel value="blogs" sx={{ p: 0 }}>
-          <PostList />
+          <PostList setSelectedPost={handleSelectPost} />
         </TabPanel>
         <TabPanel value="new-blog" sx={{ p: 0 }}>
-          <PostEditor />
+          <PostEditor cancel={handleCancel} blogId={selectedPost} />
         </TabPanel>
       </TabContext>
     </Container>

@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/blogs")
@@ -54,7 +55,7 @@ public class BlogController {
 
     @PostMapping
     public APIResponse<Blog> createBlog(@RequestParam(required = false) String request,
-                                        @RequestParam(required = false) MultipartFile[] images) throws IOException, NoSuchAlgorithmException {
+                                        @RequestParam(required = false) List<MultipartFile> images) throws IOException, NoSuchAlgorithmException {
         CreateNewBlogRequest req = null;
         if(request != null){
             req = jsonMapper.JSONToObject(request, CreateNewBlogRequest.class);
@@ -68,8 +69,8 @@ public class BlogController {
 
     @PutMapping("/{blogId}")
     public APIResponse<Blog> updateBlog(@PathVariable String blogId,
-                                     @RequestParam String request,
-                                     @RequestParam MultipartFile[] images) throws JsonProcessingException {
+                                     @RequestParam(required = false) String request,
+                                     @RequestParam(required = false) List<MultipartFile> images) throws IOException, NoSuchAlgorithmException {
         CreateNewBlogRequest req = null;
         if(request != null){
             req = jsonMapper.JSONToObject(request, CreateNewBlogRequest.class);
@@ -78,6 +79,14 @@ public class BlogController {
         return APIResponse.<Blog>builder()
                 .code(2000)
                 .result(blogService.updateBlog(blogId, req, images))
+                .build();
+    }
+
+    @DeleteMapping("/{blogId}")
+    public APIResponse<String> deleteBlog(@PathVariable String blogId) throws IOException {
+        return APIResponse.<String>builder()
+                .code(2000)
+                .result(blogService.deleteBLog(blogId))
                 .build();
     }
 

@@ -10,6 +10,7 @@ import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.model.Account;
 import com.coffee.lowland.model.Role;
 import com.coffee.lowland.JPA.repository.AccountRepository;
+import com.coffee.lowland.service.Utilities.ChartService;
 import com.coffee.lowland.service.Utilities.RandomCodeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class AuthenticationService {
     PasswordEncoder passwordEncoder;
     TokenService tokenService;
     OutBoundService outBoundService;
+    ChartService chartService;
     RandomCodeService randomCodeService;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request, DetailsLogin detailsLogin){
@@ -43,6 +45,7 @@ public class AuthenticationService {
 
         var token = tokenService.generateToken(account, detailsLogin.toString());
         UserResponse response = accountService.getInfoAfterAuthenticated(account.getAccountId());
+        chartService.postAccess(detailsLogin, response.getEmail());
         return AuthenticationResponse.builder()
                 .accessToken(token)
                 .authenticated(true)
@@ -69,7 +72,8 @@ public class AuthenticationService {
         if(!foundUser.getIsActive()) throw new AppExceptions(ErrorCode.ACCOUNT_NOT_ACTIVE);
         UserResponse response = accountService.getInfoAfterAuthenticated(foundUser.getAccountId());
         var token = tokenService.generateToken(foundUser, detailsLogin.toString());
-            return AuthenticationResponse.builder()
+        chartService.postAccess(detailsLogin, response.getEmail());
+        return AuthenticationResponse.builder()
                     .accessToken(token)
                     .authenticated(true)
                     .userResponse(response)

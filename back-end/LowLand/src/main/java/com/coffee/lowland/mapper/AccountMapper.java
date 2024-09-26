@@ -12,8 +12,10 @@ import org.mapstruct.*;
 public interface AccountMapper {
     UserResponse toUserResponse(Account request);
     DetailsAuthor toDetailsAuthor(Account request);
+    DetailsAuthor UserResponseToAuthor(UserResponse request);
     void register(@MappingTarget Account res, AccountRegisterRequest request);
     void createAccount(@MappingTarget Account res, CreateAccountRequest request);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateAccount(@MappingTarget Account account, UpdateAccountRequest request);
+
 }

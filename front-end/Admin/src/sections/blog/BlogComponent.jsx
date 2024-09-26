@@ -35,21 +35,17 @@ export const BlogHeader = ({ children, variant, sx, ...props }) => {
   );
 };
 
-export const BlogImage = ({ images, setImages, sx, mode, ...props }) => {
+export const BlogImage = ({ init, images, setImages, sx, mode, onClick }) => {
   return (
-    // <img
-    //   src={imageURL}
-    //   alt={alt}
-    //   style={{ width: "100%", marginTop: "25px", marginBottom: "25px", ...sx }}
-    //   {...props}
-    // />
-    <ImageInput
-      images={images}
-      setImages={setImages}
-      sx={sx}
-      mode={mode}
-      {...props}
-    />
+    <Box onClick={onClick}>
+      <ImageInput
+        init={init}
+        images={images}
+        setImages={setImages}
+        sx={sx}
+        mode={mode}
+      />
+    </Box>
   );
 };
 

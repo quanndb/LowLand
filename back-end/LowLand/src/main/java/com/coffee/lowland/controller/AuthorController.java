@@ -35,14 +35,14 @@ public class AuthorController {
                                                                   @RequestParam(required = false, defaultValue = "date") String sortedBy,
                                                                   @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
                                                                   @RequestParam(required = false, defaultValue = "") String query,
-                                                                  @RequestParam(required = false, defaultValue = "") String categoryId,
+                                                                  @RequestParam(required = false, defaultValue = "") String categoryName,
                                                                   @RequestParam(required = false) Boolean isActive){
         return APIResponse.<PageServiceResponse<Blogs>>builder()
                 .code(2000)
                 .result(blogService
                         .getAuthorBlogs(authorId,
                                 page,size,query,sortedBy,sortDirection,
-                                categoryId,isActive))
+                                categoryName,isActive))
                 .build();
     }
 }

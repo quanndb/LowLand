@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -80,7 +80,12 @@ const OrderPayment = ({ open, orderId }) => {
 };
 
 const CheckoutView = () => {
+  const router = useRouter();
   const products = useSelector(cart);
+
+  useEffect(() => {
+    if (products.length === 0) router.push("/products");
+  }, []);
 
   const data = useSelector(user);
   const [customerName, setCustomerName] = useState(data.fullName);

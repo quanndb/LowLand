@@ -1,5 +1,6 @@
-import { Box, Card, Grid, Skeleton } from "@mui/material";
+import { Box, Card, Grid, Pagination, Skeleton } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 import BlogItem from "src/components/BlogItem";
 import SectionTitle from "src/components/SectionTitle";
@@ -12,7 +13,11 @@ const FeaturedPostsSkeleton = () => {
         <Card sx={{ p: 3 }}>
           <Skeleton sx={{ height: "200px", width: "100%" }} variant="rounded" />
           <Skeleton
-            sx={{ height: "20px", width: "100%", mt: "10px" }}
+            sx={{
+              height: "20px",
+              width: Math.random() * (95 - 60) + 60 + "%",
+              mt: "10px",
+            }}
             variant="rounded"
           />
           <Skeleton
@@ -25,7 +30,11 @@ const FeaturedPostsSkeleton = () => {
         <Card sx={{ p: 3 }}>
           <Skeleton sx={{ height: "200px", width: "100%" }} variant="rounded" />
           <Skeleton
-            sx={{ height: "20px", width: "100%", mt: "10px" }}
+            sx={{
+              height: "20px",
+              width: Math.random() * (95 - 60) + 60 + "%",
+              mt: "10px",
+            }}
             variant="rounded"
           />
           <Skeleton
@@ -40,12 +49,16 @@ const FeaturedPostsSkeleton = () => {
 
 const FeaturedPosts = () => {
   const { data: blogsPage } = useQuery({
-    queryKey: ["blogs", { size: 2, categoryName: "Store stories" }],
+    queryKey: [
+      "blogs",
+      { size: 2, categoryName: "Store stories", sortedBy: "views" },
+    ],
     queryFn: () =>
       blogAPI.getBlogs({
         size: 2,
         isActive: true,
         categoryName: "Store stories",
+        sortedBy: "views",
       }),
   });
 

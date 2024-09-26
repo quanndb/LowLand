@@ -1,5 +1,6 @@
 package com.coffee.lowland.service.Account;
 
+import com.coffee.lowland.JPA.repository.AccountRepository;
 import com.coffee.lowland.exception.AppExceptions;
 import com.coffee.lowland.exception.ErrorCode;
 import com.coffee.lowland.model.Account;
@@ -32,6 +33,7 @@ public class TokenService {
     String SECRET_KEY;
 
     TokenRepository tokenRepository;
+    AccountRepository accountRepository;
 
     public String generateToken(Account account,String details) {
         String tokenId  = tokenRepository.save(Token.builder()
@@ -87,9 +89,12 @@ public class TokenService {
                 throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
             }
 
-            boolean isLogout = tokenRepository.findById(signedJWT.getJWTClaimsSet().getJWTID())
-                    .orElseThrow(() -> new AppExceptions(ErrorCode.UNAUTHENTICATED)).isLogout();
-            if(isLogout) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
+            Token current = tokenRepository.findById(signedJWT.getJWTClaimsSet().getJWTID())
+                    .orElseThrow(() -> new AppExceptions(ErrorCode.UNAUTHENTICATED));
+            if(current.isLogout()) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
+            Account user = accountRepository.findById(current.getAccountId())
+                    .orElseThrow(()->new AppExceptions(ErrorCode.ACCOUNT_NOT_ACTIVE));
+            if(!user.getIsActive()) throw new AppExceptions(ErrorCode.ACCOUNT_NOT_ACTIVE);
             return true;
         }
         catch (AppExceptions exceptions){

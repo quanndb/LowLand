@@ -91,7 +91,7 @@ public class ChartController {
                 .build();
         return APIResponse.<String>builder()
                 .code(2000)
-                .result(_service.postAccess(detailsLogin))
+                .result(_service.postAccess(detailsLogin, null))
                 .build();
     }
 }

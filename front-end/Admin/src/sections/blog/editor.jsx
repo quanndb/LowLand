@@ -12,7 +12,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { BlogHeader, BlogImage, BlogLink, Motto } from "./BlogComponent";
 import Iconify from "src/components/iconify/iconify";
 import { v4 as uuidv4 } from "uuid";
-import ConfirmDelete from "../products/confirm-delete";
+import ConfirmDelete from "../../components/dialog/confirm-delete";
 
 const MenuEditor = ({ anchorEl, open, handleClose, setContent, index }) => {
   const handleAddElement = (type) => {
@@ -319,11 +319,15 @@ const MemoizedBlogItem = memo(
               return (
                 <>
                   <BlogImage
+                    init={item}
                     images={images}
                     setImages={(images, image, callback) => {
                       setImages(images);
                       if (image)
-                        setItem(item.id, { ...item, data: image.hashed });
+                        setItem(item.id, {
+                          ...item,
+                          data: image?.hashed ? image.hashed : image?.data,
+                        });
                       if (callback) callback();
                     }}
                     onClick={() => setMode("edit")}
@@ -414,72 +418,77 @@ const MemoizedBlogItem = memo(
   }
 );
 
-const BlogContentDisplay = memo(
-  ({ initContent, setBlogDetails, images, setImages }) => {
-    const [content, setContent] = useState(
-      initContent.map((item) => ({ ...item, id: uuidv4() }))
+const BlogContentDisplay = ({
+  content,
+  setContent,
+  setBlogDetails,
+  images,
+  setImages,
+}) => {
+  useEffect(() => {
+    setBlogDetails((blogDetails) => {
+      return { ...blogDetails, content: content };
+    });
+  }, [content]);
+
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({ id: null, el: null });
+
+  const removeItem = (id) => {
+    setContent((prevContent) => prevContent.filter((item) => item.id !== id));
+  };
+
+  const setItem = (id, data) => {
+    setContent((prevContent) =>
+      prevContent.map((item) => (item.id === id ? data : item))
     );
+  };
 
-    useEffect(() => {
-      setBlogDetails((blogDetails) => {
-        return { ...blogDetails, content: content };
-      });
-    }, [content]);
-
-    const [hoveredIndex, setHoveredIndex] = useState(null);
-    const [anchorEl, setAnchorEl] = useState({ id: null, el: null });
-
-    const removeItem = (id) => {
-      setContent((prevContent) => prevContent.filter((item) => item.id !== id));
-    };
-
-    const setItem = (id, data) => {
-      setContent((prevContent) =>
-        prevContent.map((item) => (item.id === id ? data : item))
-      );
-    };
-
-    const renderBlogContent = (content) => {
-      return content.map((item) => (
-        <MemoizedBlogItem
-          key={item.id}
-          item={item}
-          hoveredIndex={hoveredIndex}
-          setHoveredIndex={setHoveredIndex}
-          setAnchorEl={setAnchorEl}
-          removeItem={removeItem}
-          setItem={setItem}
-          images={images}
-          setImages={setImages}
-        />
-      ));
-    };
-
-    return (
-      <>
-        {renderBlogContent(content)}
-        <MenuEditor
-          anchorEl={anchorEl.el}
-          open={Boolean(anchorEl.el)}
-          handleClose={() => setAnchorEl({ id: null, el: null })}
-          setContent={setContent}
-          index={anchorEl.id}
-        />
-      </>
-    );
-  }
-);
-
-const BlogEditor = ({ content, setBlogDetails, images, setImages }) => {
-  return (
-    <Box>
-      <BlogContentDisplay
-        initContent={content}
-        setBlogDetails={setBlogDetails}
+  const renderBlogContent = (content) => {
+    return content.map((item) => (
+      <MemoizedBlogItem
+        key={item.id}
+        item={item}
+        hoveredIndex={hoveredIndex}
+        setHoveredIndex={setHoveredIndex}
+        setAnchorEl={setAnchorEl}
+        removeItem={removeItem}
+        setItem={setItem}
         images={images}
         setImages={setImages}
       />
-    </Box>
+    ));
+  };
+
+  return (
+    <>
+      {renderBlogContent(content)}
+      <MenuEditor
+        anchorEl={anchorEl.el}
+        open={Boolean(anchorEl.el)}
+        handleClose={() => setAnchorEl({ id: null, el: null })}
+        setContent={setContent}
+        index={anchorEl.id}
+      />
+    </>
+  );
+};
+
+const BlogEditor = ({
+  content,
+  setContent,
+  setBlogDetails,
+  images,
+  setImages,
+}) => {
+  return (
+    <BlogContentDisplay
+      content={content}
+      setContent={setContent}
+      setBlogDetails={setBlogDetails}
+      images={images}
+      setImages={setImages}
+    />
   );
 };
 

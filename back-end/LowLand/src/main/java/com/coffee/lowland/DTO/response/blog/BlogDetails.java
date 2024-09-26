@@ -18,7 +18,7 @@ import java.util.List;
 public class BlogDetails {
     String blogId;
     DetailsAuthor author;
-    ObjectId categoryId;
+    String categoryName;
     String imageURL;
     String title;
     long views;

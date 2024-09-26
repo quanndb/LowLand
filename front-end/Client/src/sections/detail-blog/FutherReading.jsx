@@ -15,7 +15,11 @@ export const BlogItemSkeleton = () => {
     <Card sx={{ p: 3 }}>
       <Skeleton sx={{ height: "200px", width: "100%" }} variant="rounded" />
       <Skeleton
-        sx={{ height: "20px", width: "100%", mt: "10px" }}
+        sx={{
+          height: "20px",
+          width: Math.random() * (100 - 60) + 60 + "%",
+          mt: "10px",
+        }}
         variant="rounded"
       />
       <Skeleton

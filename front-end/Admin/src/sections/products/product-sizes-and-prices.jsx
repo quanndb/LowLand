@@ -3,7 +3,7 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import productSizeAPI from "src/services/API/productSizeAPI";
 import { CustomAutocomplete } from "src/components/input/CustomAutoComplete";
 import { toast } from "react-toastify";
-import ConfirmDelete from "./confirm-delete";
+import ConfirmDelete from "../../components/dialog/confirm-delete";
 import productAPI from "src/services/API/productAPI";
 import { useMutation } from "@tanstack/react-query";
 import LoadingComp from "src/components/loading/LoadingComp";

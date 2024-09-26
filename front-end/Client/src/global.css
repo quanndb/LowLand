@@ -38,7 +38,7 @@
 
 .swiper {
   .swiper-pagination {
-    top: 95% !important;
+    top: 96% !important;
     .swiper-pagination-bullet-active {
       background-color: var(--secondary-color);
     }

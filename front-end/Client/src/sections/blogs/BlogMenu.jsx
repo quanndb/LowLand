@@ -1,4 +1,11 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Pagination,
+  Typography,
+} from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import BlogMenuSkeleton from "src/components/BlogMenuSkeleton";
@@ -53,7 +60,7 @@ const Category = ({ children, imgURL, onClick, sx, active }) => {
   );
 };
 
-const BlogCategories = ({ categoryName, setCategoryName }) => {
+const BlogCategories = ({ categoryName, setCategoryName, setPage }) => {
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: () =>
@@ -80,6 +87,7 @@ const BlogCategories = ({ categoryName, setCategoryName }) => {
             key={JSON.stringify(category._id)}
             onClick={() => {
               setCategoryName(category.name);
+              setPage(1);
             }}
             active={categoryName === category.name}
           >
@@ -131,12 +139,14 @@ const DetailStore = () => {
 };
 
 export const BlogMenu = ({ authorId }) => {
+  const [page, setPage] = useState(1);
   const [categoryName, setCategoryName] = useState("All");
 
   const { data: blogsPage } = useQuery({
     queryKey: [
       "blogs",
       {
+        page: page,
         size: 4,
         authorId,
         isActive: true,
@@ -146,6 +156,7 @@ export const BlogMenu = ({ authorId }) => {
     ],
     queryFn: () =>
       blogAPI.getBlogs({
+        page: page,
         size: 4,
         isActive: true,
         sortedBy: "views",
@@ -180,6 +191,14 @@ export const BlogMenu = ({ authorId }) => {
           ) : (
             <BlogMenuSkeleton />
           )}
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Pagination
+              page={page}
+              count={blogsPage?.totalPages || 1}
+              onChange={(event, value) => setPage(value)}
+              color="primary"
+            />
+          </Box>
         </Grid>
         <Grid item md={4}>
           <SectionTitleB>About Us</SectionTitleB>
@@ -187,6 +206,7 @@ export const BlogMenu = ({ authorId }) => {
           <BlogCategories
             categoryName={categoryName}
             setCategoryName={setCategoryName}
+            setPage={setPage}
           />
           <Authors />
         </Grid>

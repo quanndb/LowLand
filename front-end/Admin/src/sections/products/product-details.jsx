@@ -22,7 +22,7 @@ import {
 import Iconify from "src/components/iconify";
 import Image from "src/components/Image";
 import productTypeAPI from "src/services/API/productTypeAPI";
-import ConfirmDelete from "./confirm-delete";
+import ConfirmDelete from "../../components/dialog/confirm-delete";
 import productAPI from "src/services/API/productAPI";
 import { toast } from "react-toastify";
 import LoadingComp from "src/components/loading/LoadingComp";

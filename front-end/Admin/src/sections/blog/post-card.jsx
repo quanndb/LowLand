@@ -17,8 +17,8 @@ import SvgColor from "src/components/svg-color";
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
+export default function PostCard({ post, index, innerRef, onClick }) {
+  const { imageURL, title, views, comment, author, date } = post;
 
   const latestPostLarge = index === 0;
 
@@ -26,8 +26,9 @@ export default function PostCard({ post, index }) {
 
   const renderAvatar = (
     <Avatar
-      alt={author.name}
-      src={author.avatarUrl}
+      alt={author.email}
+      title={author.email}
+      src={author.imageURL}
       sx={{
         zIndex: 9,
         width: 32,
@@ -77,12 +78,9 @@ export default function PostCard({ post, index }) {
         mt: 3,
         color: "text.disabled",
       }}
+      ref={innerRef}
     >
-      {[
-        { number: comment, icon: "eva:message-circle-fill" },
-        { number: view, icon: "eva:eye-fill" },
-        { number: share, icon: "eva:share-fill" },
-      ].map((info, _index) => (
+      {[{ number: views, icon: "eva:eye-fill" }].map((info, _index) => (
         <Stack
           key={_index}
           direction="row"
@@ -106,7 +104,7 @@ export default function PostCard({ post, index }) {
     <Box
       component="img"
       alt={title}
-      src={cover}
+      src={imageURL}
       sx={{
         top: 0,
         width: 1,
@@ -130,7 +128,7 @@ export default function PostCard({ post, index }) {
         }),
       }}
     >
-      {fDate(createdAt)}
+      {fDate(date)}
     </Typography>
   );
 
@@ -151,7 +149,13 @@ export default function PostCard({ post, index }) {
   );
 
   return (
-    <Grid xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
+    <Grid
+      xs={12}
+      sm={latestPostLarge ? 12 : 6}
+      md={latestPostLarge ? 6 : 3}
+      sx={{ cursor: "pointer" }}
+      onClick={onClick}
+    >
       <Card>
         <Box
           sx={{

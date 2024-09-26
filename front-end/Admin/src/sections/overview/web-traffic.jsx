@@ -136,38 +136,47 @@ const WebTraffic = () => {
             Search
           </Button>
         </Box>
-        {accessHistoriesPage ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 2,
-            }}
-          >
-            {accessHistoriesPage.response.map((item) => {
-              return (
-                <Card key={item.id} raised sx={{ my: 1, p: 2 }}>
-                  <Typography>
-                    {" "}
-                    {new Date(item.date).toDateString() +
-                      " " +
-                      new Date(item.date).toLocaleTimeString()}
-                  </Typography>
-                  <Typography color={"error"}>{item.user}</Typography>
-                  <Typography sx={{ fontWeight: 600 }}>
-                    IP: {item.ip}
-                  </Typography>
-                  <Typography sx={{ maxWidth: "200px" }}>
-                    {item.userAgent}
-                  </Typography>
-                </Card>
-              );
-            })}
-          </Box>
-        ) : (
-          <Skeleton variant="rounded" width="100%" height={300} />
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 2,
+          }}
+        >
+          {accessHistoriesPage ? (
+            <>
+              {accessHistoriesPage.response.map((item) => {
+                return (
+                  <Card key={item.id} raised sx={{ my: 1, p: 2 }}>
+                    <Typography>
+                      {" "}
+                      {new Date(item.date).toDateString() +
+                        " " +
+                        new Date(item.date).toLocaleTimeString()}
+                    </Typography>
+                    <Typography color={"error"}>{item.user}</Typography>
+                    <Typography sx={{ fontWeight: 600 }}>
+                      IP: {item.ip}
+                    </Typography>
+                    <Typography sx={{ maxWidth: "200px" }}>
+                      {item.userAgent}
+                    </Typography>
+                  </Card>
+                );
+              })}
+            </>
+          ) : (
+            [...Array(6).keys()].map((index) => (
+              <Skeleton
+                key={index}
+                variant="rounded"
+                width={200}
+                height={300}
+              />
+            ))
+          )}
+        </Box>
 
         <Pagination
           count={accessHistoriesPage?.totalPages || 1}

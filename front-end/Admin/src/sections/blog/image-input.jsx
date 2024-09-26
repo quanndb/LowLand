@@ -1,10 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import Image from "src/components/Image";
 
 import { hashImage } from "src/utils/image-hasher";
 
-const ImageInput = ({ images, setImages, sx, mode, ...props }) => {
+const ImageInput = ({ init, images, setImages, mode, sx }) => {
+  const [outURL, setOutURL] = useState(null);
   const [image, setImage] = useState(null);
   const inputRef = useRef(null);
 
@@ -41,18 +42,26 @@ const ImageInput = ({ images, setImages, sx, mode, ...props }) => {
           minHeight: 300,
           ...sx,
         }}
-        {...props}
       >
-        {image?.data && (
-          <Image
-            imageURL={image.data}
-            alt={image?.title}
-            sx={{ width: "100%", height: "100%", minHeight: 600 }}
-            unShowOverlay={true}
-          />
-        )}
+        <Image
+          imageURL={outURL ? outURL : image?.data ? image.data : init?.data}
+          alt={image?.title ? image.title : init?.title}
+          sx={{ width: "100%", height: "100%", minHeight: 600 }}
+          unShowOverlay={true}
+        />
       </Box>
-      {mode !== "view" && (
+      {mode !== "view" && !image && (
+        <TextField
+          label="Enter image URL"
+          value={outURL ? outURL : init?.data}
+          onChange={(e) => {
+            setOutURL(e.target.value);
+            setImages([...images], { data: e.target.value });
+          }}
+          sx={{ width: "100%", mt: 2 }}
+        />
+      )}
+      {mode !== "view" && !outURL && (
         <input
           type="file"
           ref={inputRef}

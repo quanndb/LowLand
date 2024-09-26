@@ -30,16 +30,6 @@ const navConfig = [
     path: "/blogs",
     icon: icon("ic_blog"),
   },
-  // {
-  //   title: "login",
-  //   path: "/login",
-  //   icon: icon("ic_lock"),
-  // },
-  {
-    title: "size",
-    path: "/sizes",
-    icon: icon("ic_analytics"),
-  },
   {
     title: "order",
     path: "/orders",
@@ -50,16 +40,6 @@ const navConfig = [
     path: "/materials",
     icon: icon("ic_import"),
   },
-  {
-    title: "importStock",
-    path: "/importStocks",
-    icon: icon("ic_import"),
-  },
-  // {
-  //   title: "Not found",
-  //   path: "/404",
-  //   icon: icon("ic_disabled"),
-  // },
 ];
 
 export default navConfig;

@@ -95,12 +95,13 @@ public class ChartService {
         return pageAccessService.pageResponse(store);
     }
 
-    public String postAccess(DetailsLogin detailsLogin){
+    public String postAccess(DetailsLogin detailsLogin, String userName){
         accessRepository.save(Access.builder()
                         .date(LocalDateTime.now())
                         .ip(detailsLogin.getIP())
                         .userAgent(detailsLogin.getUserAgent())
-                        .user(SecurityContextHolder.getContext().getAuthentication().getName())
+                        .user(userName != null ? userName
+                                : SecurityContextHolder.getContext().getAuthentication().getName())
                 .build());
         return "Welcome to Lowland!";
     }

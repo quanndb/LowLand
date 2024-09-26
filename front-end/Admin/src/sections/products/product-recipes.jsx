@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { CustomAutocomplete } from "src/components/input/CustomAutoComplete";
 import materialAPI from "src/services/API/materialAPI";
-import ConfirmDelete from "./confirm-delete";
+import ConfirmDelete from "../../components/dialog/confirm-delete";
 
 const ProductRecipes = ({ recipes, setRecipes }) => {
   const queryFn = materialAPI.getMaterials;
