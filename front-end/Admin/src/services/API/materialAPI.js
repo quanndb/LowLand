@@ -6,13 +6,9 @@ const materialAPI = {
     const url = "/materials";
     return axios.get(url, { params });
   },
-  update: (params) => {
-    const url = "/Material/CreateOrUpdate";
-    return axios.post(url, params);
-  },
-  delete: (id) => {
-    const url = `/Material/Delete?Id=${id}`;
-    return axios.get(url);
+  update: (id, params) => {
+    const url = "/materials" + "/" + id;
+    return axios.put(url, params);
   },
 };
 

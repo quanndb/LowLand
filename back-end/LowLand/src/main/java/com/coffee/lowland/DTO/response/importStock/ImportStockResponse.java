@@ -23,6 +23,8 @@ public class ImportStockResponse {
     String importCode;
     String supplierName;
     String description;
+    LocalDateTime updatedDate;
+    String updatedBy;
     LocalDateTime importDate;
     String materialsList;
     Long totalPrice;

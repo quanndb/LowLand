@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,8 @@ public class ImportStockService {
                  .importStockId(found.getImportStockId())
                  .importCode(found.getImportCode())
                  .importDate(found.getImportDate())
+                 .updatedDate(found.getUpdatedDate())
+                 .updatedBy(found.getUpdatedBy())
                  .description(found.getDescription())
                  .materialsList(list)
                  .supplierName(found.getSupplierName())
@@ -73,7 +76,7 @@ public class ImportStockService {
                         .supplierName(request.getSupplierName())
                         .importDate(LocalDateTime.now())
                 .build());
-        _detailsService.createDetails(request.getDetails(), newImport.getImportStockId());
+        _detailsService.createDetails(request.getMaterialsList(), newImport.getImportStockId());
         return getDetails(newImport.getImportStockId());
     }
 
@@ -83,8 +86,10 @@ public class ImportStockService {
                 .orElseThrow(()->new AppExceptions(ErrorCode.IMPORT_NOTFOUND));
         found.setDescription(request.getDescription());
         found.setSupplierName(request.getSupplierName());
+        found.setUpdatedDate(LocalDateTime.now());
+        found.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         _repo.save(found);
-        _detailsService.updateDetails(request.getDetails(), found.getImportStockId());
+        _detailsService.updateDetails(request.getMaterialsList(), found.getImportStockId());
         return getDetails(id);
     }
 }

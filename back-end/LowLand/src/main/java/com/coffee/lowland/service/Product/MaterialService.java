@@ -28,8 +28,9 @@ public class MaterialService {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public Material updateMaterial(String id, MaterialDTO request){
-        checkMaterialName(request.getMaterialName());
         Material foundMaterial = getMaterialById(id);
+        if(!foundMaterial.getMaterialName().equalsIgnoreCase(request.getMaterialName()))
+            checkMaterialName(request.getMaterialName());
         materialMapper.update(foundMaterial,request);
         return _repo.save(foundMaterial);
     }

@@ -12,6 +12,7 @@ import {
   Select,
   TextField,
   Button,
+  Typography,
 } from "@mui/material";
 
 import { DataGrid } from "@mui/x-data-grid";
@@ -62,6 +63,9 @@ export default function OrderView() {
 
   return (
     <Container>
+      <Typography variant="h4" sx={{ mb: 5 }}>
+        Order
+      </Typography>
       <Paper sx={{ padding: "25px", width: "100%" }}>
         <Grid container spacing={{ md: 3 }}>
           <Grid item xs={12}>

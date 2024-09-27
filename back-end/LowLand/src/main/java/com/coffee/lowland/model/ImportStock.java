@@ -24,4 +24,6 @@ public class ImportStock {
     String supplierName;
     String description;
     LocalDateTime importDate;
+    LocalDateTime updatedDate;
+    String updatedBy;
 }

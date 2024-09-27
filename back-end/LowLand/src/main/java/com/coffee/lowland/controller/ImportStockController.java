@@ -25,7 +25,7 @@ public class ImportStockController {
             @RequestParam(required = false, defaultValue = "") String query,
             @RequestParam(required = false, defaultValue = "") String providerName,
             @RequestParam(required = false, defaultValue = "") String importDate,
-            @RequestParam(required = false, defaultValue = "import_stock_id") String sortedBy,
+            @RequestParam(required = false, defaultValue = "import_date") String sortedBy,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection)
     {
 

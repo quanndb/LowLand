@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -19,6 +19,11 @@ export const CustomAutocomplete = ({
   sx,
 }) => {
   const [value, setValue] = useState(current);
+  useEffect(() => {
+    if (current) {
+      setValue(current);
+    }
+  }, [current]);
   const [focused, setFocused] = useState(false);
 
   // Debounced value to limit API calls

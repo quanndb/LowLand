@@ -17,7 +17,7 @@ export default function ChartTotalMoney({
 
   const units = ["VNĐ", "orders"]; // Adjust units for each series as needed
 
-  const chartOptions = useChart({
+  const { chartOptions } = useChart({
     colors,
     plotOptions: {
       bar: {

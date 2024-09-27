@@ -2,21 +2,21 @@ import { update } from "lodash";
 import axios from "src/services";
 
 const importStockAPI = {
-  getAll: () => {
-    const url = "/ImportStock/GetAll";
+  getImports: (params) => {
+    const url = "/importStocks";
+    return axios.get(url, { params });
+  },
+  getDetails: (id) => {
+    const url = `/importStocks/${id}`;
     return axios.get(url);
   },
-  getById:(id) => {
-    const url = `/ImportStock/GetById?Id=${id}`;
-    return axios.get(url);
+  update: (id, data) => {
+    const url = "/importStocks" + "/" + id;
+    return axios.put(url, data);
   },
-  update: (params) => {
-    const url = "/ImportStock/CreateOrUpdate";
+  create: (params) => {
+    const url = "/importStocks";
     return axios.post(url, params);
-  },
-  delete: (id) => {
-    const url = `/ImportStock/Delete?Id=${id}`;
-    return axios.get(url);
   },
 };
 

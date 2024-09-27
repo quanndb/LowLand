@@ -126,8 +126,6 @@ const ModalContent = ({ onClose, orderDetails, refetch, refetchOrder }) => {
 
   const handlePay = () => {
     if (order.paymentLink) {
-      console.log(order.paymentLink);
-
       window.open(order.paymentLink, "_blank");
     } else {
       createPaymentLink(order.orderId, {
@@ -143,8 +141,6 @@ const ModalContent = ({ onClose, orderDetails, refetch, refetchOrder }) => {
   };
 
   const handleSubmit = () => {
-    console.log(order);
-
     updateOrder(order, {
       onSuccess: () => {
         toast.success("Update success");

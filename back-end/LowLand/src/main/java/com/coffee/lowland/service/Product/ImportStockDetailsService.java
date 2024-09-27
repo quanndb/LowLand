@@ -45,17 +45,19 @@ public class ImportStockDetailsService {
     }
 
     public void createDetails(List<DetailsImportStockRequest> request, String importStockId){
-        for(DetailsImportStockRequest item : request){
-            Material material = materialService
-                    .getOrCreateMaterialByName(item.getMaterialName(),
-                            item.getUnitName(),item.getQuantity().doubleValue(), item.getDescription());
-            _repo.save(ImportStockDetails.builder()
-                            .importStockId(importStockId)
-                            .price(item.getPrice().doubleValue())
-                            .quantity(item.getQuantity().doubleValue())
-                            .description(item.getDescription())
-                            .materialName(material.getMaterialName())
-                    .build());
+        if(request != null){
+            for(DetailsImportStockRequest item : request){
+                Material material = materialService
+                        .getOrCreateMaterialByName(item.getMaterialName(),
+                                item.getUnitName(),item.getQuantity().doubleValue(), item.getDescription());
+                _repo.save(ImportStockDetails.builder()
+                        .importStockId(importStockId)
+                        .price(item.getPrice().doubleValue())
+                        .quantity(item.getQuantity().doubleValue())
+                        .description(item.getDescription())
+                        .materialName(material.getMaterialName())
+                        .build());
+            }
         }
     }
 

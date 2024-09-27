@@ -17,6 +17,8 @@ public class ImportStockDetailsResponse {
     String importCode;
     String supplierName;
     String description;
+    LocalDateTime updatedDate;
+    String updatedBy;
     LocalDateTime importDate;
     List<DetailsImportMaterialResponse> materialsList;
     Long totalPrice;

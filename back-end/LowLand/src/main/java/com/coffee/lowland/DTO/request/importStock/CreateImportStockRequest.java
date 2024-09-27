@@ -13,5 +13,5 @@ import java.util.List;
 public class CreateImportStockRequest {
     String supplierName;
     String description;
-    List<DetailsImportStockRequest> details;
+    List<DetailsImportStockRequest> materialsList;
 }

@@ -20,8 +20,6 @@ const SizeAndPrice = ({ details, setDetails }) => {
   const { mutate: deleteDetails, isPending: isDeleting } = useMutation({
     mutationKey: (data) => ["deleteProductDetails", data],
     mutationFn: (data) => {
-      console.log(data);
-
       return productAPI.deleteDetails(data.productId, data.productDetailsId);
     },
   });

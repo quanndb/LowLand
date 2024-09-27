@@ -17,7 +17,7 @@ export default function AppWebsiteVisits({
 }) {
   const { labels, colors, series, options } = chart;
 
-  const chartOptions = useChart({
+  const { chartOptions } = useChart({
     colors,
     plotOptions: {
       bar: {
