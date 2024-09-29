@@ -7,13 +7,14 @@ Lowland Coffee is a project focused on the presentation and management of a coff
 1. [Overview](#overview)
 2. [Key Features](#key-features)
 3. [Technologies Used](#technologies-used)
-4. [Installation](#installation)
-5. [Usage](#usage)
-6. [Screenshots](#screenshots)
-7. [Contributing](#contributing)
-8. [License](#license)
-9. [Contact](#contact)
-10. [Conclusion](#conclusion)
+4. [Application architecture](#application-architecture)
+5. [Installation](#installation)
+6. [Usage](#usage)
+7. [Screenshots](#screenshots)
+8. [Contributing](#contributing)
+9. [License](#license)
+10. [Contact](#contact)
+11. [Conclusion](#conclusion)
 
 ## Overview
 
@@ -138,17 +139,18 @@ To set up the project locally using Docker, follow these steps:
     <tbody>
         <tr valign="top">
             <td>
-                <img src="screenshots/home.png" alt="Lowland home"/>
-                <img src="screenshots/products.png" alt="Lowland products"/>
-                <img src="screenshots/contact.png" alt="Lowland contact"/>
-            </td>
-            <td>
                 <img src="screenshots/swagger.png" alt="Lowland api docs"/>
                 <img src="screenshots/dashboard.png" alt="Lowland admin dasboard"/>
                 <img src="screenshots/manage-product.png" alt="Lowland admin manage product"/>
             </td>
+            <td>
+                <img src="screenshots/home.png" alt="Lowland home"/>
+                <img src="screenshots/products.png" alt="Lowland products"/>
+                <img src="screenshots/contact.png" alt="Lowland contact"/>
+            </td>
         </tr>
     </tbody>
+
 </table>
 
 ## Contributing
