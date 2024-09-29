@@ -140,6 +140,7 @@ To set up the project locally using Docker, follow these steps:
             <td>
                 <img src="screenshots/home.png" alt="Lowland home"/>
                 <img src="screenshots/products.png" alt="Lowland products"/>
+                <img src="screenshots/contact.png" alt="Lowland contact"/>
             </td>
             <td>
                 <img src="screenshots/swagger.png" alt="Lowland api docs"/>
