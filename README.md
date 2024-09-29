@@ -74,6 +74,10 @@ Lowland Coffee is a project focused on the presentation and management of a coff
 - **Backend**: Spring Framework, MySQL, MongoDB.
 - **Containerization**: Docker.
 
+## Application architecture
+
+![Lowland application architecture](screenshots/architecture.png)
+
 ## Installation
 
 To set up the project locally using Docker, follow these steps:
@@ -127,20 +131,20 @@ To set up the project locally using Docker, follow these steps:
 <table>
     <thead>
         <tr>
-            <th>Backoffice &amp; Storefront</th>
-            <th>Observability</th>
+            <th>API docs &amp; Admin page</th>
+            <th>Client page</th>
         </tr>
     </thead>
     <tbody>
         <tr valign="top">
             <td>
-                <img src="screenshots/swagger.png" alt="Lowland api docs"/>
                 <img src="screenshots/home.png" alt="Lowland home"/>
                 <img src="screenshots/products.png" alt="Lowland products"/>
             </td>
             <td>
+                <img src="screenshots/swagger.png" alt="Lowland api docs"/>
                 <img src="screenshots/dashboard.png" alt="Lowland admin dasboard"/>
-                <img src="screenshots/manage-product" alt="Lowland admin manage product"/>
+                <img src="screenshots/manage-product.png" alt="Lowland admin manage product"/>
             </td>
         </tr>
     </tbody>
