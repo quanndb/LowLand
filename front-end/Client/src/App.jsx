@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function App({ children }) {
   useEffect(() => {
-    accessAPI.post();
+    if (window.location.pathname !== "/404") accessAPI.post();
   }, []);
 
   return <>{children}</>;

@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.9"
 
 services:
   mongo:
@@ -34,14 +34,28 @@ services:
     ports:
       - 2818:2818
     environment:
-      #Database
+      #APP
+      - APP_SECRET_KEY=
+      - APP_ORIGIN_CLIENT=http://localhost:5173
+      - APP_ORIGIN_ADMIN=http://localhost:5174
       #MySQL
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/lowland
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=Quandz@@2083
       #Mongo
       - SPRING_DATA_MONGO_DATABASE=lowland
-      - SPRING_DATA_MONGO_URL=mongodb://root:Quandz%40%402083@mongo:27017
+      - SPRING_DATA_MONGO_URI=mongodb://root:Quandz%40%402083@mongo:27017/
+      #Cloudinary
+      - CLOUD_NAME=
+      - CLOUD_API_KEY=
+      - CLOUD_API_SECRET=
+      #PayOS
+      - PAYOS_CLIENT_ID=
+      - PAYOS_CLIENT_SECRET=
+      - PAYOS_CHECKSUM_KEY=
+      #Google
+      - GOOGLE_CLIENT_ID=
+      - GOOGLE_CLIENT_SECRET=
 
     depends_on:
       - mongo
@@ -53,9 +67,15 @@ services:
     image: lowland/admin:latest
     build: 
       context: ./front-end/Admin
+      args:
+        VITE_SERVER_BASE_URL: http://localhost:2818/api/v1.0.0
+        VITE_CLIENT: http://localhost:5173
     restart: always
     ports: 
-      - 5173:80
+      - 5174:80
+    environment:
+      - VITE_SERVER_BASE_URL=http://localhost:2818/api/v1.0.0
+      - VITE_CLIENT=http://localhost:5173
     depends_on:
       - lowland-backend
     networks:
@@ -65,9 +85,15 @@ services:
     image: lowland/client:latest
     build: 
       context: ./front-end/Client
+      args:
+        VITE_SERVER_BASE_URL: http://localhost:2818/api/v1.0.0
+        VITE_CLIENT_ID: 
     restart: always
     ports: 
-      - 5174:80
+      - 5173:80
+    environment:
+      - VITE_SERVER_BASE_URL=http://localhost:2818/api/v1.0.0
+      - VITE_CLIENT_ID=
     depends_on:
       - lowland-backend
     networks:

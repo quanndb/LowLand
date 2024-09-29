@@ -26,7 +26,7 @@ const HomeStory = () => {
 
       <ButtonLink
         color={"secondary"}
-        href={"/blogs/b5bc4125-535b-4c37-b441-a15e05c405a7"}
+        href={"/blogs/79a5f2f2-3632-4bf9-b104-f5f098a92e47"}
         sx={{ fontWeight: "600" }}
       >
         Read the full story
