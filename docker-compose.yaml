@@ -28,7 +28,7 @@ services:
 
   lowland-backend:
     image: lowland/backend:latest
-    build: 
+    build:
       context: ./back-end/LowLand
     restart: always
     ports:
@@ -65,13 +65,13 @@ services:
 
   lowland-admin:
     image: lowland/admin:latest
-    build: 
+    build:
       context: ./front-end/Admin
       args:
         VITE_SERVER_BASE_URL: http://localhost:2818/api/v1.0.0
         VITE_CLIENT: http://localhost:5173
     restart: always
-    ports: 
+    ports:
       - 5174:80
     environment:
       - VITE_SERVER_BASE_URL=http://localhost:2818/api/v1.0.0
@@ -80,16 +80,16 @@ services:
       - lowland-backend
     networks:
       - quanndb_network
-  
+
   lowland-client:
     image: lowland/client:latest
-    build: 
+    build:
       context: ./front-end/Client
       args:
         VITE_SERVER_BASE_URL: http://localhost:2818/api/v1.0.0
-        VITE_CLIENT_ID: 
+        VITE_CLIENT_ID:
     restart: always
-    ports: 
+    ports:
       - 5173:80
     environment:
       - VITE_SERVER_BASE_URL=http://localhost:2818/api/v1.0.0

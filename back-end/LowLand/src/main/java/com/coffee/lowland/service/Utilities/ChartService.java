@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,7 +98,7 @@ public class ChartService {
 
     public String postAccess(DetailsLogin detailsLogin, String userName){
         accessRepository.save(Access.builder()
-                        .date(LocalDateTime.now())
+                        .date(LocalDateTime.now(ZoneId.of("UTC+7")))
                         .ip(detailsLogin.getIP())
                         .userAgent(detailsLogin.getUserAgent())
                         .user(userName != null ? userName

@@ -31,6 +31,7 @@ import vn.payos.type.Webhook;
 import vn.payos.type.WebhookData;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -81,7 +82,7 @@ public class OrderService {
                 .getAuthentication().getName();
         newOrder.setAccountId(accountId);
         newOrder.setOrderCode(randomCodeService.generateCode());
-        newOrder.setCreatedDate(LocalDateTime.now());
+        newOrder.setCreatedDate(LocalDateTime.now(ZoneId.of("UTC+7")));
         newOrder.setCreatedBy(createdUser);
         Order savedOrder = orderRepository.save(newOrder);
 
@@ -129,7 +130,7 @@ public class OrderService {
             throw new AppExceptions(ErrorCode.RESOLVED_ORDER);
         }
         orderMapper.updateOrder(foundOrder, request);
-        foundOrder.setUpdatedDate(LocalDateTime.now());
+        foundOrder.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC+7")));
         foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         orderRepository.save(foundOrder);
         return orderRepository.save(foundOrder);
@@ -146,7 +147,7 @@ public class OrderService {
         }
         materialService.updateQuantityMaterialAfterApproveOrder(orderId);
         orderMapper.approveOrder(foundOrder, request);
-        foundOrder.setUpdatedDate(LocalDateTime.now());
+        foundOrder.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC+7")));
         foundOrder.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
 
         return orderRepository.save(foundOrder);

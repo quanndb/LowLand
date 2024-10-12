@@ -29,6 +29,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class InteractService {
             likeRepository.delete(existingLike);
         } else {
             Like newLike = Like.builder()
-                    .likedDate(LocalDateTime.now())
+                    .likedDate(LocalDateTime.now(ZoneId.of("UTC+7")))
                     .blogId(blogId)
                     .accountId(accountId)
                     .build();
@@ -78,7 +79,7 @@ public class InteractService {
             likeRepository.delete(existingLike);
         } else {
             Like newLike = Like.builder()
-                    .likedDate(LocalDateTime.now())
+                    .likedDate(LocalDateTime.now(ZoneId.of("UTC+7")))
                     .commentId(new ObjectId(commentId))
                     .blogId(blogId)
                     .parentsId(new ObjectId(parentsId!=null?parentsId:commentId))
@@ -190,7 +191,7 @@ public class InteractService {
         String accountId = getCurrentAccountId();
         if(accountId == null) throw new AppExceptions(ErrorCode.UNAUTHENTICATED);
         Comment newComment = commentRepository.save(Comment.builder()
-                        .commentedDate(LocalDateTime.now())
+                        .commentedDate(LocalDateTime.now(ZoneId.of("UTC+7")))
                         .content(content.getContent())
                         .blogId(blogId)
                         .accountId(accountId)
@@ -210,7 +211,7 @@ public class InteractService {
                 .orElseThrow(()-> new AppExceptions(ErrorCode.COMMENT_NOT_FOUND));
         String replyTo = accountService.findAccountById(parentComment.getAccountId()).getEmail();
         Comment newComment = commentRepository.save(Comment.builder()
-                .commentedDate(LocalDateTime.now())
+                .commentedDate(LocalDateTime.now(ZoneId.of("UTC+7")))
                 .content(content.getContent())
                 .blogId(blogId)
                 .parentsId(new ObjectId(parentsId))
@@ -259,7 +260,7 @@ public class InteractService {
                 .isIncludeRoleOrOwner(foundComment.getAccountId(), "ADMIN", "EMPLOYEE"))
             throw new AppExceptions(ErrorCode.FORBIDDEN_EXCEPTION);
         foundComment.setContent(content.getContent());
-        foundComment.setUpdatedDate(LocalDateTime.now());
+        foundComment.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC+7")));
         foundComment.setUpdatedBy(getCurrentUser().getEmail());
         return commentRepository.save(foundComment);
     }

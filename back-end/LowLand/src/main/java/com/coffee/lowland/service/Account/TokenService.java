@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class TokenService {
         String tokenId  = tokenRepository.save(Token.builder()
                     .logout(false)
                     .accountId(account.getAccountId())
-                    .lastLogin(LocalDateTime.now().toString())
+                    .lastLogin(LocalDateTime.now(ZoneId.of("UTC+7")).toString())
                     .details(details)
                     .build()).getTokenId();
         try {

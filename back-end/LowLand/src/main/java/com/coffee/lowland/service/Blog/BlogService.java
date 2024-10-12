@@ -40,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -70,7 +71,7 @@ public class BlogService {
         req.setIsActive(true);
         req.setViews(0);
         req.setAccountId(authenticationService.getMyInfo().getAccountId());
-        req.setDate(LocalDateTime.now());
+        req.setDate(LocalDateTime.now(ZoneId.of("UTC+7")));
         if(savedImages.get(req.getImageURL()) != null){
             req.setImageURL(savedImages.get(req.getImageURL()));
         }
@@ -198,7 +199,7 @@ public class BlogService {
             }
         }
         found.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-        found.setLastUpdate(LocalDateTime.now());
+        found.setLastUpdate(LocalDateTime.now(ZoneId.of("UTC+7")));
         deleteAllUnusedImages(found);
         return blogRepository.save(found);
     }

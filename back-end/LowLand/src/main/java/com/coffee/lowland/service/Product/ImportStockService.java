@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -74,7 +75,7 @@ public class ImportStockService {
                         .importCode(_random.generateCode()+"")
                         .description(request.getDescription())
                         .supplierName(request.getSupplierName())
-                        .importDate(LocalDateTime.now())
+                        .importDate(LocalDateTime.now(ZoneId.of("UTC+7")))
                 .build());
         _detailsService.createDetails(request.getMaterialsList(), newImport.getImportStockId());
         return getDetails(newImport.getImportStockId());
@@ -86,7 +87,7 @@ public class ImportStockService {
                 .orElseThrow(()->new AppExceptions(ErrorCode.IMPORT_NOTFOUND));
         found.setDescription(request.getDescription());
         found.setSupplierName(request.getSupplierName());
-        found.setUpdatedDate(LocalDateTime.now());
+        found.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC+7")));
         found.setUpdatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         _repo.save(found);
         _detailsService.updateDetails(request.getMaterialsList(), found.getImportStockId());
